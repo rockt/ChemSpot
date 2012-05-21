@@ -51,8 +51,7 @@ public class App {
 			} 
 			if (arguments.isPathToTextFile()) {
 				pathToTextFile = arguments.getPathToTextFile();
-			}
-			else if (arguments.isPathToIOBCorpora()) {
+			} else if (arguments.isPathToIOBCorpora()) {
 				pathToCorpora = arguments.getPathToIOBCorpora();
 			} else {
 				usage();
@@ -66,7 +65,8 @@ public class App {
 			System.out.println(e);
 			usage();
 		}
-	
+
+        //initializing ChemSpot with a CRF model file and an LINNAEUS automaton (the latter is optional)
 		ChemSpot chemspot = new ChemSpot(pathToModelFile, pathToDictionaryFile);
 
 		TypeSystemDescription typeSystem = TypeSystemDescriptionFactory.createTypeSystemDescription("desc/TypeSystem");

@@ -1,19 +1,8 @@
 package de.berlin.hu.chemspot;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-import java.util.zip.GZIPInputStream;
-
+import de.berlin.hu.types.PubmedDocument;
+import de.berlin.hu.uima.cc.eval.ComparableAnnotation;
+import de.berlin.hu.wbi.common.research.Evaluator;
 import org.apache.uima.UIMAException;
 import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
@@ -27,9 +16,9 @@ import org.uimafit.factory.JCasFactory;
 import org.uimafit.factory.TypeSystemDescriptionFactory;
 import org.uimafit.util.JCasUtil;
 
-import de.berlin.hu.types.PubmedDocument;
-import de.berlin.hu.uima.cc.eval.ComparableAnnotation;
-import de.berlin.hu.wbi.common.research.Evaluator;
+import java.io.*;
+import java.util.*;
+import java.util.zip.GZIPInputStream;
 
 public class ChemSpot {
 	private TypeSystemDescription typeSystem;
@@ -42,16 +31,22 @@ public class ChemSpot {
 	private AnalysisEngine stopwordFilter;	
 	private Map<String,Integer> abstractOffsets = new HashMap<String,Integer>();
 
+    /**
+     * Initialize ChemSpot without a dictionary automaton.
+     * @param pathToModelFile the Path to a CRF model
+     */
+    public ChemSpot(String pathToModelFile) {
+        new ChemSpot(pathToModelFile, "");
+    }
 
-	/**
-	 * @param args
-	 * @throws IOException 
-	 * @throws UIMAException 
-	 */
-
-	//FIXME: find a way to access the descriptors in the jar rather then outside
+    /**
+     * Initialize ChemSpot with a CRF model and a dictionary automaton.
+     * @param pathToModelFile the path to a CRF model
+     * @param pathToDictionaryFile the ath to a dictionary automaton
+     */
 	public ChemSpot(String pathToModelFile, String pathToDictionaryFile) {
 		try {
+            //FIXME: find a way to access the descriptors in the jar rather then outside
 			typeSystem = TypeSystemDescriptionFactory.createTypeSystemDescription("desc/TypeSystem");
 			fineTokenizer = AnalysisEngineFactory.createAnalysisEngine("desc/util/fineTokenizerAEDescriptor");
 			sentenceDetector = AnalysisEngineFactory.createAnalysisEngine("desc/ae/opennlp/SentenceDetector");
@@ -71,7 +66,12 @@ public class ChemSpot {
 			e.printStackTrace();
 		}
 	}
-	
+
+    /**
+     * Given a {@code JCas} object, this method extracts chemicals from the document text and returns a list of {@code Mention}.
+     * @param jcas contains the document text
+     * @return a list of mentions
+     */
 	public List<Mention> tag(JCas jcas) {
 		try {
 			fineTokenizer.process(jcas);
@@ -86,6 +86,7 @@ public class ChemSpot {
 			Iterator<NamedEntity> entities = JCasUtil.iterator(jcas, NamedEntity.class);
 			while (entities.hasNext()) {
 				NamedEntity entity = (NamedEntity) entities.next();
+                //do not include gold-standard mentions!
 				if (!"goldstandard".equals(entity.getSource())) {
 					mentions.add(new Mention(entity.getBegin(), entity.getEnd(), entity.getCoveredText(), entity.getId(), entity.getSource()));
 				}
@@ -97,7 +98,12 @@ public class ChemSpot {
 		}
 		return null;
 	}
-	
+
+    /**
+     * Extracts chemicals from a {@code text} and returns a list of {@code Mention}.
+     * @param text natural language text from which you want to extract chemical entities
+     * @return a list of mentions
+     */
 	public List<Mention> tag(String text) {
 		try {
 			JCas jcas = JCasFactory.createJCas(typeSystem);
