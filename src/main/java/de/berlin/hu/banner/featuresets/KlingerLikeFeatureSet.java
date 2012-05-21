@@ -118,5 +118,4 @@ public class KlingerLikeFeatureSet extends FeatureSet {
 		pipes.add(new TokenSequence2FeatureVectorSequence(true, true));
 		return new SerialPipes(pipes);
 	}
-
 }
