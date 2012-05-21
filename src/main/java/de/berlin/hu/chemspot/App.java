@@ -5,26 +5,19 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Iterator;
 
 import org.apache.uima.UIMAException;
 import org.apache.uima.collection.CollectionReader;
-import org.apache.uima.examples.SourceDocumentInformation;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.metadata.TypeSystemDescription;
-import org.u_compare.shared.semantic.NamedEntity;
 import org.uimafit.factory.CollectionReaderFactory;
 import org.uimafit.factory.JCasFactory;
 import org.uimafit.factory.TypeSystemDescriptionFactory;
-import org.uimafit.util.JCasUtil;
-
-import de.berlin.hu.types.PubmedDocument;
 
 import uk.co.flamingpenguin.jewel.cli.ArgumentValidationException;
 import uk.co.flamingpenguin.jewel.cli.CliFactory;
 
 public class App {
-
 	private static String pathToCorpora;
 	private static String pathToModelFile;
 	private static String pathToDictionaryFile;
@@ -33,12 +26,6 @@ public class App {
 	private static boolean evaluate = false;
 	private static String pathToTextFile;
 
-	/**
-	 * @param args
-	 * @throws IOException 
-	 * @throws UIMAException 
-	 */
-	
 	public static void main(String[] args) throws UIMAException, IOException {
 		try {
 			arguments = CliFactory.parseArguments(ChemSpotArguments.class, args);
@@ -84,12 +71,12 @@ public class App {
 			}	
 		} else {
 			if (arguments.isZippedTextFile()) {
-				serializeAnnotations(chemspot.tagGZ(pathToTextFile));
+				chemspot.tagGZ(pathToTextFile);
 			} else {
 				BufferedReader reader = new BufferedReader(new FileReader(new File(pathToTextFile)));
-				String line = "";
+				String line;
 				while ((line = reader.readLine()) != null) {
-					if (outputFile != null) outputFile.write(chemspot.tagString(line));
+					if (outputFile != null) outputFile.write(chemspot.tagReturnIOB(line));
 				}
 			}
 		}
@@ -105,45 +92,5 @@ public class App {
 		System.out.println("\t-o path to an output file (IOB format)");
 		System.out.println("\t-e if this parameter is set, the performance of ChemSpot on the IOB gold-standard corpus (cf. -c) is evaluated");	
 		System.exit(0);
-	}	
-	
-	private static void serializeAnnotations(JCas jcas) throws IOException {
-		Iterator<SourceDocumentInformation> srcIterator = JCasUtil.iterator(jcas, SourceDocumentInformation.class);
-		SourceDocumentInformation src = (SourceDocumentInformation) srcIterator.next();
-		String pathToFile = src.getUri().replaceFirst("file:", "") + ".chem";
-		
-		File file = new File(pathToFile);
-		file.createNewFile();
-		FileWriter writer = new FileWriter(file);
-
-		int offset = 0;
-		
-		Iterator<PubmedDocument> documentIterator = JCasUtil.iterator(jcas, PubmedDocument.class);		
-		while (documentIterator.hasNext()) {
-			PubmedDocument document = (PubmedDocument) documentIterator.next();
-			offset = document.getBegin();
-			String pmid = document.getPmid();
-			int numberOfEntities = 0;
-			Iterator<NamedEntity> entityIterator = JCasUtil.iterator(document, NamedEntity.class, true, true);
-			while (entityIterator.hasNext()) {
-				NamedEntity entity = (NamedEntity) entityIterator.next();
-				if (!"goldstandard".equals(entity.getSource())) {
-					int begin = entity.getBegin() - offset;
-					int end = entity.getEnd() - offset - 1;
-					String id = entity.getId();
-					String text = entity.getCoveredText();
-					if (id == null || id.isEmpty()) {
-						writer.write(pmid + "\t" + begin + "\t" + end + "\t" + text + "\t" + "\\N\n");
-					} else {
-						writer.write(pmid + "\t" + begin + "\t" + end + "\t" + text + "\t" + id + "\n");
-					}					 
-				}
-				numberOfEntities++;
-			}
-			if (numberOfEntities == 0) {
-				writer.write(pmid + "\t-1\t-1\t\\N\t\\N\n");
-			}
-		}
-		writer.close();
 	}
 }

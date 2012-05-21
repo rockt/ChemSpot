@@ -19,17 +19,11 @@ public interface ChemSpotArguments {
 	  boolean isPathToTextFile();
 	  
 	  @Option(shortName="e")
-	  boolean getRunEvaluation();
 	  boolean isRunEvaluation();
 	  
 	  @Option(shortName="z")
-	  boolean getZippedTextFile();
 	  boolean isZippedTextFile();
-	    
-	  @Option(shortName="x")
-	  String getPathToXMIOutputDirectory();
-	  boolean isPathToXMIOutputDirectory();
-	  
+
 	  @Option(shortName="o")
 	  String getPathToOutputFile();
 	  boolean isPathToOutputFile();
