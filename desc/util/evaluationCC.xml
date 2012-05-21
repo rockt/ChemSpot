@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<casConsumerDescription xmlns="http://uima.apache.org/resourceSpecifier">
+  <frameworkImplementation>org.apache.uima.java</frameworkImplementation>
+  <implementationName>de.berlin.hu.uima.cc.eval.Evaluation</implementationName>
+  <processingResourceMetaData>
+    <name>EvaluationCASConsumerDescriptor</name>
+    <description/>
+    <version>1.0</version>
+    <vendor/>
+    <configurationParameters/>
+    <configurationParameterSettings/>
+    <typeSystemDescription>
+      <imports>
+        <import location="../TypeSystem.xml"/>
+      </imports>
+    </typeSystemDescription>
+    <typePriorities/>
+    <fsIndexCollection/>
+    <capabilities>
+      <capability>
+        <inputs>
+          <type allAnnotatorFeatures="true">org.u_compare.shared.semantic.NamedEntity</type>
+        </inputs>
+        <outputs/>
+        <languagesSupported/>
+      </capability>
+    </capabilities>
+    <operationalProperties>
+      <modifiesCas>false</modifiesCas>
+      <multipleDeploymentAllowed>false</multipleDeploymentAllowed>
+      <outputsNewCASes>false</outputsNewCASes>
+    </operationalProperties>
+  </processingResourceMetaData>
+  <resourceManagerConfiguration/>
+</casConsumerDescription>

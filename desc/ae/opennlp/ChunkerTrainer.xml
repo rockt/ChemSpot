@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+	Copyright (C) 2009 OpenNLP
+
+	This library is free software; you can redistribute it and/or
+	modify it under the terms of the GNU Lesser General Public
+	License as published by the Free Software Foundation; either
+	version 2.1 of the License, or (at your option) any later version.
+
+	This library is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU Lesser General Public
+	License along with this program; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+-->
+
+<casConsumerDescription xmlns="http://uima.watson.ibm.com/resourceSpecifier">
+	<frameworkImplementation>org.apache.uima.java</frameworkImplementation>
+	<implementationName>opennlp.uima.chunker.ChunkerTrainer</implementationName>
+	<processingResourceMetaData>
+		<name>POS Trainer</name>
+		<description></description>
+		<version>1.4.3</version>
+		<vendor>OpenNLP</vendor>
+		<configurationParameters>
+
+			<configurationParameter>
+				<name>opennlp.uima.ModelName</name>
+				<type>String</type>
+				<multiValued>false</multiValued>
+				<mandatory>true</mandatory>
+			</configurationParameter>
+
+			<configurationParameter>
+				<name>opennlp.uima.SentenceType</name>
+				<type>String</type>
+				<multiValued>false</multiValued>
+				<mandatory>true</mandatory>
+			</configurationParameter>
+
+			<configurationParameter>
+				<name>opennlp.uima.TokenType</name>
+				<type>String</type>
+				<multiValued>false</multiValued>
+				<mandatory>true</mandatory>
+			</configurationParameter>
+
+			<configurationParameter>
+				<name>opennlp.uima.POSFeature</name>
+				<type>String</type>
+				<multiValued>false</multiValued>
+				<mandatory>true</mandatory>
+			</configurationParameter>
+		</configurationParameters>
+
+		<configurationParameterSettings>
+			<nameValuePair>
+				<name>opennlp.uima.ModelName</name>
+				<value>
+					<string>POS.bin</string>
+				</value>
+			</nameValuePair>
+
+			<nameValuePair>
+				<name>opennlp.uima.TokenType</name>
+				<value>
+					<string>opennlp.uima.Token</string>
+				</value>
+			</nameValuePair>
+
+			<nameValuePair>
+				<name>opennlp.uima.SentenceType</name>
+				<value>
+					<string>opennlp.uima.Sentence</string>
+				</value>
+			</nameValuePair>
+
+			<nameValuePair>
+				<name>opennlp.uima.POSFeature</name>
+				<value>
+					<string>pos</string>
+				</value>
+			</nameValuePair>
+		</configurationParameterSettings>
+		
+		<typeSystemDescription />
+		<typePriorities />
+		<fsIndexCollection />
+		<capabilities />
+		<operationalProperties>
+			<modifiesCas>false</modifiesCas>
+			<multipleDeploymentAllowed>false</multipleDeploymentAllowed>
+		</operationalProperties>
+	</processingResourceMetaData>
+</casConsumerDescription>

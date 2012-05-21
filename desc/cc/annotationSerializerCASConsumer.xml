@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<casConsumerDescription xmlns="http://uima.apache.org/resourceSpecifier">
+  <frameworkImplementation>org.apache.uima.java</frameworkImplementation>
+  <implementationName>de.berlin.hu.uima.cc.serializer.AnnotationSerializer</implementationName>
+  <processingResourceMetaData>
+    <name>Annotation Serializer</name>
+    <description>Serializes Annotation to a file</description>
+    <version>1.0</version>
+    <configurationParameters>
+      <configurationParameter>
+        <name>outputFile</name>
+        <description>File to annotations will be serialized</description>
+        <type>String</type>
+        <multiValued>false</multiValued>
+        <mandatory>false</mandatory>
+      </configurationParameter>
+    </configurationParameters>
+    <configurationParameterSettings>
+      <nameValuePair>
+        <name>outputFile</name>
+        <value>
+          <string>data/msb_paper/annot/annotations_map.txt</string>
+        </value>
+      </nameValuePair>
+    </configurationParameterSettings>
+    <typeSystemDescription>
+      <imports>
+        <import name="org.apache.uima.examples.SourceDocumentInformation"/>
+      </imports>
+    </typeSystemDescription>
+    <capabilities>
+      <capability>
+        <inputs>
+          <type allAnnotatorFeatures="true">org.apache.uima.examples.SourceDocumentInformation</type>
+        </inputs>
+        <outputs/>
+        <languagesSupported/>
+      </capability>
+    </capabilities>
+    <operationalProperties>
+      <modifiesCas>false</modifiesCas>
+      <multipleDeploymentAllowed>true</multipleDeploymentAllowed>
+      <outputsNewCASes>false</outputsNewCASes>
+    </operationalProperties>
+  </processingResourceMetaData>
+</casConsumerDescription>

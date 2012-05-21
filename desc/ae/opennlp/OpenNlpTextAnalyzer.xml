@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+	<!--
+		Copyright (C) 2009 OpenNLP This library is free software; you can
+		redistribute it and/or modify it under the terms of the GNU Lesser
+		General Public License as published by the Free Software Foundation;
+		either version 2.1 of the License, or (at your option) any later
+		version. This library is distributed in the hope that it will be
+		useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+		General Public License for more details. You should have received a
+		copy of the GNU Lesser General Public License along with this program;
+		if not, write to the Free Software Foundation, Inc., 59 Temple Place -
+		Suite 330, Boston, MA 02111-1307, USA.
+	-->
+
+<analysisEngineDescription xmlns="http://uima.apache.org/resourceSpecifier">
+	<frameworkImplementation>org.apache.uima.java</frameworkImplementation>
+	<primitive>false</primitive>
+
+	<delegateAnalysisEngineSpecifiers>
+		<delegateAnalysisEngine key="SentenceDetector">
+			<import location="SentenceDetector.xml" />
+		</delegateAnalysisEngine>
+
+		<delegateAnalysisEngine key="Tokenizer">
+			<import location="Tokenizer.xml" />
+		</delegateAnalysisEngine>
+
+		<delegateAnalysisEngine key="DateFinder">
+			<import location="DateNameFinder.xml" />
+		</delegateAnalysisEngine>
+
+		<delegateAnalysisEngine key="PersonFinder">
+			<import location="PersonNameFinder.xml" />
+		</delegateAnalysisEngine>
+
+		<delegateAnalysisEngine key="OrganizationFinder">
+			<import location="OrganizationNameFinder.xml" />
+		</delegateAnalysisEngine>
+
+		<delegateAnalysisEngine key="MoneyFinder">
+			<import location="MoneyNameFinder.xml" />
+		</delegateAnalysisEngine>
+
+		<delegateAnalysisEngine key="LocationFinder">
+			<import location="LocationNameFinder.xml" />
+		</delegateAnalysisEngine>
+
+		<delegateAnalysisEngine key="PercentageFinder">
+			<import location="PercentageNameFinder.xml" />
+		</delegateAnalysisEngine>
+
+		<delegateAnalysisEngine key="TimeFinder">
+			<import location="TimeNameFinder.xml" />
+		</delegateAnalysisEngine>
+		
+		<delegateAnalysisEngine key="PosTagger">
+			<import location="PosTagger.xml" />
+		</delegateAnalysisEngine>
+		
+		<delegateAnalysisEngine key="Chunker">
+			<import location="Chunker.xml" />
+		</delegateAnalysisEngine>
+		
+	</delegateAnalysisEngineSpecifiers>
+
+	<analysisEngineMetaData>
+		<name>OpenNlpTextAnalyzer</name>
+		<description />
+		<version>1.4.4</version>
+		<vendor>OpenNlp</vendor>
+		<configurationParameters />
+		<configurationParameterSettings />
+		<flowConstraints>
+			<fixedFlow>
+				<node>SentenceDetector</node>
+				<node>Tokenizer</node>
+				<node>PersonFinder</node>
+				<node>OrganizationFinder</node>
+				<node>MoneyFinder</node>
+				<node>DateFinder</node>
+				<node>LocationFinder</node>
+				<node>PercentageFinder</node>
+				<node>TimeFinder</node>
+				<node>PosTagger</node>
+				<node>Chunker</node>
+			</fixedFlow>
+		</flowConstraints>
+		<capabilities>
+			<capability>
+				<inputs />
+				<outputs />
+				<languagesSupported>
+					<language>en</language>
+				</languagesSupported>
+			</capability>
+		</capabilities>
+		<operationalProperties>
+			<modifiesCas>true</modifiesCas>
+			<multipleDeploymentAllowed>false</multipleDeploymentAllowed>
+			<outputsNewCASes>false</outputsNewCASes>
+		</operationalProperties>
+	</analysisEngineMetaData>
+
+	<resourceManagerConfiguration>
+
+		<externalResources>
+			<externalResource>
+				<name>SentenceModel</name>
+				<fileResourceSpecifier>
+					<fileUrl>file:SentenceFinder.bin</fileUrl>
+				</fileResourceSpecifier>
+				<implementationName>opennlp.uima.util.MaxentModelResource_impl</implementationName>
+			</externalResource>
+
+			<externalResource>
+				<name>TokenModel</name>
+				<fileResourceSpecifier>
+					<fileUrl>file:Tokenizer.bin</fileUrl>
+				</fileResourceSpecifier>
+				<implementationName>opennlp.uima.util.MaxentModelResource_impl</implementationName>
+			</externalResource>
+			
+			<externalResource>
+				<name>PersonModel</name>
+				<fileResourceSpecifier>
+					<fileUrl>file:PersonFinder.bin</fileUrl>
+				</fileResourceSpecifier>
+				<implementationName>opennlp.uima.util.MaxentModelResource_impl</implementationName>
+				</externalResource>
+				
+			<externalResource>
+				<name>PercentageModel</name>
+				<fileResourceSpecifier>
+					<fileUrl>file:PercentageFinder.bin</fileUrl>
+				</fileResourceSpecifier>
+				<implementationName>opennlp.uima.util.MaxentModelResource_impl</implementationName>
+			</externalResource>
+
+			<externalResource>
+				<name>OrganizationModel</name>
+				<fileResourceSpecifier>
+					<fileUrl>file:OrganizationFinder.bin</fileUrl>
+				</fileResourceSpecifier>
+				<implementationName>opennlp.uima.util.MaxentModelResource_impl</implementationName>
+			</externalResource>
+
+			<externalResource>
+				<name>MoneyModel</name>
+				<fileResourceSpecifier>
+					<fileUrl>file:MoneyFinder.bin</fileUrl>
+				</fileResourceSpecifier>
+				<implementationName>opennlp.uima.util.MaxentModelResource_impl</implementationName>
+			</externalResource>
+
+			<externalResource>
+				<name>DateModel</name>
+				<fileResourceSpecifier>
+					<fileUrl>file:DateFinder.bin</fileUrl>
+				</fileResourceSpecifier>
+				<implementationName>opennlp.uima.util.MaxentModelResource_impl</implementationName>
+			</externalResource>
+
+			<externalResource>
+				<name>LocationModel</name>
+				<fileResourceSpecifier>
+					<fileUrl>file:LocationFinder.bin</fileUrl>
+				</fileResourceSpecifier>
+				<implementationName>opennlp.uima.util.MaxentModelResource_impl</implementationName>
+			</externalResource>
+
+			<externalResource>
+				<name>TimeModel</name>
+				<fileResourceSpecifier>
+					<fileUrl>file:TimeFinder.bin</fileUrl>
+				</fileResourceSpecifier>
+				<implementationName>opennlp.uima.util.MaxentModelResource_impl</implementationName>
+			</externalResource>
+
+			<externalResource>
+				<name>PosModel</name>
+				<fileResourceSpecifier>
+					<fileUrl>file:PosTagger.bin</fileUrl>
+				</fileResourceSpecifier>
+				<implementationName>opennlp.uima.util.MaxentModelResource_impl</implementationName>
+			</externalResource>
+			
+			<externalResource>
+				<name>ChunkerModel</name>
+				<fileResourceSpecifier>
+					<fileUrl>file:Chunker.bin</fileUrl>
+				</fileResourceSpecifier>
+				<implementationName>opennlp.uima.util.MaxentModelResource_impl</implementationName>
+			</externalResource>
+		</externalResources>
+
+		<externalResourceBindings>
+			<externalResourceBinding>
+				<key>SentenceDetector/opennlp.uima.ModelName</key>
+				<resourceName>SentenceModel</resourceName>
+			</externalResourceBinding>
+			<externalResourceBinding>
+				<key>Tokenizer/opennlp.uima.ModelName</key>
+				<resourceName>TokenModel</resourceName>
+			</externalResourceBinding>
+			<externalResourceBinding>
+				<key>PersonFinder/opennlp.uima.ModelName</key>
+				<resourceName>PersonModel</resourceName>
+			</externalResourceBinding>
+			<externalResourceBinding>
+				<key>PercentageFinder/opennlp.uima.ModelName</key>
+				<resourceName>PercentageModel</resourceName>
+			</externalResourceBinding>
+			<externalResourceBinding>
+				<key>OrganizationFinder/opennlp.uima.ModelName</key>
+				<resourceName>OrganizationModel</resourceName>
+			</externalResourceBinding>
+			<externalResourceBinding>
+				<key>MoneyFinder/opennlp.uima.ModelName</key>
+				<resourceName>MoneyModel</resourceName>
+			</externalResourceBinding>
+			<externalResourceBinding>
+				<key>DateFinder/opennlp.uima.ModelName</key>
+				<resourceName>DateModel</resourceName>
+			</externalResourceBinding>
+			<externalResourceBinding>
+				<key>LocationFinder/opennlp.uima.ModelName</key>
+				<resourceName>LocationModel</resourceName>
+			</externalResourceBinding>
+			<externalResourceBinding>
+				<key>TimeFinder/opennlp.uima.ModelName</key>
+				<resourceName>TimeModel</resourceName>
+			</externalResourceBinding>
+			<externalResourceBinding>
+				<key>PosTagger/opennlp.uima.ModelName</key>
+				<resourceName>PosModel</resourceName>
+			</externalResourceBinding>
+			<externalResourceBinding>
+				<key>Chunker/opennlp.uima.ModelName</key>
+				<resourceName>ChunkerModel</resourceName>
+			</externalResourceBinding>
+		</externalResourceBindings>
+
+	</resourceManagerConfiguration>
+</analysisEngineDescription>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<banner-configuration>
+  <banner>
+    <eval>
+      <datasetName>banner.eval.dataset.AZDCDataset</datasetName>
+      <dataset>
+        <sentenceFilename>***PATH***/AZDC_6-26-2009.txt</sentenceFilename>
+        <mentionTestFilename>***PATH***/AZDC_6-26-2009.txt</mentionTestFilename>
+      </dataset>
+      <idInputFilename>output/ids.txt</idInputFilename>
+      <rawInputFilename>output/raw.txt</rawInputFilename>
+      <trainingInputFilename>output/training.txt</trainingInputFilename>
+      <outputFilename>output/output.txt</outputFilename>
+      <inContextAnalysisFilename>output/contextAnalysis.html</inContextAnalysisFilename>
+      <mentionFilename>output/mention.txt</mentionFilename>
+      <modelFilename>output/model_AZDC.bin</modelFilename>
+      <lemmatiserDataDirectory>nlpdata/lemmatiser</lemmatiserDataDirectory>
+      <posTaggerDataDirectory>nlpdata/tagger</posTaggerDataDirectory>
+      <posTagger>dragon.nlp.tool.HeppleTagger</posTagger>
+      <tokenizer>banner.tokenization.SimpleTokenizer</tokenizer>
+      <useParenthesisPostProcessing>true</useParenthesisPostProcessing>
+      <useLocalAbbreviationPostProcessing>true</useLocalAbbreviationPostProcessing>
+      <useNumericNormalization>true</useNumericNormalization>
+      <tagFormat>IOB</tagFormat>
+      <crfOrder>2</crfOrder>
+      <textDirection>Forward</textDirection>
+      <mentionTypes>Required</mentionTypes>
+      <sameTypeOverlapOption>Union</sameTypeOverlapOption>
+      <differentTypeOverlapOption>Exception</differentTypeOverlapOption>
+    </eval>
+  </banner>
+</banner-configuration>

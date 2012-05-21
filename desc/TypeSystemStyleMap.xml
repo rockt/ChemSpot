@@ -1,0 +1,1409 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<styleMap>
+<rule>
+<pattern>opennlp.uima.Sentence</pattern>
+<label>Sentence</label>
+<style>color:black; background:lightblue;</style>
+</rule>
+<rule>
+<pattern>opennlp.uima.Token</pattern>
+<label>Token</label>
+<style>color:black; background:lightgreen;</style>
+</rule>
+<rule>
+<pattern>opennlp.uima.Chunk</pattern>
+<label>Chunk</label>
+<style>color:black; background:orange;</style>
+</rule>
+<rule>
+<pattern>opennlp.uima.Person</pattern>
+<label>Person</label>
+<style>color:black; background:yellow;</style>
+</rule>
+<rule>
+<pattern>opennlp.uima.Organization</pattern>
+<label>Organization</label>
+<style>color:black; background:pink;</style>
+</rule>
+<rule>
+<pattern>opennlp.uima.Location</pattern>
+<label>Location</label>
+<style>color:black; background:salmon;</style>
+</rule>
+<rule>
+<pattern>opennlp.uima.Date</pattern>
+<label>Date</label>
+<style>color:black; background:cyan;</style>
+</rule>
+<rule>
+<pattern>opennlp.uima.Time</pattern>
+<label>Time</label>
+<style>color:black; background:violet;</style>
+</rule>
+<rule>
+<pattern>opennlp.uima.Money</pattern>
+<label>Money</label>
+<style>color:black; background:tan;</style>
+</rule>
+<rule>
+<pattern>opennlp.uima.Percentage</pattern>
+<label>Percentage</label>
+<style>color:white; background:brown;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.DiscontinuousAnnotation</pattern>
+<label>DiscontinuousAnnotation</label>
+<style>color:white; background:blue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.BaseAnnotation</pattern>
+<label>BaseAnnotation</label>
+<style>color:white; background:green;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.AnnotationMetadata</pattern>
+<label>AnnotationMetadata</label>
+<style>color:white; background:red;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.syntactic.SyntacticAnnotation</pattern>
+<label>SyntacticAnnotation</label>
+<style>color:white; background:mediumpurple;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.syntactic.Sentence</pattern>
+<label>Sentence</label>
+<style>color:black; background:lightblue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.UnknownDependencyLabel</pattern>
+<label>UnknownDependencyLabel</label>
+<style>color:black; background:lightgreen;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.conll.ConllDependencyLabel</pattern>
+<label>ConllDependencyLabel</label>
+<style>color:black; background:orange;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.StanfordDependencyLabel</pattern>
+<label>StanfordDependencyLabel</label>
+<style>color:black; background:yellow;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.DependencyLabel</pattern>
+<label>DependencyLabel</label>
+<style>color:black; background:pink;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.ConstituentLabel</pattern>
+<label>ConstituentLabel</label>
+<style>color:black; background:salmon;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.UniqueLabel</pattern>
+<label>UniqueLabel</label>
+<style>color:black; background:cyan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.bracket.PennConstituent</pattern>
+<label>PennConstituent</label>
+<style>color:black; background:violet;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.bracket.NonterminalLabel</pattern>
+<label>NonterminalLabel</label>
+<style>color:black; background:tan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.function.FunctionLabel</pattern>
+<label>FunctionLabel</label>
+<style>color:white; background:brown;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.coindex.NullElementLabel</pattern>
+<label>NullElementLabel</label>
+<style>color:white; background:blue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.bracket.UnknownNonterminalLabel</pattern>
+<label>UnknownNonterminalLabel</label>
+<style>color:white; background:green;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.bracket.Clause</pattern>
+<label>Clause</label>
+<style>color:white; background:red;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.bracket.Phrase</pattern>
+<label>Phrase</label>
+<style>color:white; background:mediumpurple;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.bracket.ROOT</pattern>
+<label>ROOT</label>
+<style>color:black; background:lightblue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.bracket.release.S</pattern>
+<label>S</label>
+<style>color:black; background:lightgreen;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.bracket.release.SBAR</pattern>
+<label>SBAR</label>
+<style>color:black; background:orange;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.bracket.release.SBARQ</pattern>
+<label>SBARQ</label>
+<style>color:black; background:yellow;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.bracket.release.SINV</pattern>
+<label>SINV</label>
+<style>color:black; background:pink;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.bracket.release.SQ</pattern>
+<label>SQ</label>
+<style>color:black; background:salmon;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.bracket.release.RRC</pattern>
+<label>RRC</label>
+<style>color:black; background:cyan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.bracket.release.ADJ</pattern>
+<label>ADJ</label>
+<style>color:black; background:violet;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.bracket.release.ADJP</pattern>
+<label>ADJP</label>
+<style>color:black; background:tan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.bracket.release.ADVP</pattern>
+<label>ADVP</label>
+<style>color:white; background:brown;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.bracket.release.CONJP</pattern>
+<label>CONJP</label>
+<style>color:white; background:blue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.bracket.release.FRAG</pattern>
+<label>FRAG</label>
+<style>color:white; background:green;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.bracket.release.INTJ</pattern>
+<label>INTJ</label>
+<style>color:white; background:red;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.bracket.release.LST</pattern>
+<label>LST</label>
+<style>color:white; background:mediumpurple;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.bracket.release.NAC</pattern>
+<label>NAC</label>
+<style>color:black; background:lightblue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.bracket.general.NounPhrase</pattern>
+<label>NounPhrase</label>
+<style>color:black; background:lightgreen;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.bracket.release.NP</pattern>
+<label>NP</label>
+<style>color:black; background:orange;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.bracket.release.NX</pattern>
+<label>NX</label>
+<style>color:black; background:yellow;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.bracket.release.PP</pattern>
+<label>PP</label>
+<style>color:black; background:pink;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.bracket.release.PARN</pattern>
+<label>PARN</label>
+<style>color:black; background:salmon;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.bracket.release.PRT</pattern>
+<label>PRT</label>
+<style>color:black; background:cyan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.bracket.release.QP</pattern>
+<label>QP</label>
+<style>color:black; background:violet;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.bracket.release.UCP</pattern>
+<label>UCP</label>
+<style>color:black; background:tan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.bracket.release.VP</pattern>
+<label>VP</label>
+<style>color:white; background:brown;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.bracket.release.WHADJP</pattern>
+<label>WHADJP</label>
+<style>color:white; background:blue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.bracket.release.WHADVP</pattern>
+<label>WHADVP</label>
+<style>color:white; background:green;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.bracket.release.ADJP</pattern>
+<label>ADJP</label>
+<style>color:white; background:red;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.bracket.release.WHNP</pattern>
+<label>WHNP</label>
+<style>color:white; background:mediumpurple;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.bracket.release.WHPP</pattern>
+<label>WHPP</label>
+<style>color:black; background:lightblue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.bracket.release.X</pattern>
+<label>X</label>
+<style>color:black; background:lightgreen;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.function.text.TextFunctionLabel</pattern>
+<label>TextFunctionLabel</label>
+<style>color:black; background:orange;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.function.text.HLN</pattern>
+<label>HLN</label>
+<style>color:black; background:yellow;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.function.text.LST</pattern>
+<label>LST</label>
+<style>color:black; background:pink;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.function.text.TTL</pattern>
+<label>TTL</label>
+<style>color:black; background:salmon;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.function.grammatical.GrammaticalFunctionLabel</pattern>
+<label>GrammaticalFunctionLabel</label>
+<style>color:black; background:cyan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.function.grammatical.CLF</pattern>
+<label>CLF</label>
+<style>color:black; background:violet;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.function.grammatical.NOM</pattern>
+<label>NOM</label>
+<style>color:black; background:tan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.function.grammatical.ADV</pattern>
+<label>ADV</label>
+<style>color:white; background:brown;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.function.grammatical.DTV</pattern>
+<label>DTV</label>
+<style>color:white; background:blue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.function.grammatical.LGS</pattern>
+<label>LGS</label>
+<style>color:white; background:green;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.function.grammatical.PRD</pattern>
+<label>PRD</label>
+<style>color:white; background:red;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.function.grammatical.PUT</pattern>
+<label>PUT</label>
+<style>color:white; background:mediumpurple;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.function.grammatical.SBJ</pattern>
+<label>SBJ</label>
+<style>color:black; background:lightblue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.function.grammatical.TPC</pattern>
+<label>TPC</label>
+<style>color:black; background:lightgreen;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.function.grammatical.CLR</pattern>
+<label>CLR</label>
+<style>color:black; background:orange;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.function.semantic.SemanticFunctionLabel</pattern>
+<label>SemanticFunctionLabel</label>
+<style>color:black; background:yellow;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.function.semantic.VOC</pattern>
+<label>VOC</label>
+<style>color:black; background:pink;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.function.semantic.BNF</pattern>
+<label>BNF</label>
+<style>color:black; background:salmon;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.function.semantic.DIR</pattern>
+<label>DIR</label>
+<style>color:black; background:cyan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.function.semantic.LOC</pattern>
+<label>LOC</label>
+<style>color:black; background:violet;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.function.semantic.MNR</pattern>
+<label>MNR</label>
+<style>color:black; background:tan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.function.semantic.PRP</pattern>
+<label>PRP</label>
+<style>color:white; background:brown;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.function.semantic.TMP</pattern>
+<label>TMP</label>
+<style>color:white; background:blue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.coindex.T</pattern>
+<label>T</label>
+<style>color:white; background:green;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.coindex.ICH</pattern>
+<label>ICH</label>
+<style>color:white; background:red;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.coindex.PPA</pattern>
+<label>PPA</label>
+<style>color:white; background:mediumpurple;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.coindex.RNR</pattern>
+<label>RNR</label>
+<style>color:black; background:lightblue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.coindex.EXP</pattern>
+<label>EXP</label>
+<style>color:black; background:lightgreen;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.coindex.ZERO</pattern>
+<label>ZERO</label>
+<style>color:black; background:orange;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.coindex.NONE</pattern>
+<label>NONE</label>
+<style>color:black; background:yellow;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.coindex.Q</pattern>
+<label>Q</label>
+<style>color:black; background:pink;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.syntactic.Dependency</pattern>
+<label>Dependency</label>
+<style>color:black; background:salmon;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.conll.VMOD</pattern>
+<label>VMOD</label>
+<style>color:black; background:cyan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.syntactic.ConllDependency</pattern>
+<label>ConllDependency</label>
+<style>color:black; background:violet;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.syntactic.StanfordDependency</pattern>
+<label>StanfordDependency</label>
+<style>color:black; background:tan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.abbrev</pattern>
+<label>abbrev</label>
+<style>color:white; background:brown;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.acomp</pattern>
+<label>acomp</label>
+<style>color:white; background:blue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.advcl</pattern>
+<label>advcl</label>
+<style>color:white; background:green;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.advmod</pattern>
+<label>advmod</label>
+<style>color:white; background:red;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.agent</pattern>
+<label>agent</label>
+<style>color:white; background:mediumpurple;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.amod</pattern>
+<label>amod</label>
+<style>color:black; background:lightblue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.appos</pattern>
+<label>appos</label>
+<style>color:black; background:lightgreen;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.attr</pattern>
+<label>attr</label>
+<style>color:black; background:orange;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.auxiliary</pattern>
+<label>auxiliary</label>
+<style>color:black; background:yellow;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.auxpass</pattern>
+<label>auxpass</label>
+<style>color:black; background:pink;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.cc</pattern>
+<label>cc</label>
+<style>color:black; background:salmon;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.ccomp</pattern>
+<label>ccomp</label>
+<style>color:black; background:cyan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.complm</pattern>
+<label>complm</label>
+<style>color:black; background:violet;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.conj</pattern>
+<label>conj</label>
+<style>color:black; background:tan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.cop</pattern>
+<label>cop</label>
+<style>color:white; background:brown;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.csubj</pattern>
+<label>csubj</label>
+<style>color:white; background:blue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.csubjpass</pattern>
+<label>csubjpass</label>
+<style>color:white; background:green;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.dep</pattern>
+<label>dep</label>
+<style>color:white; background:red;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.det</pattern>
+<label>det</label>
+<style>color:white; background:mediumpurple;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.dobj</pattern>
+<label>dobj</label>
+<style>color:black; background:lightblue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.expl</pattern>
+<label>expl</label>
+<style>color:black; background:lightgreen;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.infmod</pattern>
+<label>infmod</label>
+<style>color:black; background:orange;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.iobj</pattern>
+<label>iobj</label>
+<style>color:black; background:yellow;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.mark</pattern>
+<label>mark</label>
+<style>color:black; background:pink;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.measure</pattern>
+<label>measure</label>
+<style>color:black; background:salmon;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.neg</pattern>
+<label>neg</label>
+<style>color:black; background:cyan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.nn</pattern>
+<label>nn</label>
+<style>color:black; background:violet;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.nsubj</pattern>
+<label>nsubj</label>
+<style>color:black; background:tan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.nsubjpass</pattern>
+<label>nsubjpass</label>
+<style>color:white; background:brown;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.num</pattern>
+<label>num</label>
+<style>color:white; background:blue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.number</pattern>
+<label>number</label>
+<style>color:white; background:green;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.parataxis</pattern>
+<label>parataxis</label>
+<style>color:white; background:red;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.partmod</pattern>
+<label>partmod</label>
+<style>color:white; background:mediumpurple;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.pcomp</pattern>
+<label>pcomp</label>
+<style>color:black; background:lightblue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.pobj</pattern>
+<label>pobj</label>
+<style>color:black; background:lightgreen;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.poss</pattern>
+<label>poss</label>
+<style>color:black; background:orange;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.possessive</pattern>
+<label>possessive</label>
+<style>color:black; background:yellow;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.preconj</pattern>
+<label>preconj</label>
+<style>color:black; background:pink;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.predet</pattern>
+<label>predet</label>
+<style>color:black; background:salmon;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.prep</pattern>
+<label>prep</label>
+<style>color:black; background:cyan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.prepc</pattern>
+<label>prepc</label>
+<style>color:black; background:violet;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.prt</pattern>
+<label>prt</label>
+<style>color:black; background:tan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.punct</pattern>
+<label>punct</label>
+<style>color:white; background:brown;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.purpcl</pattern>
+<label>purpcl</label>
+<style>color:white; background:blue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.quantmod</pattern>
+<label>quantmod</label>
+<style>color:white; background:green;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.rcmod</pattern>
+<label>rcmod</label>
+<style>color:white; background:red;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.ref</pattern>
+<label>ref</label>
+<style>color:white; background:mediumpurple;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.rel</pattern>
+<label>rel</label>
+<style>color:black; background:lightblue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.tmod</pattern>
+<label>tmod</label>
+<style>color:black; background:lightgreen;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.xcomp</pattern>
+<label>xcomp</label>
+<style>color:black; background:orange;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.stanford.xsubj</pattern>
+<label>xsubj</label>
+<style>color:black; background:yellow;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.syntactic.Token</pattern>
+<label>Token</label>
+<style>color:black; background:pink;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.POS</pattern>
+<label>POS</label>
+<style>color:black; background:salmon;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.PennPOS</pattern>
+<label>PennPOS</label>
+<style>color:black; background:cyan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.semantic.LinkedAnnotationSet</pattern>
+<label>LinkedAnnotationSet</label>
+<style>color:black; background:violet;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.ReferenceAnnotation</pattern>
+<label>ReferenceAnnotation</label>
+<style>color:black; background:tan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.semantic.SemanticAnnotation</pattern>
+<label>SemanticAnnotation</label>
+<style>color:white; background:brown;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.semantic.SemanticClassAnnotation</pattern>
+<label>SemanticClassAnnotation</label>
+<style>color:white; background:blue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.ExternalReference</pattern>
+<label>ExternalReference</label>
+<style>color:white; background:green;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.semantic.Expression</pattern>
+<label>Expression</label>
+<style>color:white; background:red;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.semantic.Negation</pattern>
+<label>Negation</label>
+<style>color:white; background:mediumpurple;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.semantic.Speculation</pattern>
+<label>Speculation</label>
+<style>color:black; background:lightblue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.semantic.NamedEntity</pattern>
+<label>NamedEntity</label>
+<style>color:black; background:lightgreen;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.semantic.DictionaryNamedEntity</pattern>
+<label>DictionaryNamedEntity</label>
+<style>color:black; background:orange;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.semantic.Title</pattern>
+<label>Title</label>
+<style>color:black; background:yellow;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.semantic.ProperName</pattern>
+<label>ProperName</label>
+<style>color:black; background:pink;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.semantic.Person</pattern>
+<label>Person</label>
+<style>color:black; background:salmon;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.semantic.Place</pattern>
+<label>Place</label>
+<style>color:black; background:cyan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.semantic.NormalizedEntity</pattern>
+<label>NormalizedEntity</label>
+<style>color:black; background:violet;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.semantic.bio.GeneOrGeneProduct</pattern>
+<label>GeneOrGeneProduct</label>
+<style>color:black; background:tan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.semantic.bio.Gene</pattern>
+<label>Gene</label>
+<style>color:white; background:brown;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.semantic.bio.Protein</pattern>
+<label>Protein</label>
+<style>color:white; background:blue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.semantic.bio.ProteinRegion</pattern>
+<label>ProteinRegion</label>
+<style>color:white; background:green;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.semantic.bio.CellLine</pattern>
+<label>CellLine</label>
+<style>color:white; background:red;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.semantic.bio.CellType</pattern>
+<label>CellType</label>
+<style>color:white; background:mediumpurple;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.semantic.bio.DNA</pattern>
+<label>DNA</label>
+<style>color:black; background:lightblue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.semantic.bio.DNARegion</pattern>
+<label>DNARegion</label>
+<style>color:black; background:lightgreen;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.semantic.bio.RNA</pattern>
+<label>RNA</label>
+<style>color:black; background:orange;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.semantic.CoreferenceAnnotation</pattern>
+<label>CoreferenceAnnotation</label>
+<style>color:black; background:yellow;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.semantic.DiscourseEntity</pattern>
+<label>DiscourseEntity</label>
+<style>color:black; background:pink;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.semantic.EventAnnotation</pattern>
+<label>EventAnnotation</label>
+<style>color:black; background:salmon;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.syntactic.TreeNode</pattern>
+<label>TreeNode</label>
+<style>color:black; background:cyan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.syntactic.AbstractConstituent</pattern>
+<label>AbstractConstituent</label>
+<style>color:black; background:violet;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.syntactic.Constituent</pattern>
+<label>Constituent</label>
+<style>color:black; background:tan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.syntactic.FunctionTaggedConstituent</pattern>
+<label>FunctionTaggedConstituent</label>
+<style>color:white; background:brown;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.syntactic.TemplateMappedConstituent</pattern>
+<label>TemplateMappedConstituent</label>
+<style>color:white; background:blue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.syntactic.NullElement</pattern>
+<label>NullElement</label>
+<style>color:white; background:green;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.syntactic.POSToken</pattern>
+<label>POSToken</label>
+<style>color:white; background:red;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.syntactic.RichToken</pattern>
+<label>RichToken</label>
+<style>color:white; background:mediumpurple;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.CC</pattern>
+<label>CC</label>
+<style>color:black; background:lightblue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.CD</pattern>
+<label>CD</label>
+<style>color:black; background:lightgreen;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.DT</pattern>
+<label>DT</label>
+<style>color:black; background:orange;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.EX</pattern>
+<label>EX</label>
+<style>color:black; background:yellow;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.FW</pattern>
+<label>FW</label>
+<style>color:black; background:pink;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.IN</pattern>
+<label>IN</label>
+<style>color:black; background:salmon;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.general.Adjective</pattern>
+<label>Adjective</label>
+<style>color:black; background:cyan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.JJ</pattern>
+<label>JJ</label>
+<style>color:black; background:violet;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.JJR</pattern>
+<label>JJR</label>
+<style>color:black; background:tan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.JJS</pattern>
+<label>JJS</label>
+<style>color:white; background:brown;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.LS</pattern>
+<label>LS</label>
+<style>color:white; background:blue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.MD</pattern>
+<label>MD</label>
+<style>color:white; background:green;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.general.Noun</pattern>
+<label>Noun</label>
+<style>color:white; background:red;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.general.GeneralNoun</pattern>
+<label>GeneralNoun</label>
+<style>color:white; background:mediumpurple;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.NN</pattern>
+<label>NN</label>
+<style>color:black; background:lightblue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.NNS</pattern>
+<label>NNS</label>
+<style>color:black; background:lightgreen;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.general.ProperNoun</pattern>
+<label>ProperNoun</label>
+<style>color:black; background:orange;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.NNP</pattern>
+<label>NNP</label>
+<style>color:black; background:yellow;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.NNPS</pattern>
+<label>NNPS</label>
+<style>color:black; background:pink;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.PDT</pattern>
+<label>PDT</label>
+<style>color:black; background:salmon;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.POS</pattern>
+<label>POS</label>
+<style>color:black; background:cyan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.general.Pronoun</pattern>
+<label>Pronoun</label>
+<style>color:black; background:violet;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.PRP</pattern>
+<label>PRP</label>
+<style>color:black; background:tan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.PRPS</pattern>
+<label>PRPS</label>
+<style>color:white; background:brown;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.general.Adverb</pattern>
+<label>Adverb</label>
+<style>color:white; background:blue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.RB</pattern>
+<label>RB</label>
+<style>color:white; background:green;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.RBR</pattern>
+<label>RBR</label>
+<style>color:white; background:red;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.RBS</pattern>
+<label>RBS</label>
+<style>color:white; background:mediumpurple;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.RP</pattern>
+<label>RP</label>
+<style>color:black; background:lightblue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.SYM</pattern>
+<label>SYM</label>
+<style>color:black; background:lightgreen;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.TO</pattern>
+<label>TO</label>
+<style>color:black; background:orange;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.UH</pattern>
+<label>UH</label>
+<style>color:black; background:yellow;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.general.Verb</pattern>
+<label>Verb</label>
+<style>color:black; background:pink;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.VB</pattern>
+<label>VB</label>
+<style>color:black; background:salmon;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.VBD</pattern>
+<label>VBD</label>
+<style>color:black; background:cyan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.VBG</pattern>
+<label>VBG</label>
+<style>color:black; background:violet;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.VBN</pattern>
+<label>VBN</label>
+<style>color:black; background:tan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.VBP</pattern>
+<label>VBP</label>
+<style>color:white; background:brown;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.VBZ</pattern>
+<label>VBZ</label>
+<style>color:white; background:blue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.WH</pattern>
+<label>WH</label>
+<style>color:white; background:green;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.WDT</pattern>
+<label>WDT</label>
+<style>color:white; background:red;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.WP</pattern>
+<label>WP</label>
+<style>color:white; background:mediumpurple;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.WPS</pattern>
+<label>WPS</label>
+<style>color:black; background:lightblue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.WRB</pattern>
+<label>WRB</label>
+<style>color:black; background:lightgreen;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.general.Sign</pattern>
+<label>Sign</label>
+<style>color:black; background:orange;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.POUND</pattern>
+<label>POUND</label>
+<style>color:black; background:yellow;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.DOLLAR</pattern>
+<label>DOLLAR</label>
+<style>color:black; background:pink;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.general.Punctuation</pattern>
+<label>Punctuation</label>
+<style>color:black; background:salmon;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.PERIOD</pattern>
+<label>PERIOD</label>
+<style>color:black; background:cyan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.COMMA</pattern>
+<label>COMMA</label>
+<style>color:black; background:violet;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.COLON</pattern>
+<label>COLON</label>
+<style>color:black; background:tan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.general.Bracket</pattern>
+<label>Bracket</label>
+<style>color:white; background:brown;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.LRB</pattern>
+<label>LRB</label>
+<style>color:white; background:blue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.RRB</pattern>
+<label>RRB</label>
+<style>color:white; background:green;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.general.Quotation</pattern>
+<label>Quotation</label>
+<style>color:white; background:red;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.SDQ</pattern>
+<label>SDQ</label>
+<style>color:white; background:mediumpurple;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.LSQ</pattern>
+<label>LSQ</label>
+<style>color:black; background:lightblue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.LDQ</pattern>
+<label>LDQ</label>
+<style>color:black; background:lightgreen;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.RSQ</pattern>
+<label>RSQ</label>
+<style>color:black; background:orange;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.release.RDQ</pattern>
+<label>RDQ</label>
+<style>color:black; background:yellow;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.bioie.HYPH</pattern>
+<label>HYPH</label>
+<style>color:black; background:pink;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.bioie.AFX</pattern>
+<label>AFX</label>
+<style>color:black; background:salmon;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.label.penn.pos.UnknownPOS</pattern>
+<label>UnknownPOS</label>
+<style>color:black; background:cyan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.document.Structure</pattern>
+<label>Structure</label>
+<style>color:black; background:violet;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.document.structure.Abstract</pattern>
+<label>Abstract</label>
+<style>color:black; background:tan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.document.structure.Article</pattern>
+<label>Article</label>
+<style>color:white; background:brown;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.document.structure.Appendix</pattern>
+<label>Appendix</label>
+<style>color:white; background:blue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.document.structure.Section</pattern>
+<label>Section</label>
+<style>color:white; background:green;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.document.Text</pattern>
+<label>Text</label>
+<style>color:white; background:red;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.document.text.TextBody</pattern>
+<label>TextBody</label>
+<style>color:white; background:mediumpurple;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.document.text.Paragraph</pattern>
+<label>Paragraph</label>
+<style>color:black; background:lightblue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.document.text.AbstractText</pattern>
+<label>AbstractText</label>
+<style>color:black; background:lightgreen;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.document.text.Heading</pattern>
+<label>Heading</label>
+<style>color:black; background:orange;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.document.text.Title</pattern>
+<label>Title</label>
+<style>color:black; background:yellow;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.document.text.Caption</pattern>
+<label>Caption</label>
+<style>color:black; background:pink;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.document.text.FigureCaption</pattern>
+<label>FigureCaption</label>
+<style>color:black; background:salmon;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.document.text.TableCaption</pattern>
+<label>TableCaption</label>
+<style>color:black; background:cyan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.document.Fragment</pattern>
+<label>Fragment</label>
+<style>color:black; background:violet;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.document.fragment.Keyword</pattern>
+<label>Keyword</label>
+<style>color:black; background:tan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.document.fragment.Affiliation</pattern>
+<label>Affiliation</label>
+<style>color:white; background:brown;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.document.fragment.Authors</pattern>
+<label>Authors</label>
+<style>color:white; background:blue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.document.DocumentAnnotation</pattern>
+<label>DocumentAnnotation</label>
+<style>color:white; background:green;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.document.DocumentClassAnnotation</pattern>
+<label>DocumentClassAnnotation</label>
+<style>color:white; background:red;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.document.DocumentAttribute</pattern>
+<label>DocumentAttribute</label>
+<style>color:white; background:mediumpurple;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.document.DocumentValueAttribute</pattern>
+<label>DocumentValueAttribute</label>
+<style>color:black; background:lightblue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.document.DocumentReferenceAttribute</pattern>
+<label>DocumentReferenceAttribute</label>
+<style>color:black; background:lightgreen;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.comparable.ComparisonSet</pattern>
+<label>ComparisonSet</label>
+<style>color:black; background:orange;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.comparable.MatchedPair</pattern>
+<label>MatchedPair</label>
+<style>color:black; background:yellow;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.comparable.AnnotationGroupCluster</pattern>
+<label>AnnotationGroupCluster</label>
+<style>color:black; background:pink;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.comparable.AnnotationGroup</pattern>
+<label>AnnotationGroup</label>
+<style>color:black; background:salmon;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.comparable.Capability</pattern>
+<label>Capability</label>
+<style>color:black; background:cyan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.comparable.InputCapability</pattern>
+<label>InputCapability</label>
+<style>color:black; background:violet;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.comparable.OutputCapability</pattern>
+<label>OutputCapability</label>
+<style>color:black; background:tan;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.ComponentID</pattern>
+<label>ComponentID</label>
+<style>color:white; background:brown;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.comparable.Iteration</pattern>
+<label>Iteration</label>
+<style>color:white; background:blue;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.comparable.IDArray</pattern>
+<label>IDArray</label>
+<style>color:white; background:green;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.syntactic.Coordinations</pattern>
+<label>Coordinations</label>
+<style>color:white; background:red;</style>
+</rule>
+<rule>
+<pattern>org.u_compare.shared.comparable.TernaryComparisonSet</pattern>
+<label>TernaryComparisonSet</label>
+<style>color:white; background:mediumpurple;</style>
+</rule>
+<rule>
+<pattern>org.apache.uima.examples.SourceDocumentInformation</pattern>
+<label>SourceDocumentInformation</label>
+<style>color:black; background:lightblue;</style>
+</rule>
+</styleMap>
+

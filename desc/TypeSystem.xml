@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<typeSystemDescription xmlns="http://uima.apache.org/resourceSpecifier">
+  <name>MedlineTypeSystem</name>
+  <description/>
+  <version>1.0</version>
+  <vendor/>
+  <imports>
+    <import location="ae/opennlp/TypeSystem.xml"/>
+    <import location="uCompareTypeSystem/U_compareTypeSystem.xml"/>
+  </imports>
+  <types>
+    <typeDescription>
+      <name>org.u_compare.shared.semantic.Drug</name>
+      <description/>
+      <supertypeName>org.u_compare.shared.semantic.NamedEntity</supertypeName>
+      <features>
+        <featureDescription>
+          <name>dbID</name>
+          <description/>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+      </features>
+    </typeDescription>
+    <typeDescription>
+      <name>org.u_compare.shared.semantic.Chemical</name>
+      <description/>
+      <supertypeName>org.u_compare.shared.semantic.NamedEntity</supertypeName>
+    </typeDescription>
+    <typeDescription>
+      <name>de.berlin.hu.types.PubmedDocument</name>
+      <description/>
+      <supertypeName>uima.tcas.Annotation</supertypeName>
+      <features>
+        <featureDescription>
+          <name>pmid</name>
+          <description/>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+      </features>
+    </typeDescription>
+  </types>
+</typeSystemDescription>

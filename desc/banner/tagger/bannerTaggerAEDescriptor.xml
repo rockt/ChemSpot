@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<analysisEngineDescription xmlns="http://uima.apache.org/resourceSpecifier">
+  <frameworkImplementation>org.apache.uima.java</frameworkImplementation>
+  <primitive>true</primitive>
+  <annotatorImplementationName>de.berlin.hu.uima.ae.banner.tagger.BannerTagger</annotatorImplementationName>
+  <analysisEngineMetaData>
+    <name>bannerTaggerAEDescriptor</name>
+    <description/>
+    <version>1.0</version>
+    <vendor/>
+    <configurationParameters>
+      <configurationParameter>
+        <name>BannerModelFile</name>
+        <type>String</type>
+        <multiValued>false</multiValued>
+        <mandatory>false</mandatory>
+      </configurationParameter>
+      <configurationParameter>
+        <name>BannerConfigFile</name>
+        <type>String</type>
+        <multiValued>false</multiValued>
+        <mandatory>false</mandatory>
+      </configurationParameter>
+      <configurationParameter>
+        <name>Threshold</name>
+        <type>Float</type>
+        <multiValued>false</multiValued>
+        <mandatory>false</mandatory>
+      </configurationParameter>
+    </configurationParameters>
+    <configurationParameterSettings>
+      <nameValuePair>
+        <name>Threshold</name>
+        <value>
+          <float>0.5</float>
+        </value>
+      </nameValuePair>
+      <nameValuePair>
+        <name>BannerConfigFile</name>
+        <value>
+          <string>conf/banner.xml</string>
+        </value>
+      </nameValuePair>
+      <nameValuePair>
+        <name>BannerModelFile</name>
+        <value>
+          <string>resources/banner/model.bin</string>
+        </value>
+      </nameValuePair>
+    </configurationParameterSettings>
+    <typeSystemDescription>
+      <imports>
+        <import location="../../TypeSystem.xml"/>
+      </imports>
+    </typeSystemDescription>
+    <typePriorities/>
+    <fsIndexCollection/>
+    <capabilities>
+      <capability>
+        <inputs>
+          <type allAnnotatorFeatures="true">org.u_compare.shared.syntactic.Token</type>
+          <type allAnnotatorFeatures="true">org.u_compare.shared.syntactic.Sentence</type>
+        </inputs>
+        <outputs>
+          <type allAnnotatorFeatures="true">org.u_compare.shared.semantic.NamedEntity</type>
+        </outputs>
+        <languagesSupported/>
+      </capability>
+    </capabilities>
+    <operationalProperties>
+      <modifiesCas>true</modifiesCas>
+      <multipleDeploymentAllowed>true</multipleDeploymentAllowed>
+      <outputsNewCASes>false</outputsNewCASes>
+    </operationalProperties>
+  </analysisEngineMetaData>
+  <resourceManagerConfiguration/>
+</analysisEngineDescription>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<casConsumerDescription xmlns="http://uima.apache.org/resourceSpecifier">
+  <frameworkImplementation>org.apache.uima.java</frameworkImplementation>
+  <implementationName>de.berlin.hu.uima.cc.banner.trainer.BannerTrainer</implementationName>
+  <processingResourceMetaData>
+    <name>bannerTrainerCASConsumerDescriptor</name>
+    <description/>
+    <version>1.0</version>
+    <vendor/>
+    <configurationParameters>
+      <configurationParameter>
+        <name>BannerModelOutputFile</name>
+        <type>String</type>
+        <multiValued>false</multiValued>
+        <mandatory>true</mandatory>
+      </configurationParameter>
+      <configurationParameter>
+        <name>BannerConfigFile</name>
+        <type>String</type>
+        <multiValued>false</multiValued>
+        <mandatory>true</mandatory>
+      </configurationParameter>
+    </configurationParameters>
+    <configurationParameterSettings>
+      <nameValuePair>
+        <name>BannerModelOutputFile</name>
+        <value>
+          <string>resources/banner/iupac_model.bin</string>
+        </value>
+      </nameValuePair>
+      <nameValuePair>
+        <name>BannerConfigFile</name>
+        <value>
+          <string>conf/banner.xml</string>
+        </value>
+      </nameValuePair>
+    </configurationParameterSettings>
+    <typeSystemDescription>
+      <imports>
+        <import location="../../TypeSystem.xml"/>
+      </imports>
+    </typeSystemDescription>
+    <typePriorities/>
+    <fsIndexCollection/>
+    <capabilities>
+      <capability>
+        <inputs>
+          <type allAnnotatorFeatures="true">org.u_compare.shared.syntactic.Token</type>
+          <type allAnnotatorFeatures="true">org.u_compare.shared.semantic.NamedEntity</type>
+          <type allAnnotatorFeatures="true">org.u_compare.shared.syntactic.Sentence</type>
+        </inputs>
+        <outputs/>
+        <languagesSupported/>
+      </capability>
+    </capabilities>
+    <operationalProperties>
+      <modifiesCas>false</modifiesCas>
+      <multipleDeploymentAllowed>false</multipleDeploymentAllowed>
+      <outputsNewCASes>false</outputsNewCASes>
+    </operationalProperties>
+  </processingResourceMetaData>
+  <resourceManagerConfiguration/>
+</casConsumerDescription>

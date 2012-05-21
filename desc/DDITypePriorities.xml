@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<typePriorities xmlns="http://uima.apache.org/resourceSpecifier">
+  <name>DDITypePriority</name>
+  <description/>
+  <version>1.0</version>
+  <vendor/>
+  <priorityList>
+    <type>sprint.uima.types.CorpusDocument</type>
+    <type>sprint.uima.types.Sentence</type>
+    <type>sprint.uima.types.Pair</type>
+    <type>sprint.uima.types.Token</type>
+    <type>sprint.uima.types.Entity</type>
+  </priorityList>
+</typePriorities>

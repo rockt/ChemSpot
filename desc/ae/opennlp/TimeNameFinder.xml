@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+	Copyright (C) 2009 OpenNLP
+
+	This library is free software; you can redistribute it and/or
+	modify it under the terms of the GNU Lesser General Public
+	License as published by the Free Software Foundation; either
+	version 2.1 of the License, or (at your option) any later version.
+
+	This library is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU Lesser General Public
+	License along with this program; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+-->
+
+<analysisEngineDescription xmlns="http://uima.apache.org/resourceSpecifier">
+	<frameworkImplementation>org.apache.uima.java</frameworkImplementation>
+	<primitive>true</primitive>
+	<annotatorImplementationName>opennlp.uima.namefind.NameFinder</annotatorImplementationName>
+	<analysisEngineMetaData>
+		<name>Time Name Finder</name>
+		<description></description>
+		<version>1.4.4</version>
+		<vendor>OpenNLP</vendor>
+		<configurationParameters>
+
+			<configurationParameter>
+				<name>opennlp.uima.SentenceType</name>
+				<type>String</type>
+				<multiValued>false</multiValued>
+				<mandatory>true</mandatory>
+			</configurationParameter>
+
+			<configurationParameter>
+				<name>opennlp.uima.TokenType</name>
+				<type>String</type>
+				<multiValued>false</multiValued>
+				<mandatory>true</mandatory>
+			</configurationParameter>
+
+			<configurationParameter>
+				<name>opennlp.uima.NameType</name>
+				<type>String</type>
+				<multiValued>false</multiValued>
+				<mandatory>true</mandatory>
+			</configurationParameter>
+
+			<configurationParameter>
+				<name>opennlp.uima.AdditionalContextType</name>
+				<type>String</type>
+				<multiValued>true</multiValued>
+				<mandatory>false</mandatory>
+			</configurationParameter>
+		</configurationParameters>
+
+		<configurationParameterSettings>
+
+			<nameValuePair>
+				<name>opennlp.uima.SentenceType</name>
+				<value>
+					<string>uima.tcas.DocumentAnnotation</string>
+				</value>
+			</nameValuePair>
+
+			<nameValuePair>
+				<name>opennlp.uima.TokenType</name>
+				<value>
+					<string>opennlp.uima.Token</string>
+				</value>
+			</nameValuePair>
+
+			<nameValuePair>
+				<name>opennlp.uima.NameType</name>
+				<value>
+					<string>opennlp.uima.Person</string>
+				</value>
+			</nameValuePair>
+		</configurationParameterSettings>
+
+		<typeSystemDescription>
+			<imports>
+				<import location="TypeSystem.xml" />
+			</imports>
+		</typeSystemDescription>
+
+		<capabilities>
+			<capability>
+				<inputs />
+				<outputs />
+				<languagesSupported>
+					<language>en</language>
+				</languagesSupported>
+			</capability>
+		</capabilities>
+	</analysisEngineMetaData>
+	
+	<externalResourceDependencies>
+		<externalResourceDependency>
+			<key>opennlp.uima.ModelName</key>
+		</externalResourceDependency>
+	</externalResourceDependencies>
+	
+	<resourceManagerConfiguration>
+		<externalResources>
+			<externalResource>
+				<name>TimeModel</name>
+				<fileResourceSpecifier>
+					<fileUrl>file:TimeFinder.bin</fileUrl>
+				</fileResourceSpecifier>
+			</externalResource>
+		</externalResources>
+		
+		<externalResourceBindings>
+			<externalResourceBinding>
+				<key>opennlp.uima.ModelName</key>
+				<resourceName>TimeModel</resourceName>
+			</externalResourceBinding>
+		</externalResourceBindings>
+	</resourceManagerConfiguration>
+</analysisEngineDescription>
