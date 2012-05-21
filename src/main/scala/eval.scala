@@ -218,7 +218,7 @@
 
 import collection.mutable.HashMap
 import io.Source
-import java.io.{InputStreamReader, File, FileInputStream}
+import java.io.{File, FileInputStream}
 import java.lang.IllegalStateException
 import java.util.zip.GZIPInputStream
 

@@ -1,14 +1,6 @@
 package de.berlin.hu.uima.cc.eval;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
+import de.berlin.hu.wbi.common.research.Evaluator;
 import org.apache.uima.cas.CAS;
 import org.apache.uima.cas.CASException;
 import org.apache.uima.cas.FSIndex;
@@ -21,9 +13,12 @@ import org.u_compare.shared.semantic.NamedEntity;
 import org.u_compare.shared.syntactic.Sentence;
 import org.uimafit.util.JCasUtil;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*;
 
 //import de.berlin.hu.util.Evaluator;
-import de.berlin.hu.wbi.common.research.Evaluator;
 
 
 public class Evaluation  extends CasConsumer_ImplBase{

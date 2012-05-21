@@ -3,12 +3,6 @@
  */
 package de.berlin.hu.uima.ae;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.jcas.JCas;
@@ -16,6 +10,8 @@ import org.u_compare.shared.semantic.NamedEntity;
 import org.u_compare.shared.semantic.chemical.Chemical;
 import org.u_compare.shared.syntactic.Sentence;
 import org.uimafit.util.JCasUtil;
+
+import java.util.*;
 
 /**
  * @author trocktae

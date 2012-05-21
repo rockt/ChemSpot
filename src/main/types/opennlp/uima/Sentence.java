@@ -3,10 +3,9 @@
 /* First created by JCasGen Wed Mar 16 10:14:24 CET 2011 */
 package opennlp.uima;
 
-import org.apache.uima.jcas.JCas; 
+import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
 import org.apache.uima.jcas.cas.TOP_Type;
-
 import org.apache.uima.jcas.tcas.Annotation;
 
 

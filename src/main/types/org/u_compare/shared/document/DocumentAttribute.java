@@ -3,12 +3,11 @@
 /* First created by JCasGen Wed Mar 16 10:14:04 CET 2011 */
 package org.u_compare.shared.document;
 
-import org.apache.uima.jcas.JCas; 
+import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
-import org.apache.uima.jcas.cas.TOP_Type;
-
-import org.u_compare.shared.ExternalReference;
 import org.apache.uima.jcas.cas.TOP;
+import org.apache.uima.jcas.cas.TOP_Type;
+import org.u_compare.shared.ExternalReference;
 
 
 /** Abstract type for document attributes, which appear in the document tags. <br></br>

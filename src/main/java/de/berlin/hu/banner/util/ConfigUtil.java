@@ -3,12 +3,6 @@
  */
 package de.berlin.hu.banner.util;
 
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.apache.commons.configuration.HierarchicalConfiguration;
-
 import banner.eval.BANNER;
 import banner.eval.dataset.Dataset;
 import banner.postprocessing.LocalAbbreviationPostProcessor;
@@ -23,6 +17,11 @@ import banner.types.Sentence.OverlapOption;
 import dragon.nlp.tool.HeppleTagger;
 import dragon.nlp.tool.MedPostTagger;
 import dragon.nlp.tool.lemmatiser.EngLemmatiser;
+import org.apache.commons.configuration.HierarchicalConfiguration;
+
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author trocktae

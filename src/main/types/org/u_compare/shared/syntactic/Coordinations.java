@@ -3,12 +3,11 @@
 /* First created by JCasGen Wed Mar 16 10:14:08 CET 2011 */
 package org.u_compare.shared.syntactic;
 
-import org.apache.uima.jcas.JCas; 
+import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
-import org.apache.uima.jcas.cas.TOP_Type;
-
 import org.apache.uima.jcas.cas.FSArray;
 import org.apache.uima.jcas.cas.TOP;
+import org.apache.uima.jcas.cas.TOP_Type;
 
 
 /** Contains an array of constituents which are marked as Coordinations. Corresponds to syn="COOD" in the Genia Treebank.

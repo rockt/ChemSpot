@@ -2,13 +2,13 @@
 /* First created by JCasGen Wed Mar 16 10:14:04 CET 2011 */
 package org.u_compare.shared.document;
 
-import org.apache.uima.jcas.JCas;
-import org.apache.uima.jcas.JCasRegistry;
+import org.apache.uima.cas.FeatureStructure;
+import org.apache.uima.cas.Type;
 import org.apache.uima.cas.impl.CASImpl;
 import org.apache.uima.cas.impl.FSGenerator;
-import org.apache.uima.cas.FeatureStructure;
 import org.apache.uima.cas.impl.TypeImpl;
-import org.apache.uima.cas.Type;
+import org.apache.uima.jcas.JCas;
+import org.apache.uima.jcas.JCasRegistry;
 import org.u_compare.shared.ReferenceAnnotation_Type;
 
 /** Base abstract type for document annotations. <br></br>

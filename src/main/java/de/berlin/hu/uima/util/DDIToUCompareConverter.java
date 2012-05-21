@@ -1,17 +1,15 @@
 package de.berlin.hu.uima.util;
 
-import java.util.Iterator;
-
-
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.cas.FSIndex;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.Annotation;
-
 import sprint.uima.types.Entity;
 import sprint.uima.types.Sentence;
 import sprint.uima.types.Token;
+
+import java.util.Iterator;
 
 public class DDIToUCompareConverter extends JCasAnnotator_ImplBase {
 

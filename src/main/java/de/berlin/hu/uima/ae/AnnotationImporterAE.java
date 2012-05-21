@@ -3,17 +3,13 @@
  */
 package de.berlin.hu.uima.ae;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Arrays;
-
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.jcas.JCas;
 import org.u_compare.shared.semantic.chemical.Chemical;
+
+import java.io.*;
+import java.util.Arrays;
 
 /**
  * @author trocktae

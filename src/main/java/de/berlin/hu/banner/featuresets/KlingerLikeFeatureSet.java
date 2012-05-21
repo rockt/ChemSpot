@@ -3,21 +3,11 @@
  */
 package de.berlin.hu.banner.featuresets;
 
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.regex.Pattern;
-
 import banner.tagging.FeatureSet;
 import banner.tagging.TagFormat;
-import banner.tagging.pipe.LChar;
-import banner.tagging.pipe.LemmaPOS;
-import banner.tagging.pipe.LowerCaseTokenText;
-import banner.tagging.pipe.Pretagger;
-import banner.tagging.pipe.RChar;
-import banner.tagging.pipe.Sentence2TokenSequence;
+import banner.tagging.pipe.*;
 import banner.types.Mention.MentionType;
 import banner.types.Sentence.OverlapOption;
-import cc.mallet.pipe.Noop;
 import cc.mallet.pipe.Pipe;
 import cc.mallet.pipe.SerialPipes;
 import cc.mallet.pipe.TokenSequence2FeatureVectorSequence;
@@ -27,6 +17,10 @@ import cc.mallet.pipe.tsf.TokenTextCharPrefix;
 import cc.mallet.pipe.tsf.TokenTextCharSuffix;
 import dragon.nlp.tool.Lemmatiser;
 import dragon.nlp.tool.Tagger;
+
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * @author trocktae

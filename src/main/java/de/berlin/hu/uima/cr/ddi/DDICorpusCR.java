@@ -1,12 +1,6 @@
 package de.berlin.hu.uima.cr.ddi;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.ArrayList;
-
+import de.berlin.hu.uima.cr.ddi.parser.DDICorpusContentHandlerImpl;
 import org.apache.uima.cas.CAS;
 import org.apache.uima.cas.CASException;
 import org.apache.uima.collection.CollectionException;
@@ -24,7 +18,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-import de.berlin.hu.uima.cr.ddi.parser.DDICorpusContentHandlerImpl;
+import java.io.*;
+import java.util.ArrayList;
 
 /**
  * A simple collection reader that reads documents from a directory in the filesystem. It can be

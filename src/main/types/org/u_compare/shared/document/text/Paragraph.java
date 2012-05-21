@@ -3,7 +3,7 @@
 /* First created by JCasGen Wed Mar 16 10:14:05 CET 2011 */
 package org.u_compare.shared.document.text;
 
-import org.apache.uima.jcas.JCas; 
+import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
 import org.apache.uima.jcas.cas.TOP_Type;
 

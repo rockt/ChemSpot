@@ -3,10 +3,9 @@
 /* First created by JCasGen Thu Jul 14 13:32:47 CEST 2011 */
 package sprint.uima.types;
 
-import org.apache.uima.jcas.JCas; 
+import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
 import org.apache.uima.jcas.cas.TOP_Type;
-
 import org.apache.uima.jcas.tcas.DocumentAnnotation;
 
 

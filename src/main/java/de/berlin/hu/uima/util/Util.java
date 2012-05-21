@@ -1,18 +1,15 @@
 package de.berlin.hu.uima.util;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
+import banner.types.Token;
 import org.apache.uima.cas.FSIndex;
-import org.apache.uima.examples.SourceDocumentInformation;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.Annotation;
-import org.u_compare.shared.semantic.NamedEntity;
 import org.u_compare.shared.syntactic.Sentence;
 import org.uimafit.util.JCasUtil;
 
-import banner.types.Token;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Tim Rocktäschel

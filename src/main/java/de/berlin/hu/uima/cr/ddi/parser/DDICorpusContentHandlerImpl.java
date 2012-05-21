@@ -3,9 +3,6 @@
  */
 package de.berlin.hu.uima.cr.ddi.parser;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.cas.FSArray;
 import org.uimafit.util.JCasUtil;
@@ -13,12 +10,10 @@ import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
+import sprint.uima.types.*;
 
-import sprint.uima.types.CorpusDocument;
-import sprint.uima.types.Entity;
-import sprint.uima.types.Pair;
-import sprint.uima.types.Sentence;
-import sprint.uima.types.Token;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 
 /**

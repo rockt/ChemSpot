@@ -1,14 +1,14 @@
 package de.berlin.hu.uima.ae.filter;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.cas.FSIndex;
 import org.apache.uima.jcas.JCas;
 import org.u_compare.shared.semantic.NamedEntity;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class SuffixFilter extends JCasAnnotator_ImplBase {
 

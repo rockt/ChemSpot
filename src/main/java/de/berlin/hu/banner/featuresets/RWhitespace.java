@@ -6,14 +6,13 @@
 
 package de.berlin.hu.banner.featuresets;
 
-import java.util.List;
-
 import banner.types.Sentence;
 import banner.types.Token;
-
 import cc.mallet.pipe.Pipe;
 import cc.mallet.types.Instance;
 import cc.mallet.types.TokenSequence;
+
+import java.util.List;
 
 /**
  * This class is used by the CRFTagger as the base for the feature set.

@@ -1,10 +1,6 @@
 package de.berlin.hu.uima.cc.eval;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-
+import de.berlin.hu.wbi.common.research.Evaluator;
 import org.apache.uima.cas.CAS;
 import org.apache.uima.cas.CASException;
 import org.apache.uima.cas.FSIndex;
@@ -15,7 +11,10 @@ import org.apache.uima.resource.ResourceInitializationException;
 import org.apache.uima.resource.ResourceProcessException;
 import org.u_compare.shared.semantic.NamedEntity;
 
-import de.berlin.hu.wbi.common.research.Evaluator;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 
 public class DifferentiatedEvaluation  extends CasConsumer_ImplBase{

@@ -1,11 +1,17 @@
 package de.berlin.hu.uima.cc.banner.trainer;
 
-import java.io.File;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
+import banner.tagging.CRFTagger;
+import banner.tagging.FeatureSet;
+import banner.tagging.TagFormat;
+import banner.types.EntityType;
+import banner.types.Mention;
+import banner.types.Mention.MentionType;
+import banner.types.Sentence.OverlapOption;
+import de.berlin.hu.banner.featuresets.KlingerLikeFeatureSet;
+import de.berlin.hu.banner.util.ConfigUtil;
+import de.berlin.hu.uima.util.Util;
+import dragon.nlp.tool.Tagger;
+import dragon.nlp.tool.lemmatiser.EngLemmatiser;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
@@ -19,18 +25,11 @@ import org.u_compare.shared.semantic.NamedEntity;
 import org.u_compare.shared.syntactic.Sentence;
 import org.uimafit.util.JCasUtil;
 
-import banner.tagging.CRFTagger;
-import banner.tagging.FeatureSet;
-import banner.tagging.TagFormat;
-import banner.types.EntityType;
-import banner.types.Mention;
-import banner.types.Mention.MentionType;
-import banner.types.Sentence.OverlapOption;
-import de.berlin.hu.banner.featuresets.KlingerLikeFeatureSet;
-import de.berlin.hu.banner.util.ConfigUtil;
-import de.berlin.hu.uima.util.Util;
-import dragon.nlp.tool.Tagger;
-import dragon.nlp.tool.lemmatiser.EngLemmatiser;
+import java.io.File;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Tim Rocktäschel

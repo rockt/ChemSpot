@@ -1,15 +1,14 @@
 package de.berlin.hu.uima.util;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import opennlp.uima.Sentence;
-
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.cas.FSIndex;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.Annotation;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class OpenNLPToUCompareSentenceConverterAE extends JCasAnnotator_ImplBase {
 

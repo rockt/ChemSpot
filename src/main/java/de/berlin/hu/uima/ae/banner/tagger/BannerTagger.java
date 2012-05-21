@@ -1,12 +1,8 @@
 package de.berlin.hu.uima.ae.banner.tagger;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
+import banner.tagging.CRFTagger;
+import banner.types.Mention;
+import de.berlin.hu.uima.util.Util;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.uima.UimaContext;
@@ -19,9 +15,12 @@ import org.apache.uima.resource.ResourceInitializationException;
 import org.u_compare.shared.semantic.NamedEntity;
 import org.u_compare.shared.syntactic.Sentence;
 
-import banner.tagging.CRFTagger;
-import banner.types.Mention;
-import de.berlin.hu.uima.util.Util;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Tim Rocktäschel

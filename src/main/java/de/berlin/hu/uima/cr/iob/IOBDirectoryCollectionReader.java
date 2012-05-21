@@ -19,22 +19,7 @@
 
 package de.berlin.hu.uima.cr.iob;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.zip.GZIPInputStream;
-
+import de.berlin.hu.types.PubmedDocument;
 import org.apache.uima.UIMAFramework;
 import org.apache.uima.cas.CAS;
 import org.apache.uima.cas.CASException;
@@ -47,17 +32,15 @@ import org.apache.uima.examples.SourceDocumentInformation;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceConfigurationException;
 import org.apache.uima.resource.ResourceInitializationException;
-import org.apache.uima.util.FileUtils;
-import org.apache.uima.util.InvalidXMLException;
-import org.apache.uima.util.Level;
-import org.apache.uima.util.Progress;
-import org.apache.uima.util.ProgressImpl;
-import org.apache.uima.util.XMLInputSource;
+import org.apache.uima.util.*;
 import org.u_compare.shared.semantic.NamedEntity;
 import org.u_compare.shared.syntactic.Token;
 import org.xml.sax.SAXException;
 
-import de.berlin.hu.types.PubmedDocument;
+import java.io.*;
+import java.net.URL;
+import java.util.*;
+import java.util.zip.GZIPInputStream;
 
 /**
  * A simple collection reader that reads documents from a directory in the filesystem. It can be

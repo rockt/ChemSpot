@@ -1,18 +1,5 @@
 package de.berlin.hu.uima.ae.drugtagger;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.regex.Pattern;
-
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
@@ -20,9 +7,12 @@ import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.u_compare.shared.semantic.chemical.Chemical;
 import org.uimafit.util.JCasUtil;
-
 import uk.ac.man.entitytagger.Mention;
 import uk.ac.man.entitytagger.matching.matchers.AutomatonMatcher;
+
+import java.io.*;
+import java.util.*;
+import java.util.regex.Pattern;
 
 public class DrugTagger extends JCasAnnotator_ImplBase {
 	private static final String PATH_TO_DICTIONARY = "DrugBankMatcherDictionaryAutomat";

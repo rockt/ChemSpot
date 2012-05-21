@@ -3,12 +3,11 @@
 /* First created by JCasGen Thu Jul 14 11:57:11 CEST 2011 */
 package org.u_compare.shared;
 
-import org.apache.uima.jcas.JCas; 
+import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
-import org.apache.uima.jcas.cas.TOP_Type;
-
 import org.apache.uima.jcas.cas.FSArray;
 import org.apache.uima.jcas.cas.TOP;
+import org.apache.uima.jcas.cas.TOP_Type;
 
 
 /** For system use. <br></br>
