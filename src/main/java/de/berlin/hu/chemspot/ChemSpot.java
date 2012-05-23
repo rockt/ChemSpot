@@ -266,7 +266,7 @@ public class ChemSpot {
      */
     public ChemSpot(String pathToModelFile, String pathToDictionaryFile) {
         try {
-            //FIXME: find a way to access the descriptors in the jar rather then outside
+            //FIXME: find a way to access the descriptors in the jar rather than outside
             typeSystem = TypeSystemDescriptionFactory.createTypeSystemDescription("desc/TypeSystem");
             fineTokenizer = AnalysisEngineFactory.createAnalysisEngine("desc/util/fineTokenizerAEDescriptor");
             sentenceDetector = AnalysisEngineFactory.createAnalysisEngine("desc/ae/opennlp/SentenceDetector");
@@ -277,7 +277,7 @@ public class ChemSpot {
             if (pathToDictionaryFile != null) linnaeusTagger = AnalysisEngineFactory.createAnalysisEngine("desc/ae/drugTagger/drugTaggerAEDescriptor", "DrugBankMatcherDictionaryAutomat", pathToDictionaryFile);
             annotationMerger = AnalysisEngineFactory.createAnalysisEngine("desc/ae/annotationMergerAEDescriptor");
             stopwordFilter = AnalysisEngineFactory.createAnalysisEngine("desc/ae/filter/stopwordFilterAEDescriptor");
-            System.out.println("Finished initialization! Start tagging...");
+            System.out.println("Finished initializing ChemSpot.");
         } catch (UIMAException e) {
             System.err.println("Failed initializing ChemSpot.");
             e.printStackTrace();
