@@ -27,4 +27,8 @@ public interface ChemSpotArguments {
 	  @Option(shortName="o")
 	  String getPathToOutputFile();
 	  boolean isPathToOutputFile();
+
+      @Option(shortName="l")
+      String getTagCommandLine();
+ 	  boolean isTagCommandLine();
 }

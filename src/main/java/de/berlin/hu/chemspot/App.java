@@ -229,6 +229,7 @@ import uk.co.flamingpenguin.jewel.cli.ArgumentValidationException;
 import uk.co.flamingpenguin.jewel.cli.CliFactory;
 
 import java.io.*;
+import java.util.List;
 
 public class App {
 	private static String pathToCorpora;
@@ -238,8 +239,9 @@ public class App {
 	private static ChemSpotArguments arguments;
 	private static boolean evaluate = false;
 	private static String pathToTextFile;
+    private static String tagFromCommandLine;
 
-	public static void main(String[] args) throws UIMAException, IOException {
+    public static void main(String[] args) throws UIMAException, IOException {
 		try {
 			arguments = CliFactory.parseArguments(ChemSpotArguments.class, args);
 			pathToModelFile = arguments.getPathToModelFile();
@@ -253,47 +255,60 @@ public class App {
 				pathToTextFile = arguments.getPathToTextFile();
 			} else if (arguments.isPathToIOBCorpora()) {
 				pathToCorpora = arguments.getPathToIOBCorpora();
+            } else if (arguments.isTagCommandLine()) {
+                    tagFromCommandLine = arguments.getTagCommandLine();
 			} else {
-				usage();
-				throw new IllegalArgumentException("At least one corpus (IOB directory or a text file) should be specified!");
+                usage();
+                throw new IllegalArgumentException("At least one corpus (IOB directory, a text file or a command line text) should be specified!");
 			}
 			if (arguments.isPathToTextFile()) {
 				pathToTextFile = arguments.getPathToTextFile();
 			}
 			evaluate = arguments.isRunEvaluation();
+
 		} catch(ArgumentValidationException e) {
 			System.out.println(e);
 			usage();
+            System.exit(0);
 		}
 
         //initializing ChemSpot with a CRF model file and an LINNAEUS automaton (the latter is optional)
 		ChemSpot chemspot = new ChemSpot(pathToModelFile, pathToDictionaryFile);
 
 		TypeSystemDescription typeSystem = TypeSystemDescriptionFactory.createTypeSystemDescription("desc/TypeSystem");
-		
-		FileWriter outputFile = null;
-		if (arguments.isPathToOutputFile()) outputFile = new FileWriter(new File(pathToOutputFile));
-		
-		if (arguments.isPathToIOBCorpora()) {
-			CollectionReader reader = CollectionReaderFactory.createCollectionReaderFromPath("desc/cr/scaiCR.xml", "InputDirectory", pathToCorpora, "UseGoldStandardAnnotations", true, "GoldstandardTypeSuffix" , "", "BrowseSubdirectories", true, "IncludeSuffixes", new String[]{"iob", "iob2"});
-			while (reader.hasNext()) {
-				JCas jcas = JCasFactory.createJCas(typeSystem);
-				reader.getNext(jcas.getCas());
-				String output = chemspot.tagJCas(jcas, evaluate, true);
-				if (outputFile != null) outputFile.write(output);
-			}	
-		} else {
-			if (arguments.isZippedTextFile()) {
-				chemspot.tagGZ(pathToTextFile);
-			} else {
-				BufferedReader reader = new BufferedReader(new FileReader(new File(pathToTextFile)));
-				String line;
-				while ((line = reader.readLine()) != null) {
-					if (outputFile != null) outputFile.write(chemspot.tagReturnIOB(line));
-				}
-			}
-		}
-		if (outputFile != null) outputFile.close();
+
+        if (tagFromCommandLine != null) {
+            List<Mention> mentions = chemspot.tag(tagFromCommandLine);
+            for (Mention mention : mentions) {
+                System.out.printf("%d\t%d\t%s\t%s\t%s\n",
+                     mention.getStart(), mention.getEnd(), mention.getText(),
+                     mention.getId(), mention.getSource());
+            }
+        } else {
+            FileWriter outputFile = null;
+            if (arguments.isPathToOutputFile()) outputFile = new FileWriter(new File(pathToOutputFile));
+
+            if (arguments.isPathToIOBCorpora()) {
+                CollectionReader reader = CollectionReaderFactory.createCollectionReaderFromPath("desc/cr/scaiCR.xml", "InputDirectory", pathToCorpora, "UseGoldStandardAnnotations", true, "GoldstandardTypeSuffix" , "", "BrowseSubdirectories", true, "IncludeSuffixes", new String[]{"iob", "iob2"});
+                while (reader.hasNext()) {
+                    JCas jcas = JCasFactory.createJCas(typeSystem);
+                    reader.getNext(jcas.getCas());
+                    String output = chemspot.tagJCas(jcas, evaluate, true);
+                    if (outputFile != null) outputFile.write(output);
+                }
+            } else {
+                if (arguments.isZippedTextFile()) {
+                    chemspot.tagGZ(pathToTextFile);
+                } else {
+                    BufferedReader reader = new BufferedReader(new FileReader(new File(pathToTextFile)));
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        if (outputFile != null) outputFile.write(chemspot.tagReturnIOB(line));
+                    }
+                }
+            }
+            if (outputFile != null) outputFile.close();
+        }
 	}
 
 	private static void usage() {
@@ -303,7 +318,6 @@ public class App {
 		System.out.println("\t-m path to a CRF model file");
 		System.out.println("\t-d path to a linnaeus dictionary file (optional)");
 		System.out.println("\t-o path to an output file (IOB format)");
-		System.out.println("\t-e if this parameter is set, the performance of ChemSpot on the IOB gold-standard corpus (cf. -c) is evaluated");	
-		System.exit(0);
+		System.out.println("\t-e if this parameter is set, the performance of ChemSpot on the IOB gold-standard corpus (cf. -c) is evaluated");	System.exit(0);
 	}
 }

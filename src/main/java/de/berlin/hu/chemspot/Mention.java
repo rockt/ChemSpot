@@ -230,15 +230,17 @@ public class Mention {
      * @param start position of the start character of an annotation
      * @param end position of the end character of an annotation (exclusive)
      * @param text covered text
-     * @param id ChemIDplus identifier if entities is normalized, empty otherwise
-     * @param source indicates whether found by "banner" CRF, "linnaeus" or taken from "goldstandard"
+     * @param id ChemIDplus or InChI identifier if entities is normalized, empty otherwise
+     * @param source indicates whether found by BANNER's CRF, ChemIDplus LINNAEUS dictionary or taken from goldstandard
      */
 	public Mention(int start, int end, String text, String id, String source) {
 		this.start = start;
 		this.end = end;
 		this.text = text;
-		this.id = id;
-		this.source = source;
+        this.id = id;
+        if ("banner".equals(source)) this.source = "CRF";
+        else if ("linnaeus".equals(source)) this.source = "Dictionary";
+        else this.source = source;
 	}
 
 	public int getStart() {
