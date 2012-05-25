@@ -5,8 +5,7 @@
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/main/types" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
@@ -58,14 +57,7 @@
     <orderEntry type="library" name="Maven: dragontool:dragontool:2011-10-12" level="project" />
     <orderEntry type="library" name="Maven: heptag:heptag:2011-10-12" level="project" />
     <orderEntry type="library" name="Maven: automaton:automaton:2011-10-12" level="project" />
-    <orderEntry type="library" name="Maven: opsin:inchi:0.9.0" level="project" />
-    <orderEntry type="library" name="Maven: opsin:core:0.9.0" level="project" />
-    <orderEntry type="library" name="Maven: dk.brics:automaton:1.11-3" level="project" />
-    <orderEntry type="library" name="Maven: xom:xom:1.2.3" level="project" />
-    <orderEntry type="library" name="Maven: log4j:log4j:1.2.13" level="project" />
-    <orderEntry type="library" name="Maven: net.sf.jni-inchi:jni-inchi:0.7" level="project" />
-    <orderEntry type="library" name="Maven: net.sf.jnati:jnati-deploy:0.3" level="project" />
-    <orderEntry type="library" name="Maven: net.sf.jnati:jnati-core:0.3" level="project" />
+    <orderEntry type="library" name="Maven: opsin:inchi:1.2.0" level="project" />
   </component>
 </module>
 
