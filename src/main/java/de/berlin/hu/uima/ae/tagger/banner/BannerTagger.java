@@ -1,4 +1,4 @@
-package de.berlin.hu.uima.ae.banner.tagger;
+package de.berlin.hu.uima.ae.tagger.banner;
 
 import banner.tagging.CRFTagger;
 import banner.types.Mention;

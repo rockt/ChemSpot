@@ -3,13 +3,13 @@
 http://maven.apache.org/xsd/maven-4.0.0.xsd"> 
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>vlkb</groupId>
-	<artifactId>banner_uima</artifactId>
+	<groupId>de.berlin.hu</groupId>
+	<artifactId>chemspot</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 
-	<name>banner_uima</name>
+	<name>chemspot</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
@@ -163,7 +163,12 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
             <version>2011-10-12</version>
             <scope>system</scope>
             <systemPath>${basedir}/lib/automaton.jar</systemPath>
-        </dependency>           
+        </dependency>
+        <dependency>
+      		<groupId>opsin</groupId>
+      		<artifactId>inchi</artifactId>
+      		<version>0.9.0</version>
+      	</dependency>
 	</dependencies>
 
 
@@ -249,6 +254,10 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
                 <id>ucc-repo</id>
                 <url>http://maven.ch.cam.ac.uk/m2repo</url>
         </repository>
+        <repository>
+      			<id>ucc-repo</id>
+      			<url>https://maven.ch.cam.ac.uk/m2repo</url>
+      	</repository>
 	</repositories>
 </project>
 

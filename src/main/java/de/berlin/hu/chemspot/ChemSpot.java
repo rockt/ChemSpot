@@ -250,6 +250,7 @@ public class ChemSpot {
     private AnalysisEngine annotationMerger;
     private AnalysisEngine fineTokenizer;
     private AnalysisEngine stopwordFilter;
+    private AnalysisEngine normalizer;
 
     /**
      * Initializes ChemSpot without a dictionary automaton.
@@ -276,6 +277,7 @@ public class ChemSpot {
             if (pathToDictionaryFile!= null) System.out.println("Loading dictionary..."); else System.out.println("No dictionary location specified! Tagging without dictionary...");
             if (pathToDictionaryFile != null) linnaeusTagger = AnalysisEngineFactory.createAnalysisEngine("desc/ae/drugTagger/drugTaggerAEDescriptor", "DrugBankMatcherDictionaryAutomat", pathToDictionaryFile);
             annotationMerger = AnalysisEngineFactory.createAnalysisEngine("desc/ae/annotationMergerAEDescriptor");
+            normalizer = AnalysisEngineFactory.createAnalysisEngine("desc/ae/normalization/iupacToInChIAEDescriptor");
             stopwordFilter = AnalysisEngineFactory.createAnalysisEngine("desc/ae/filter/stopwordFilterAEDescriptor");
             System.out.println("Finished initializing ChemSpot.");
         } catch (UIMAException e) {
@@ -300,6 +302,7 @@ public class ChemSpot {
             bannerTagger.process(jcas);
             if (linnaeusTagger != null) linnaeusTagger.process(jcas);
             annotationMerger.process(jcas);
+            normalizer.process(jcas);
             stopwordFilter.process(jcas);
 
             List<Mention> mentions = new ArrayList<Mention>();
@@ -390,6 +393,7 @@ public class ChemSpot {
         bannerTagger.process(jcas);
         if (linnaeusTagger != null) linnaeusTagger.process(jcas);
         annotationMerger.process(jcas);
+        normalizer.process(jcas);
         stopwordFilter.process(jcas);
 
         HashMap<String, ArrayList<NamedEntity>> goldAnnotations = new HashMap<String, ArrayList<NamedEntity>>();

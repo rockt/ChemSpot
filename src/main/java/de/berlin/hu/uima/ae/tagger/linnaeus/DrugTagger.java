@@ -1,4 +1,4 @@
-package de.berlin.hu.uima.ae.drugtagger;
+package de.berlin.hu.uima.ae.tagger.linnaeus;
 
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
