@@ -2,9 +2,9 @@
 <analysisEngineDescription xmlns="http://uima.apache.org/resourceSpecifier">
   <frameworkImplementation>org.apache.uima.java</frameworkImplementation>
   <primitive>true</primitive>
-  <annotatorImplementationName>de.berlin.hu.uima.util.DrugToChemicalConverterAE</annotatorImplementationName>
+  <annotatorImplementationName>de.berlin.hu.uima.util.OpenNLPToUCompareSentenceConverterAE</annotatorImplementationName>
   <analysisEngineMetaData>
-    <name>drugToChemicalConverterAEDescriptor</name>
+    <name>openNLPToUCompareSentenceConverterAEDescriptor</name>
     <description/>
     <version>1.0</version>
     <vendor/>
@@ -12,7 +12,7 @@
     <configurationParameterSettings/>
     <typeSystemDescription>
       <imports>
-        <import location="../TypeSystem.xml"/>
+        <import location="../../TypeSystem.xml"/>
       </imports>
     </typeSystemDescription>
     <typePriorities/>
@@ -20,10 +20,10 @@
     <capabilities>
       <capability>
         <inputs>
-          <type allAnnotatorFeatures="true">org.u_compare.shared.semantic.Drug</type>
+          <type allAnnotatorFeatures="true">opennlp.uima.Sentence</type>
         </inputs>
         <outputs>
-          <type allAnnotatorFeatures="true">org.u_compare.shared.semantic.Chemical</type>
+          <type allAnnotatorFeatures="true">org.u_compare.shared.syntactic.Sentence</type>
         </outputs>
         <languagesSupported/>
       </capability>

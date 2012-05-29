@@ -269,16 +269,16 @@ public class ChemSpot {
         try {
             //FIXME: find a way to access the descriptors in the jar rather than outside
             typeSystem = TypeSystemDescriptionFactory.createTypeSystemDescription("desc/TypeSystem");
-            fineTokenizer = AnalysisEngineFactory.createAnalysisEngine("desc/util/fineTokenizerAEDescriptor");
-            sentenceDetector = AnalysisEngineFactory.createAnalysisEngine("desc/ae/opennlp/SentenceDetector");
-            sentenceConverter = AnalysisEngineFactory.createAnalysisEngine("desc/util/openNLPToUCompareSentenceConverterAEDescriptor");
+            fineTokenizer = AnalysisEngineFactory.createAnalysisEngine("desc/ae/tokenizer/FineGrainedTokenizerAE");
+            sentenceDetector = AnalysisEngineFactory.createAnalysisEngine("desc/ae/tagger/opennlp/SentenceDetector");
+            sentenceConverter = AnalysisEngineFactory.createAnalysisEngine("desc/ae/converter/OpenNLPToUCompareSentenceConverterAE");
             System.out.println("Loading CRF...");
-            bannerTagger = AnalysisEngineFactory.createAnalysisEngine("desc/banner/tagger/bannerTaggerAEDescriptor", "BannerModelFile", pathToModelFile);
+            bannerTagger = AnalysisEngineFactory.createAnalysisEngine("desc/banner/tagger/BANNERTaggerAE", "BannerModelFile", pathToModelFile);
             if (pathToDictionaryFile!= null) System.out.println("Loading dictionary..."); else System.out.println("No dictionary location specified! Tagging without dictionary...");
-            if (pathToDictionaryFile != null) linnaeusTagger = AnalysisEngineFactory.createAnalysisEngine("desc/ae/drugTagger/drugTaggerAEDescriptor", "DrugBankMatcherDictionaryAutomat", pathToDictionaryFile);
-            annotationMerger = AnalysisEngineFactory.createAnalysisEngine("desc/ae/annotationMergerAEDescriptor");
-            normalizer = AnalysisEngineFactory.createAnalysisEngine("desc/ae/normalization/iupacToInChIAEDescriptor");
-            stopwordFilter = AnalysisEngineFactory.createAnalysisEngine("desc/ae/filter/stopwordFilterAEDescriptor");
+            if (pathToDictionaryFile != null) linnaeusTagger = AnalysisEngineFactory.createAnalysisEngine("desc/ae/tagger/DictionaryTaggerAE", "DrugBankMatcherDictionaryAutomat", pathToDictionaryFile);
+            annotationMerger = AnalysisEngineFactory.createAnalysisEngine("desc/ae/AnnotationMergerAE");
+            normalizer = AnalysisEngineFactory.createAnalysisEngine("desc/ae/normalizer/IUPACToInChIAE");
+            stopwordFilter = AnalysisEngineFactory.createAnalysisEngine("desc/ae/filter/StopwordFilterAE");
             System.out.println("Finished initializing ChemSpot.");
         } catch (UIMAException e) {
             System.err.println("Failed initializing ChemSpot.");

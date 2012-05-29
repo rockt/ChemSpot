@@ -11,7 +11,7 @@ import org.apache.uima.jcas.tcas.Annotation;
 
 /** 
  * Updated by JCasGen Thu Jul 14 14:25:40 CEST 2011
- * XML source: /vol/home-vol3/wbi/wbi_stud/VLKB/Tim/vlkb/chemspotVSoscar3/desc/util/ddiToUCompareConverterAEDescriptor.xml
+ * XML source: /vol/home-vol3/wbi/wbi_stud/VLKB/Tim/vlkb/chemspotVSoscar3/desc/util/DDIToUCompareConverterAE.xml
  * @generated */
 public class Entity extends Annotation {
   /** @generated

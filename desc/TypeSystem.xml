@@ -5,7 +5,7 @@
   <version>1.0</version>
   <vendor/>
   <imports>
-    <import location="ae/opennlp/TypeSystem.xml"/>
+    <import location="ae/tagger/opennlp/TypeSystem.xml"/>
     <import location="uCompareTypeSystem/U_compareTypeSystem.xml"/>
   </imports>
   <types>
