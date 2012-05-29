@@ -260,7 +260,7 @@ public class IupacToInChIAE extends JCasAnnotator_ImplBase {
             if ("banner".equals(entity.getSource())) {
                 all++;
                 try {
-                    String inchi = nameToInChi.parseToInchi(entity.getCoveredText(), false);
+                    String inchi = nameToInChi.parseToInchi(entity.getCoveredText());
                     if (inchi != null) {
                         entity.setId(inchi);
                         normalized++;

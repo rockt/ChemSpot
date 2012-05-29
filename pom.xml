@@ -165,10 +165,10 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
             <systemPath>${basedir}/lib/automaton.jar</systemPath>
         </dependency>
         <dependency>
-      		<groupId>opsin</groupId>
-      		<artifactId>inchi</artifactId>
-      		<version>1.2.0</version>
-      	</dependency>
+            <groupId>uk.ac.cam.ch.opsin</groupId>
+            <artifactId>opsin-inchi</artifactId>
+            <version>1.2.0</version>
+        </dependency>
 	</dependencies>
 
 
@@ -237,6 +237,26 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
 					</archive>
 				</configuration>
 			</plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>$basedir/src/main/types</source>
+                                <source>$basedir/src/main/scala</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 		</plugins>
 	</build>
 	<repositories>
