@@ -243,7 +243,7 @@ public class IupacToInChIAE extends JCasAnnotator_ImplBase {
         try {
             nameToInChi = new NameToInchi();
         } catch (NameToStructureException e) {
-            System.err.println("Failed intiliaizing OPSIN!");
+            System.err.println("Failed initializing OPSIN!");
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         super.initialize(aContext);    //To change body of overridden methods use File | Settings | File Templates.
@@ -256,7 +256,7 @@ public class IupacToInChIAE extends JCasAnnotator_ImplBase {
         Iterator<NamedEntity> entities = JCasUtil.iterator(jCas, NamedEntity.class);
         while (entities.hasNext()) {
             NamedEntity entity = entities.next();
-            //disregards gold-standard mentions
+            //only consider mentions extracted by CRF
             if ("banner".equals(entity.getSource())) {
                 all++;
                 try {

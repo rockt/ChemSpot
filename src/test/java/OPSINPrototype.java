@@ -227,6 +227,6 @@ import uk.ac.cam.ch.wwmm.opsin.NameToStructureException;
 public class OPSINPrototype {
     public static void main(String[] args) throws NameToStructureException {
         NameToInchi nameToInchi = new NameToInchi();
-        System.out.println(nameToInchi.parseToInchi("acetonitrile", false));
+        System.out.println(nameToInchi.parseToInchi("acetonitrile"));
     }
 }
