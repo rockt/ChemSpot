@@ -455,11 +455,8 @@ public class IOBDirectoryCollectionReader extends CollectionReader_ImplBase {
 
 		if (useGoldstandardAnnotations && (goldstandardTypeSuffix.isEmpty() || type.endsWith(goldstandardTypeSuffix)) && 
 				//filter Modifiers
+                //FIXME: make this configurable
 				!type.endsWith("MODIFIER")
-				//				&& (type.endsWith("IUPAC") && !type.endsWith("PARTIUPAC")) 
-				//				//filter Part-IUPAC
-				//				&& !type.endsWith("PARTIUPAC")
-				//&& !type.endsWith("TRIVIALVAR")
 				) {
 			numberOfEntities++;
 			NamedEntity namedEntity = new NamedEntity(jcas);

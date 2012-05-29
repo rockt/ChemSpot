@@ -216,6 +216,7 @@ public class BannerTrainer extends CasConsumer_ImplBase{
 			System.out.println("Training complete, saving model");
 			tagger.describe("model_describe.txt");
 			tagger.write(bannerModelOutputFile);
+        //FIXME: throwable is to general!
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
