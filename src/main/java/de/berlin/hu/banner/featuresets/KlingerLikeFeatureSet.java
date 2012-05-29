@@ -1,6 +1,3 @@
-/**
- * 
- */
 package de.berlin.hu.banner.featuresets;
 
 import banner.tagging.FeatureSet;
@@ -24,6 +21,8 @@ import java.util.regex.Pattern;
 
 /**
  * @author trocktae
+ *
+ * Feature set akin to Klinger et al. (2008)
  *
  */
 public class KlingerLikeFeatureSet extends FeatureSet {
@@ -84,7 +83,7 @@ public class KlingerLikeFeatureSet extends FeatureSet {
 		pipes.add(new LChar("LCHAR="));
 		pipes.add(new RChar("RCHAR="));
 		
-		//Bag of words TODO: really bag of words?
+		//Bag of words
 		pipes.add(new LowerCaseTokenText("W="));
 		
 		//All Caps
