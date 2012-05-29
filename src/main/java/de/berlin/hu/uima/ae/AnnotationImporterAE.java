@@ -1,6 +1,3 @@
-/**
- * 
- */
 package de.berlin.hu.uima.ae;
 
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
@@ -12,8 +9,7 @@ import java.io.*;
 import java.util.Arrays;
 
 /**
- * @author trocktae
- *
+ * Imports MetaMap annotations.
  */
 public class AnnotationImporterAE extends JCasAnnotator_ImplBase {
 

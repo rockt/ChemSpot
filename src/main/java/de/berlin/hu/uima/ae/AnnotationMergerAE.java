@@ -1,6 +1,3 @@
-/**
- * 
- */
 package de.berlin.hu.uima.ae;
 
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
@@ -14,8 +11,7 @@ import org.uimafit.util.JCasUtil;
 import java.util.*;
 
 /**
- * @author trocktae
- *
+ * Merges annotations from the CRF and the dictionary, favoring entities extracted by the CRF over the dictionary.
  */
 public class AnnotationMergerAE extends JCasAnnotator_ImplBase {
 
@@ -34,6 +30,7 @@ public class AnnotationMergerAE extends JCasAnnotator_ImplBase {
 			List<NamedEntity> entities = new ArrayList<NamedEntity>();
 			while (entityIterator.hasNext()) {
 				NamedEntity namedEntity = (NamedEntity) entityIterator.next();
+                //only consider predicted entities
 				if (!"goldstandard".equals(namedEntity.getSource())) {
 					entities.add(namedEntity);
 				}
@@ -50,10 +47,9 @@ public class AnnotationMergerAE extends JCasAnnotator_ImplBase {
 			List<NamedEntity> chemicals = new ArrayList<NamedEntity>();
 			boolean filtered = false;
 			
-			//TODO use drug if it is identical to chemical
+			//FIXME: use drug if it is identical to CRF match to obtain ChemIDplus ID
 			
 			NamedEntity lastEntity = null;
-			
 			for (NamedEntity entity : entities) {
 				if (lastEntity != null 
 						&& "linnaeus".equals(lastEntity.getSource()) 
@@ -77,7 +73,6 @@ public class AnnotationMergerAE extends JCasAnnotator_ImplBase {
 				}
 				filtered = false;
 			}
-			
 			convertNamedEntitiesToChemicals(aJCas, chemicals);
 		}
 	}

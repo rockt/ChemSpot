@@ -81,9 +81,8 @@ public class BannerTrainer extends CasConsumer_ImplBase{
 		OverlapOption differentTypeOverlapOption = ConfigUtil.getDifferentTypeOverlapOption(config);
 		crfOrder = ConfigUtil.getCRFOrder(config);
 
-		// Klinger et al. feature set
+		// Klinger et al. (2008) like feature set
 		featureSet = new KlingerLikeFeatureSet(tagFormat, lemmatiser, posTagger, null, mentionTypes, sameTypeOverlapOption, differentTypeOverlapOption);
-		
 
 		documentCounter = 0;
 		numberOfEntities = 0;
@@ -103,7 +102,7 @@ public class BannerTrainer extends CasConsumer_ImplBase{
 		while (sentenceIterator.hasNext()) {
 			Sentence sentence = (Sentence) sentenceIterator.next();
 			
-			//convert every sentence into a training example for BANNER
+			//convert every sentence to a training example for BANNER
 			banner.types.Sentence bannerSentence = new banner.types.Sentence(sentenceCounter+"", documentCounter+"", sentence.getCoveredText());
 			
 			//pointer to the start and end of the sentence within the document
@@ -111,7 +110,6 @@ public class BannerTrainer extends CasConsumer_ImplBase{
 		    int sentenceEnd = sentence.getEnd();
 		    
 		    //get all tokens that cover the current sentence
-		    //TODO: give the choice of using a tokenizer instead of expecting tokens
 		    List<org.u_compare.shared.syntactic.Token> tokensInSentence = Util.getTokens(aJCas, sentenceBegin, sentenceEnd);
 		    Util.tokenizeBannerSentence(bannerSentence, tokensInSentence);
 		   
@@ -147,7 +145,6 @@ public class BannerTrainer extends CasConsumer_ImplBase{
 				} else {
 					System.out.println("Probable annotation error: " +  lastEntity.getCoveredText() + " overlaps " + currentEntity.getCoveredText());
 				}
-				
 				lastEntity = currentEntity;
 			}
 			
@@ -170,7 +167,7 @@ public class BannerTrainer extends CasConsumer_ImplBase{
 	}
 
 	/**
-	 * @return the index of the token that is the begin of the entity
+	 * @return the index of the token denoting the begin of the entity
 	 */
 	private int getTokenPositionBegin(int currentEntityBegin,
 			List<org.u_compare.shared.syntactic.Token> tokensInSentence) {
@@ -191,7 +188,7 @@ public class BannerTrainer extends CasConsumer_ImplBase{
 	}
 	
 	/**
-	 * @return the number of the token that is the end of the entity
+	 * @return the index of the token denoting the end of the entity
 	 */
 	private int getTokenPositionEnd(int currentNamedEnd,
 			List<org.u_compare.shared.syntactic.Token> tokensInSentence) {
@@ -219,6 +216,7 @@ public class BannerTrainer extends CasConsumer_ImplBase{
 			System.out.println("Training complete, saving model");
 			tagger.describe("model_describe.txt");
 			tagger.write(bannerModelOutputFile);
+        //FIXME: throwable is to general!
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}

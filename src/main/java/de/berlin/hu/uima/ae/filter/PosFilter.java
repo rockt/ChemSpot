@@ -9,7 +9,9 @@ import org.u_compare.shared.semantic.NamedEntity;
 
 import java.util.*;
 
-
+/**
+ * Removes annotation of chemical if its POS tag is FW or LS.
+ */
 public class PosFilter  extends JCasAnnotator_ImplBase {
 	
 	private String[] posTags;
@@ -54,8 +56,6 @@ public class PosFilter  extends JCasAnnotator_ImplBase {
 			
 			if (!"goldstandard".equals(chemical.getSource())) {
 				if (isInvalid(begin, end)) {
-					//System.out.println("Chemical filtered: " + chemical.getCoveredText() + "[" + getTag(begin, end) + "]");
-					//can't remove from index while iterating
 					invalidChemicals.add(chemical);
 					numberOfFilteredEntities++;
 				}
@@ -101,12 +101,6 @@ public class PosFilter  extends JCasAnnotator_ImplBase {
 	
 	public boolean isInvalid(int begin, int end) {
 		String posTag = getTag(begin, end);
-		
-//		if (posTag == null) {
-//			System.out.println("No pos-tag availabe."); //TODO: find bug
-//			return true;
-//		}
-		
 		for (int i = 0; i < invalidPOSTags.length; i++) {
 			if (invalidPOSTags[i].equals(posTag)) {
 				return true;
