@@ -18,6 +18,7 @@ public class DrugTagger extends JCasAnnotator_ImplBase {
 	private static final String PATH_TO_DICTIONARY = "DrugBankMatcherDictionaryAutomat";
 	private boolean matchExpansion = true;
 	protected static final Pattern idPattern = Pattern.compile("(DB[0-9]+)");
+    //list of invalid suffixes taken from Hettne et al. (2009)
 	private Set<String> suffixes;
 	private AutomatonMatcher matcher;
 
@@ -88,7 +89,6 @@ public class DrugTagger extends JCasAnnotator_ImplBase {
 					}
 					lastDrug = processMention(aJCas, docText, lastDrug, begin, end, id);						
 				}
-
 				lastMention = mention;
 			}
 		}
@@ -131,7 +131,7 @@ public class DrugTagger extends JCasAnnotator_ImplBase {
 		}
 	}
 
-
+    //FIXME: implement match expansion and boundary correction in a separate AE
 	private Chemical processMention(JCas aJCas, String docText, Chemical lastDrug,
 			int begin, int end, String id) {
 		int originalBegin = begin;
@@ -204,8 +204,6 @@ public class DrugTagger extends JCasAnnotator_ImplBase {
 			begin++;
 		}
 
-
-
 		if (stack2 < 0 && docText.charAt(end-1) == ']') {
 			end--;
 		}
@@ -232,6 +230,7 @@ public class DrugTagger extends JCasAnnotator_ImplBase {
 		Chemical drug = new Chemical(aJCas);
 		drug.setBegin(begin);
 		drug.setEnd(end);
+        //only keep ChemIDplus ID if the entity matched exactly
 		if (borderHasChanged) {
 			drug.setId("");
 		} else {

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package de.berlin.hu.banner.util;
 
 import banner.eval.BANNER;

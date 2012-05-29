@@ -15,7 +15,7 @@ import cc.mallet.types.TokenSequence;
 import java.util.List;
 
 /**
- * This class is used by the CRFTagger as the base for the feature set.
+ * Accesses the preceding token and checks whether it is a whitespace character.
  * 
  * @author Bob
  */

@@ -1,7 +1,6 @@
 package de.berlin.hu.wbi.common.research;
 
 public class EvalMeasures {
-
 	public static double getFMeasure(double p, double r) {
 		return 2 * (p * r) / (p + r);
 	}
@@ -25,9 +24,4 @@ public class EvalMeasures {
 		}
 		return 1d*tp/(tp + fn);
 	}
-	
-	public static double getSebiMeasure(int tp, int fp, int fn) {
-		return 1d*tp/(tp + fn + fp);
-	}
-
 }

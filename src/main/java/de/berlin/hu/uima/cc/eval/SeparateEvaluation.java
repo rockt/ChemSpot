@@ -15,10 +15,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-
 public class SeparateEvaluation  extends CasConsumer_ImplBase{
-	
-	
 	private int bothTP = 0;
 	private int dictTP = 0;
 	private int dictFP = 0;
@@ -92,14 +89,7 @@ public class SeparateEvaluation  extends CasConsumer_ImplBase{
 			for (NamedEntity namedEntity : crfAnnotations) {
 				crfAnnotationsComparable.add(ComparableAnnotation.createInstance(namedEntity.getBegin(), namedEntity.getEnd(), namedEntity.getCoveredText(), offset));
 			}
-			
-			
-//			Evaluator<ComparableAnnotation,ComparableAnnotation> evaluator = new Evaluator<ComparableAnnotation,ComparableAnnotation>(dictAnnotationsComparable, crfAnnotationsComparable);
-//			evaluator.evaluate();
-//			
-//			Collection<ComparableAnnotation> both = evaluator.getTruePositives();
-//			Collection<ComparableAnnotation> dictWithoutCrf = evaluator.getFalsePositives();
-//			Collection<ComparableAnnotation> crfWithoutDict = evaluator.getFalseNegatives();
+
 			
 			if (dictAnnotationsComparable.size() > 0 && crfAnnotationsComparable.size() > 0) {
 				Evaluator<ComparableAnnotation,ComparableAnnotation> dictEvaluator = new Evaluator<ComparableAnnotation,ComparableAnnotation>(dictAnnotationsComparable, goldAnnoationsComparable);
@@ -125,7 +115,7 @@ public class SeparateEvaluation  extends CasConsumer_ImplBase{
 				dictEvaluator.evaluate();
 				dictTP += dictEvaluator.getTruePositives().size();
 				dictFN += dictEvaluator.getFalseNegatives().size();
-				
+
 				crfTP += 0;
 				crfFN += goldAnnoationsComparable.size();
 				bothTP += 0;
@@ -167,6 +157,5 @@ public class SeparateEvaluation  extends CasConsumer_ImplBase{
 		System.out.println();
 		
 	}
-	
 }
 	

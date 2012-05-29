@@ -38,8 +38,7 @@ public class DDIToUCompareConverter extends JCasAnnotator_ImplBase {
 			ucompareToken.setEnd(token.getEnd());
 			ucompareToken.addToIndexes();
 		}
-		
-		//entities
+
 		FSIndex<Annotation> entitiyIndex = aJCas.getAnnotationIndex(Entity.type);
 		Iterator<Annotation> entityIterator = entitiyIndex.iterator();
 
