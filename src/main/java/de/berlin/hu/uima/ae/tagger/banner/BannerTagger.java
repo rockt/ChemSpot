@@ -3,6 +3,7 @@ package de.berlin.hu.uima.ae.tagger.banner;
 import banner.tagging.CRFTagger;
 import banner.types.Mention;
 import de.berlin.hu.uima.util.Util;
+import de.berlin.hu.util.Constants;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.uima.UimaContext;
@@ -158,7 +159,7 @@ public class BannerTagger extends JCasAnnotator_ImplBase {
 			entity.setEnd(offset + endOffset);	
 			entity.setEntityType(mention.getEntityType().getText());
 			entity.setConfidence(mention.getProbability());
-			entity.setSource("banner");
+			entity.setSource(Constants.CRF);
 			entity.addToIndexes();
 			
 			assert entity.getCoveredText().equals(mention.getText());

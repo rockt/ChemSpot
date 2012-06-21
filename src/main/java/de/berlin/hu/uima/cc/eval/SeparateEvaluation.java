@@ -1,5 +1,6 @@
 package de.berlin.hu.uima.cc.eval;
 
+import de.berlin.hu.util.Constants;
 import de.berlin.hu.wbi.common.research.Evaluator;
 import org.apache.uima.cas.CAS;
 import org.apache.uima.cas.CASException;
@@ -55,15 +56,15 @@ public class SeparateEvaluation  extends CasConsumer_ImplBase{
 		
 		while (namedEntityIterator.hasNext()) {
 			NamedEntity namedEntity = (NamedEntity) namedEntityIterator.next();
-			if ("goldstandard".equals(namedEntity.getSource())) {
+			if (Constants.GOLDSTANDARD.equals(namedEntity.getSource())) {
 				goldAnnotations.add(namedEntity);
 				GA++;
 			} else {
-				if ("linnaeus".equals(namedEntity.getSource())) {
+				if (Constants.DICTIONARY.equals(namedEntity.getSource())) {
 					dictAnnotations.add(namedEntity);
 					PA++;
 					dictA++;
-				} else if ("banner".equals(namedEntity.getSource())) {
+				} else if (Constants.CRF.equals(namedEntity.getSource())) {
 					PA++;
 					crfA++;
 					crfAnnotations.add(namedEntity);

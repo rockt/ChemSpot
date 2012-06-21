@@ -1,5 +1,6 @@
 package de.berlin.hu.uima.ae.filter;
 
+import de.berlin.hu.util.Constants;
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
@@ -50,7 +51,7 @@ public class StopwordFilter extends JCasAnnotator_ImplBase {
 		invalidChemicals = new ArrayList<NamedEntity>();
 		while (chemicalIterator.hasNext()) {
 			NamedEntity chemical = (NamedEntity) chemicalIterator.next();
-			if (!"goldstandard".equals(chemical.getSource())) {
+			if (!Constants.GOLDSTANDARD.equals(chemical.getSource())) {
 				if (stopwords.contains(chemical.getCoveredText())) {
 					invalidChemicals.add(chemical);
 					numberOfFilteredEntities++;

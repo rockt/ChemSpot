@@ -1,5 +1,6 @@
 package de.berlin.hu.uima.cc.eval;
 
+import de.berlin.hu.util.Constants;
 import de.berlin.hu.wbi.common.research.Evaluator;
 import org.apache.uima.cas.CAS;
 import org.apache.uima.cas.CASException;
@@ -54,7 +55,7 @@ public class Evaluation  extends CasConsumer_ImplBase{
 		
 		while (namedEntityIterator.hasNext()) {
 			NamedEntity namedEntity = (NamedEntity) namedEntityIterator.next();
-			if ("goldstandard".equals(namedEntity.getSource())) {
+			if (Constants.GOLDSTANDARD.equals(namedEntity.getSource())) {
 				goldAnnotations.add(namedEntity);
 			} else {
 				pipelineAnnotations.add(namedEntity);
@@ -191,7 +192,7 @@ public class Evaluation  extends CasConsumer_ImplBase{
 				int entityEnd = entity.getEnd();
 
 				if ((entityBegin > begin - windowsize) && (entityEnd < end + windowsize)) {
-					if ("goldstandard".equals(entity.getSource())) {
+					if (Constants.GOLDSTANDARD.equals(entity.getSource())) {
 						sb.append(jCas.getDocumentText().subSequence(lastEnd, entityBegin));
 						if ((begin == entity.getBegin()) && (end == entity.getEnd())) {
 							sb.append("***" + entity.getCoveredText() + "***");
@@ -216,7 +217,7 @@ public class Evaluation  extends CasConsumer_ImplBase{
 				int entityEnd = entity.getEnd();
 
 				if ((entityBegin > begin - windowsize) && (entityEnd < end + windowsize)) {
-					if (!"goldstandard".equals(entity.getSource())) {
+					if (!Constants.GOLDSTANDARD.equals(entity.getSource())) {
 						//System.out.println("###From " + lastEnd + " to " + entityBegin);
 						sb.append(jCas.getDocumentText().subSequence(lastEnd, entityBegin));
 						if ((begin == entity.getBegin()) && (end == entity.getEnd())) {

@@ -20,6 +20,7 @@
 package de.berlin.hu.uima.cr.iob;
 
 import de.berlin.hu.types.PubmedDocument;
+import de.berlin.hu.util.Constants;
 import org.apache.uima.UIMAFramework;
 import org.apache.uima.cas.CAS;
 import org.apache.uima.cas.CASException;
@@ -467,7 +468,7 @@ public class IOBDirectoryCollectionReader extends CollectionReader_ImplBase {
 			namedEntity.setEnd(end);
 			namedEntity.setEntityType(ENTITY_TYPE);
 			namedEntity.setConfidence(1.0);
-			namedEntity.setSource("goldstandard");
+			namedEntity.setSource(Constants.GOLDSTANDARD);
 			namedEntity.addToIndexes();
 			if (end - begin < 3) {
 				numberOfShortEntities++;

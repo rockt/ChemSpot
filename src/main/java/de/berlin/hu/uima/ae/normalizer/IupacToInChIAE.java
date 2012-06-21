@@ -218,6 +218,7 @@
 
 package de.berlin.hu.uima.ae.normalizer;
 
+import de.berlin.hu.util.Constants;
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
@@ -257,10 +258,10 @@ public class IupacToInChIAE extends JCasAnnotator_ImplBase {
         while (entities.hasNext()) {
             NamedEntity entity = entities.next();
             //only consider mentions extracted by CRF
-            if ("banner".equals(entity.getSource())) {
+            if (Constants.CRF.equals(entity.getSource())) {
                 all++;
                 try {
-                    String inchi = nameToInChi.parseToInchi(entity.getCoveredText());
+                    String inchi = nameToInChi.parseToStdInchi(entity.getCoveredText());
                     if (inchi != null) {
                         entity.setId(inchi);
                         normalized++;

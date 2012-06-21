@@ -1,5 +1,6 @@
 package de.berlin.hu.uima.ae.filter;
 
+import de.berlin.hu.util.Constants;
 import opennlp.uima.Token;
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
@@ -52,7 +53,7 @@ public class PosFilter  extends JCasAnnotator_ImplBase {
 			int end = chemical.getEnd();
 			
 			
-			if (!"goldstandard".equals(chemical.getSource())) {
+			if (!Constants.GOLDSTANDARD.equals(chemical.getSource())) {
 				if (isInvalid(begin, end)) {
 					//System.out.println("Chemical filtered: " + chemical.getCoveredText() + "[" + getTag(begin, end) + "]");
 					//can't remove from index while iterating

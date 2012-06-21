@@ -3,6 +3,7 @@
  */
 package de.berlin.hu.uima.ae;
 
+import de.berlin.hu.util.Constants;
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.jcas.JCas;
@@ -34,7 +35,7 @@ public class AnnotationMergerAE extends JCasAnnotator_ImplBase {
 			List<NamedEntity> entities = new ArrayList<NamedEntity>();
 			while (entityIterator.hasNext()) {
 				NamedEntity namedEntity = (NamedEntity) entityIterator.next();
-				if (!"goldstandard".equals(namedEntity.getSource())) {
+				if (!Constants.GOLDSTANDARD.equals(namedEntity.getSource())) {
 					entities.add(namedEntity);
 				}
 			}
@@ -56,19 +57,19 @@ public class AnnotationMergerAE extends JCasAnnotator_ImplBase {
 			
 			for (NamedEntity entity : entities) {
 				if (lastEntity != null 
-						&& "linnaeus".equals(lastEntity.getSource()) 
-						&& !"linnaeus".equals(entity.getSource()) 
+						&& Constants.DICTIONARY.equals(lastEntity.getSource()) 
+						&& !Constants.DICTIONARY.equals(entity.getSource()) 
 						&& crosses(lastEntity, entity)) {
 					lastEntity.removeFromIndexes(aJCas);
 				} else if (lastEntity != null 
-						&& !"linnaeus".equals(lastEntity.getSource()) 
-						&& "linnaeus".equals(entity.getSource()) 
+						&& !Constants.DICTIONARY.equals(lastEntity.getSource()) 
+						&& Constants.DICTIONARY.equals(entity.getSource()) 
 						&& crosses(lastEntity, entity)) {
 					entity.removeFromIndexes(aJCas);
 					filtered = true;
 				}
 				
-				if (!filtered && !"linnaeus".equals(entity.getSource())) {
+				if (!filtered && !Constants.DICTIONARY.equals(entity.getSource())) {
 					chemicals.add(entity);
 				}
 				

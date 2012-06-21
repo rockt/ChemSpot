@@ -1,5 +1,6 @@
 package de.berlin.hu.uima.ae.tagger.linnaeus;
 
+import de.berlin.hu.util.Constants;
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
@@ -238,7 +239,7 @@ public class DrugTagger extends JCasAnnotator_ImplBase {
 			id = id.replaceAll("CHID_[0]*", "");
 			drug.setId(id);
 		}
-		drug.setSource("linnaeus");
+		drug.setSource(Constants.DICTIONARY);
 		drug.addToIndexes();
 		return drug;
 	}

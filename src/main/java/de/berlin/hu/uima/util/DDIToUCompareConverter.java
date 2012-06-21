@@ -1,5 +1,6 @@
 package de.berlin.hu.uima.util;
 
+import de.berlin.hu.util.Constants;
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.cas.FSIndex;
@@ -48,7 +49,7 @@ public class DDIToUCompareConverter extends JCasAnnotator_ImplBase {
 			org.u_compare.shared.semantic.NamedEntity ucompareNamedEntity = new org.u_compare.shared.semantic.NamedEntity(aJCas);
 			ucompareNamedEntity.setBegin(sentence.getBegin());
 			ucompareNamedEntity.setEnd(sentence.getEnd());
-			ucompareNamedEntity.setSource("goldstandard");
+			ucompareNamedEntity.setSource(Constants.GOLDSTANDARD);
 			ucompareNamedEntity.setConfidence(1.0);
 			ucompareNamedEntity.addToIndexes();
 		}

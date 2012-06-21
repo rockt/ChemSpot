@@ -20,6 +20,8 @@ import java.util.Iterator;
  * @author Tim Rocktäschel
  *
  */
+
+//FIXME: probably not working anymore
 public class DDICorpusContentHandlerImpl implements ContentHandler {
 	
 	// tags
