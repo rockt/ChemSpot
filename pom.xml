@@ -169,6 +169,11 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
             <artifactId>opsin-inchi</artifactId>
             <version>1.2.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>2.9.2</version>
+        </dependency>
 	</dependencies>
 
 
@@ -190,8 +195,34 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
                      </execution>
                  </executions>
             </plugin>
+            <plugin>
+                <groupId>org.scala-tools</groupId>
+                <artifactId>maven-scala-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 		</plugins>
 	</build>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>scala</id>
+            <name>Scala Tools</name>
+            <url>http://scala-tools.org/repo-releases/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
 
 	<repositories>
 		<repository>
@@ -212,6 +243,17 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
       			<id>ucc-repo</id>
       			<url>https://maven.ch.cam.ac.uk/m2repo</url>
       	</repository>
+        <repository>
+              <id>scala</id>
+              <name>Scala Tools</name>
+              <url>http://scala-tools.org/repo-releases/</url>
+              <releases>
+                  <enabled>true</enabled>
+              </releases>
+              <snapshots>
+                  <enabled>false</enabled>
+              </snapshots>
+          </repository>
 	</repositories>
 </project>
 
