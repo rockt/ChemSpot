@@ -174,50 +174,22 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 
 	<build>
-        <sourceDirectory>.</sourceDirectory>
         <plugins>
             <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-            <includes>
-                <include>src/main/java/**/*.java</include>
-                <include>src/main/types/**/*.java</include>
-            </includes>
-            </configuration>
+                 <groupId>org.codehaus.mojo</groupId>
+                 <artifactId>build-helper-maven-plugin</artifactId>
+                 <executions>
+                     <execution>
+                         <phase>generate-sources</phase>
+                         <goals><goal>add-source</goal></goals>
+                         <configuration>
+                             <sources>
+                                 <source>${basedir}/src/main/types</source>
+                             </sources>
+                         </configuration>
+                     </execution>
+                 </executions>
             </plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>copy-dependencies</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/lib</outputDirectory>
-							<overWriteReleases>false</overWriteReleases>
-							<overWriteSnapshots>false</overWriteSnapshots>
-							<overWriteIfNewer>true</overWriteIfNewer>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<configuration>
-					<archive>
-						<manifest>
-							<addClasspath>true</addClasspath>
-							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>org.apache.uima.examples.cpe.SimpleRunCPE</mainClass>
-						</manifest>
-					</archive>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
 

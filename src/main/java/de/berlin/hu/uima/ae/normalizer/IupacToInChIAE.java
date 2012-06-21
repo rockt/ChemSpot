@@ -270,7 +270,7 @@ public class IupacToInChIAE extends JCasAnnotator_ImplBase {
                 }
             }
         }
-//        System.out.println(all + " " + normalized);
-//        System.out.println((double) normalized / all);
+        //System.out.println(all + " " + normalized);
+        //System.out.println((double) normalized / all);
     }
 }
