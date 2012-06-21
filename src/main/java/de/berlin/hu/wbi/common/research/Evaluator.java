@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.*;
 
 /**
- * 
+ * FIXME: translate to english
  * Generische Klasse zum Berechnen von Precision, Recall und anderen Massen,
  * die als Eingabe einen Goldstandard und ein Ergebnis, welches mit diesem
  * verglichen werden soll, erwartet.
