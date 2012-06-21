@@ -59,32 +59,32 @@ public class Evaluation  extends CasConsumer_ImplBase{
 	}
 
 	public void evaluate(List<NamedEntity> goldAnnotations, List<NamedEntity> pipelineAnnotations, int offset) {
-			List<ComparableAnnotation> goldAnnoationsComparable = new ArrayList<ComparableAnnotation>();
+			List<ComparableAnnotation> goldAnnotationsComparable = new ArrayList<ComparableAnnotation>();
 			List<ComparableAnnotation> pipelineAnnotationsComparable = new ArrayList<ComparableAnnotation>();
 			
 			GATest += goldAnnotations.size();
 			PATest += pipelineAnnotations.size();
 			
 			for (NamedEntity namedEntity : goldAnnotations) {
-				goldAnnoationsComparable.add(ComparableAnnotation.createInstance(namedEntity.getBegin(), namedEntity.getEnd(), namedEntity.getCoveredText(), offset, namedEntity.getCAS()));
+				goldAnnotationsComparable.add(ComparableAnnotation.createInstance(namedEntity.getBegin(), namedEntity.getEnd(), namedEntity.getCoveredText(), offset, namedEntity.getCAS()));
 			}
 			for (NamedEntity namedEntity : pipelineAnnotations) {
 				pipelineAnnotationsComparable.add(ComparableAnnotation.createInstance(namedEntity.getBegin(), namedEntity.getEnd(), namedEntity.getCoveredText(), offset, namedEntity.getCAS()));
 			}
 			
-			GA += goldAnnoationsComparable.size();
+			GA += goldAnnotationsComparable.size();
 			PA += pipelineAnnotationsComparable.size();
 			
 			assert GATest == GA;
 			assert PATest == PA;
 			
-			if (goldAnnoationsComparable.size() == 0) {
+			if (goldAnnotationsComparable.size() == 0) {
 				FP += pipelineAnnotationsComparable.size();
 			} else if (pipelineAnnotationsComparable.size() == 0) {
-				FN += goldAnnoationsComparable.size();
+				FN += goldAnnotationsComparable.size();
 			} else {
-				//			Evaluator<ComparableAnnotation> evaluator = new Evaluator<ComparableAnnotation>(pipelineAnnotationsComparable, goldAnnoationsComparable);
-				Evaluator<ComparableAnnotation,ComparableAnnotation> evaluator = new Evaluator<ComparableAnnotation,ComparableAnnotation>(pipelineAnnotationsComparable, goldAnnoationsComparable);
+				//			Evaluator<ComparableAnnotation> evaluator = new Evaluator<ComparableAnnotation>(pipelineAnnotationsComparable, goldAnnotationsComparable);
+				Evaluator<ComparableAnnotation,ComparableAnnotation> evaluator = new Evaluator<ComparableAnnotation,ComparableAnnotation>(pipelineAnnotationsComparable, goldAnnotationsComparable);
 				evaluator.evaluate();
 				//			evaluator.printResults();
 
