@@ -1,5 +1,6 @@
 package de.berlin.hu.uima.cc.eval;
 
+import de.berlin.hu.util.Constants;
 import de.berlin.hu.wbi.common.research.Evaluator;
 import org.apache.uima.cas.CAS;
 import org.apache.uima.cas.CASException;
