@@ -2,9 +2,9 @@
 <analysisEngineDescription xmlns="http://uima.apache.org/resourceSpecifier">
   <frameworkImplementation>org.apache.uima.java</frameworkImplementation>
   <primitive>true</primitive>
-  <annotatorImplementationName>de.berlin.hu.uima.ae.tokenizer.FineTokenizerAE</annotatorImplementationName>
+  <annotatorImplementationName>de.berlin.hu.uima.util.OpenNLPToUCompareTokenConverterAE</annotatorImplementationName>
   <analysisEngineMetaData>
-    <name>fineTokenizerAEDescriptor</name>
+    <name>openNLPToUCompareTokenConverterAEDescriptor</name>
     <description/>
     <version>1.0</version>
     <vendor/>
@@ -12,14 +12,16 @@
     <configurationParameterSettings/>
     <typeSystemDescription>
       <imports>
-        <import location="../TypeSystem.xml"/>
+        <import location="../../TypeSystem.xml"/>
       </imports>
     </typeSystemDescription>
     <typePriorities/>
     <fsIndexCollection/>
     <capabilities>
       <capability>
-        <inputs/>
+        <inputs>
+          <type allAnnotatorFeatures="true">opennlp.uima.Token</type>
+        </inputs>
         <outputs>
           <type allAnnotatorFeatures="true">org.u_compare.shared.syntactic.Token</type>
         </outputs>

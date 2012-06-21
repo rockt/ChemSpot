@@ -27,7 +27,7 @@ import java.util.Set;
  * @author Tim Rocktäschel
  *	
  *	This is an UIMA Analysis Engine for tagging with BANNER. 
- *  It loads a BANNER model file and tags a CAS text, which contains sentences and is tokenized.
+ *  It loads a BANNER model file and tags tokenized sentences in the text of a CAS object.
  */
 
 public class BannerTagger extends JCasAnnotator_ImplBase {
@@ -35,28 +35,23 @@ public class BannerTagger extends JCasAnnotator_ImplBase {
 	private static final String BANNER_MODEL_FILE_PARAM = "BannerModelFile";
 	private static final String BANNER_CONFIG_FILE_PARAM = "BannerConfigFile";
 	private static final String THRESHOLD_PARAM = "Threshold";
-	
-	/**
-	 * TODO: change hardcoded switch to choose between loading model file from external resource or parameter 
-	 */
+
+	//FIXME: remove hardcoded switch to choose between loading model file from external resource or parameter
 //	private static final boolean USE_RESOURCE = true; 
 	private static final boolean USE_RESOURCE = false; 
-	
-	/**
-	 * N parameter for N-Best-Tagger
-	 */
-	private static final int N = 10;
 
 	private CRFTagger tagger;
 //	private CRFTaggerStochasticGradient tagger;
 
-	
 	private File bannerModelFile;
 	private File bannerConfigFile;
-	/**
-	 * Confidence-Threshold for N-Best-Tagger
-	 */
+
+	// Confidence-Threshold for N-Best-Tagger
 	private double threshold;
+    // N parameter for N-Best-Tagger
+	private static final int N = 10;
+
+
 	private int documentCounter;
 	private XMLConfiguration config;
 
@@ -95,7 +90,6 @@ public class BannerTagger extends JCasAnnotator_ImplBase {
 		long start = System.currentTimeMillis();
 		while (sentenceIterator.hasNext()) {
 			Sentence sentence = (Sentence) sentenceIterator.next();
-			
 			// convert every sentence into a BANNER sentence
 			banner.types.Sentence bannerSentence = new banner.types.Sentence(sentenceCounter+"", documentCounter+"", sentence.getCoveredText());
 			// get tokens covered by the sentence
@@ -114,8 +108,7 @@ public class BannerTagger extends JCasAnnotator_ImplBase {
 			}
 
 			// annotate found entities
-			createAnnotations(aJCas, sentence.getBegin(), bannerSentence, bannerSentence.getMentions());
-			
+			createAnnotations(aJCas, sentence.getBegin(), bannerSentence);
 			sentenceCounter++;
 		}
 		long time = System.currentTimeMillis() - start;
@@ -126,13 +119,14 @@ public class BannerTagger extends JCasAnnotator_ImplBase {
 	/**
 	 * converts each mention into an UIMA annotation
 	 */
-	private void createAnnotations(JCas aJCas, int offset, banner.types.Sentence bannerSentence, List<Mention> mentions) {
+	private void createAnnotations(JCas aJCas, int offset, banner.types.Sentence bannerSentence) {
+        List<Mention> mentions = bannerSentence.getMentions();
 		Set<Mention> mentionsToAdd = new HashSet<Mention>();		
-		// FIXME: sort mentions first!
+		//FIXME: when using NBestCRFTagger: sort mentions first!
 		Mention lastMention = null;
 		for (Mention mention : mentions) {
 			if (mention.getProbability() >= threshold) {
-				// simple approach to resolve overlapping entities
+				// simple approach to resolve overlapping entities when using NBestCRFTagger
 				if (lastMention != null && mention.overlaps(lastMention)) {
 					if (mention.getProbability() > lastMention.getProbability()) {
 						mentionsToAdd.remove(lastMention);
@@ -148,10 +142,8 @@ public class BannerTagger extends JCasAnnotator_ImplBase {
 		
 		for (Mention mention : mentionsToAdd) {
 			NamedEntity entity = new NamedEntity(aJCas);
-
 			int startOffset = 0;
 			int endOffset = 0;
-
 			startOffset = bannerSentence.getTokens().get(mention.getStart()).getStart();
 			endOffset = bannerSentence.getTokens().get(mention.getEnd() - 1).getEnd();
 
@@ -163,8 +155,6 @@ public class BannerTagger extends JCasAnnotator_ImplBase {
 			entity.addToIndexes();
 			
 			assert entity.getCoveredText().equals(mention.getText());
-
-			lastMention = mention;
 		}
 	}
 }

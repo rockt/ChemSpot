@@ -14,7 +14,6 @@ import java.util.*;
  * @param <ResultType> Typ eines zu vergleichenden Elementes
  */
 public class Evaluator<ResultType, StandardType> implements Serializable {
-	
 	private static final long serialVersionUID = 3009808474569044273L;
 	private ArrayList<ResultType> truePositives;
 	private ArrayList<ResultType> falsePositives;
@@ -33,10 +32,7 @@ public class Evaluator<ResultType, StandardType> implements Serializable {
 		this.recall = Double.NaN;
 		this.fMeasure = Double.NaN;
 	}
-	
-	/**
-	 * 
-	 */
+
 	public void trim() {
 		if (truePositives != null) truePositives.trimToSize();
 		if (falseNegatives != null) falseNegatives.trimToSize();
@@ -46,8 +42,8 @@ public class Evaluator<ResultType, StandardType> implements Serializable {
 	}
 	
 	/**
-	 * @param result Ergebnismenge
-	 * @param standard Goldstandard
+	 * @param result predictions
+	 * @param standard goldstandard
 	 */
 	public Evaluator(Collection<? extends ResultType> result, Collection<? extends StandardType> standard) {
 		this();
@@ -78,7 +74,6 @@ public class Evaluator<ResultType, StandardType> implements Serializable {
 		this.truePositives = new ArrayList<ResultType>(result.size());
 		this.falsePositives = new ArrayList<ResultType>(result.size());
 		this.falseNegatives = new ArrayList<StandardType>(standard.size());
-//		int i = 0;
 		//Compute TP and FP
 		for (ResultType resultSample : result) {
 			boolean contains = standard.contains(resultSample);
@@ -88,14 +83,12 @@ public class Evaluator<ResultType, StandardType> implements Serializable {
 				falsePositives.add(resultSample);
 			}
 		}
-		
 		//Compute FN
 		for (StandardType standardSample : standard) {
 			if (!result.contains(standardSample)) {
 				falseNegatives.add(standardSample);
 			}
 		}
-	
 		return this;
 	}
 
@@ -121,49 +114,32 @@ public class Evaluator<ResultType, StandardType> implements Serializable {
 		precision = EvalMeasures.getPrecision(tp, fp);
 	}
 
-	/**
-	 * @return Precision des Ergebnisses
-	 */
 	public double getPrecision() {
 		if (Double.isNaN(precision)) computePrecision();
 		return precision;
 	}
 
-	/**
-	 * @return Recall des Ergebnisses
-	 */
+
 	public double getRecall() {
 		if (Double.isNaN(recall)) computeRecall();
 		return recall;
 	}
 
-	/**
-	 * @return F-Measure des Ergebnisses
-	 */
 	public double getFMeasure() {
 		if (Double.isNaN(fMeasure)) computeFMeasure();
 		return fMeasure;
 	}
 
-	/**
-	 * @return die Menge der True Positives (Schnitt aus Goldstandard und Ergebnis)
-	 */
 	public Collection<ResultType> getTruePositives() {
 		if (truePositives == null) 	evaluate();
 		return Collections.unmodifiableCollection(truePositives);
 	}
 
-	/**
-	 * @return die Menge der False Positives (Ergebnisse die nicht im Goldstandard sind)
-	 */
 	public Collection<ResultType> getFalsePositives() {
 		if (falsePositives == null) evaluate();
 		return Collections.unmodifiableCollection(falsePositives);
 	}
 
-	/**
-	 * @return die Menge der False Negatives (Elemente aus dem Goldstandard, die im Ergebnis fehlen)
-	 */
 	public Collection<StandardType> getFalseNegatives() {
 		if (falseNegatives == null) evaluate();
 		return Collections.unmodifiableCollection(falseNegatives);
@@ -213,9 +189,6 @@ public class Evaluator<ResultType, StandardType> implements Serializable {
 		return falseNegatives.size();
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();

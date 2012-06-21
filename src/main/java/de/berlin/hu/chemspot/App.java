@@ -289,7 +289,7 @@ public class App {
             if (arguments.isPathToOutputFile()) outputFile = new FileWriter(new File(pathToOutputFile));
 
             if (arguments.isPathToIOBCorpora()) {
-                CollectionReader reader = CollectionReaderFactory.createCollectionReaderFromPath("desc/cr/scaiCR.xml", "InputDirectory", pathToCorpora, "UseGoldStandardAnnotations", true, "GoldstandardTypeSuffix" , "", "BrowseSubdirectories", true, "IncludeSuffixes", new String[]{"iob", "iob2"});
+                CollectionReader reader = CollectionReaderFactory.createCollectionReaderFromPath("desc/cr/ScaiCorpusCR.xml", "InputDirectory", pathToCorpora, "UseGoldStandardAnnotations", true, "GoldstandardTypeSuffix" , "", "BrowseSubdirectories", true, "IncludeSuffixes", new String[]{"iob", "iob2"});
                 while (reader.hasNext()) {
                     JCas jcas = JCasFactory.createJCas(typeSystem);
                     reader.getNext(jcas.getCas());

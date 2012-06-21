@@ -15,8 +15,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Filters annotations according to a stopword list generated from the Google-N-Gram corpus.
+ */
 public class StopwordFilter extends JCasAnnotator_ImplBase {
-
 	private int numberOfFilteredEntities = 0;
 	private List<NamedEntity> invalidChemicals = null;	
 	private HashSet<String> stopwords = new HashSet<String>();
@@ -24,9 +26,7 @@ public class StopwordFilter extends JCasAnnotator_ImplBase {
 	@Override
 	public void initialize(UimaContext aContext)
 			throws ResourceInitializationException {
-		// TODO Auto-generated method stub
 		super.initialize(aContext);
-		
 		File stopwordFile = new File("./resources/chemspot_stop_words.txt");
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(stopwordFile));
@@ -35,10 +35,8 @@ public class StopwordFilter extends JCasAnnotator_ImplBase {
 			  stopwords.add(line);
 		    }
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			throw new ResourceInitializationException(e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			throw new ResourceInitializationException(e);
 		}
 	}

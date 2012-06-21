@@ -72,7 +72,7 @@ public class Util {
 				}
 			}
 		} catch (IndexOutOfBoundsException e) {
-			// TODO: handle exception
+			//FIXME: what happens here?
 		}
 	}
 }

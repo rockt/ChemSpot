@@ -245,9 +245,9 @@ public class IupacToInChIAE extends JCasAnnotator_ImplBase {
             nameToInChi = new NameToInchi();
         } catch (NameToStructureException e) {
             System.err.println("Failed initializing OPSIN!");
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
-        super.initialize(aContext);    //To change body of overridden methods use File | Settings | File Templates.
+        super.initialize(aContext);
     }
 
     @Override

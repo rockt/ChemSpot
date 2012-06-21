@@ -2,9 +2,9 @@
 <analysisEngineDescription xmlns="http://uima.apache.org/resourceSpecifier">
   <frameworkImplementation>org.apache.uima.java</frameworkImplementation>
   <primitive>true</primitive>
-  <annotatorImplementationName>de.berlin.hu.uima.util.OpenNLPToUCompareSentenceConverterAE</annotatorImplementationName>
+  <annotatorImplementationName>de.berlin.hu.uima.util.DDIToUCompareConverter</annotatorImplementationName>
   <analysisEngineMetaData>
-    <name>openNLPToUCompareSentenceConverterAEDescriptor</name>
+    <name>ddiToUCompareConverterAEDescriptor</name>
     <description/>
     <version>1.0</version>
     <vendor/>
@@ -12,7 +12,8 @@
     <configurationParameterSettings/>
     <typeSystemDescription>
       <imports>
-        <import location="../TypeSystem.xml"/>
+        <import location="../../TypeSystem.xml"/>
+        <import location="../../DDITypeSystem.xml"/>
       </imports>
     </typeSystemDescription>
     <typePriorities/>
@@ -20,10 +21,14 @@
     <capabilities>
       <capability>
         <inputs>
-          <type allAnnotatorFeatures="true">opennlp.uima.Sentence</type>
+          <type allAnnotatorFeatures="true">sprint.uima.types.Token</type>
+          <type allAnnotatorFeatures="true">sprint.uima.types.Sentence</type>
+          <type allAnnotatorFeatures="true">sprint.uima.types.Entity</type>
         </inputs>
         <outputs>
           <type allAnnotatorFeatures="true">org.u_compare.shared.syntactic.Sentence</type>
+          <type allAnnotatorFeatures="true">org.u_compare.shared.syntactic.Token</type>
+          <type allAnnotatorFeatures="true">org.u_compare.shared.semantic.NamedEntity</type>
         </outputs>
         <languagesSupported/>
       </capability>

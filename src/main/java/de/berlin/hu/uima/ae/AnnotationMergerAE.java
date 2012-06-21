@@ -1,6 +1,3 @@
-/**
- * 
- */
 package de.berlin.hu.uima.ae;
 
 import de.berlin.hu.util.Constants;
@@ -15,8 +12,7 @@ import org.uimafit.util.JCasUtil;
 import java.util.*;
 
 /**
- * @author trocktae
- *
+ * Merges annotations from the CRF and the dictionary, favoring entities extracted by the CRF over the dictionary.
  */
 public class AnnotationMergerAE extends JCasAnnotator_ImplBase {
 
@@ -51,10 +47,9 @@ public class AnnotationMergerAE extends JCasAnnotator_ImplBase {
 			List<NamedEntity> chemicals = new ArrayList<NamedEntity>();
 			boolean filtered = false;
 			
-			//TODO use drug if it is identical to chemical
+			//FIXME: use drug if it is identical to CRF match to obtain ChemIDplus ID
 			
 			NamedEntity lastEntity = null;
-			
 			for (NamedEntity entity : entities) {
 				if (lastEntity != null 
 						&& Constants.DICTIONARY.equals(lastEntity.getSource()) 
@@ -78,7 +73,6 @@ public class AnnotationMergerAE extends JCasAnnotator_ImplBase {
 				}
 				filtered = false;
 			}
-			
 			convertNamedEntitiesToChemicals(aJCas, chemicals);
 		}
 	}
