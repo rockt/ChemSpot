@@ -27,8 +27,10 @@ object dict2linnaeus extends App {
   val records = dictionary.mkString("\n").split("\n--\n").drop(12)
   for (record <- records) {
     val lines = record.split("\n")
-    val cas = lines.find((s: String) => s.startsWith("DB CAS_")).getOrElse("")
-    val inChI = lines.find((s: String) => s.startsWith("DB INCH_")).getOrElse("")
+    val casOption = lines.find((s: String) => s.startsWith("DB CAS_"))
+    val cas = if (casOption.isDefined) casOption.get.substring(7) else ""
+    val inChIOption = lines.find((s: String) => s.startsWith("DB INCH_"))
+    val inChI = if (inChIOption.isDefined) inChIOption.get.substring(8) else ""
     val terms = lines.filter((s: String) => s.startsWith("TM ")).map((t: String) => t.split("\t")(0).substring(3))
     println("%s\t%s\t%s".format(cas, inChI, terms.mkString("\n\t", "\n\t", "")))
   }
