@@ -13,6 +13,9 @@
 package de.berlin.hu.dictionary
 
 import io.Source
+import dk.brics.automaton.{BasicOperations, BasicAutomata}
+import collection.JavaConversions._
+import java.io.{PrintWriter, FileOutputStream}
 
 /**
  * User: Tim Rocktaeschel
@@ -20,10 +23,13 @@ import io.Source
  * Time: 4:01 PM
  */
 
-class Entry(terms: Set[String], cas: String, inChI: String)
+object jochem2dict extends App {
+  val dictionary = Source.fromFile(args(0)).getLines()
+  val automatonOutput =  new FileOutputStream(args(1))
+  val idMapOutput = new PrintWriter(args(2))
 
-object dict2linnaeus extends App {
-  val dictionary = Source.fromFile("../ChemlistV1_2.ontology").getLines()
+  var chemicals = List[String]()
+
   val records = dictionary.mkString("\n").split("\n--\n").drop(12)
   for (record <- records) {
     val lines = record.split("\n")
@@ -32,7 +38,14 @@ object dict2linnaeus extends App {
     val inChIOption = lines.find((s: String) => s.startsWith("DB INCH_"))
     val inChI = if (inChIOption.isDefined) inChIOption.get.substring(8) else ""
     val terms = lines.filter((s: String) => s.startsWith("TM ")).map((t: String) => t.split("\t")(0).substring(3))
-    println("%s\t%s\t%s".format(cas, inChI, terms.mkString("\n\t", "\n\t", "")))
+    for (term <- terms) {
+      if (term.length > 2) idMapOutput.println(cas + ":" + inChI + "\t" + term)
+      chemicals = term :: chemicals
+    }
   }
+  idMapOutput.close()
 
+  val automata = chemicals.map((name: String) => BasicAutomata.makeString(name))
+  val automaton = BasicOperations.union(automata)
+  automaton.store(automatonOutput)
 }

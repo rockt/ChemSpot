@@ -136,12 +136,21 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
             <scope>system</scope>
             <systemPath>${basedir}/lib/banner.jar</systemPath>
         </dependency>
+        <!--
         <dependency>
             <groupId>linnaeus</groupId>
             <artifactId>linnaeus</artifactId>
             <version>2011-10-12</version>
             <scope>system</scope>
             <systemPath>${basedir}/lib/linnaeus.jar</systemPath>
+        </dependency>
+        -->
+        <dependency>
+            <groupId>linnaeus</groupId>
+            <artifactId>linnaeus</artifactId>
+            <version>2012-06-25</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/linnaeus-2.0.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>dragontool</groupId>
