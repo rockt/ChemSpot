@@ -55,16 +55,16 @@ public class BannerTagger extends JCasAnnotator_ImplBase {
 	private int documentCounter;
 	private XMLConfiguration config;
 
-	
-	@Override
+
+    @Override
 	public void initialize(UimaContext aContext)
 			throws ResourceInitializationException {
 		super.initialize(aContext);
 		try {
-			bannerModelFile = new File(aContext.getConfigParameterValue(
-						BANNER_MODEL_FILE_PARAM).toString());
-			bannerConfigFile = new File(aContext.getConfigParameterValue(
-					BANNER_CONFIG_FILE_PARAM).toString());			
+            String pathToModelFile = aContext.getConfigParameterValue(BANNER_MODEL_FILE_PARAM).toString();
+            String pathToConfigFile = aContext.getConfigParameterValue(BANNER_CONFIG_FILE_PARAM).toString();
+            bannerModelFile = new File(pathToModelFile);
+            bannerConfigFile = new File(pathToConfigFile);
 			try {
 				config = new XMLConfiguration(bannerConfigFile);
 			} catch (ConfigurationException e) {
@@ -78,7 +78,7 @@ public class BannerTagger extends JCasAnnotator_ImplBase {
 		} catch (IOException e) {
 			throw new ResourceInitializationException(e);
 		}
-		documentCounter = 0;
+        documentCounter = 0;
 	}
 
 	@Override

@@ -13,12 +13,13 @@
 package de.berlin.hu.chemspot;
 
 import org.apache.uima.UIMAException;
+import org.apache.uima.UIMAFramework;
 import org.apache.uima.collection.CollectionReader;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.metadata.TypeSystemDescription;
+import org.apache.uima.util.XMLInputSource;
 import org.uimafit.factory.CollectionReaderFactory;
 import org.uimafit.factory.JCasFactory;
-import org.uimafit.factory.TypeSystemDescriptionFactory;
 import uk.co.flamingpenguin.jewel.cli.ArgumentValidationException;
 import uk.co.flamingpenguin.jewel.cli.CliFactory;
 
@@ -34,11 +35,13 @@ public class App {
 	private static boolean evaluate = false;
 	private static String pathToTextFile;
     private static String tagFromCommandLine;
+    private static String pathToSentenceFile;
 
     public static void main(String[] args) throws UIMAException, IOException {
 		try {
 			arguments = CliFactory.parseArguments(ChemSpotArguments.class, args);
-			pathToModelFile = arguments.getPathToModelFile();
+			pathToModelFile = arguments.getPathToCRFModelFile();
+            pathToSentenceFile = arguments.getPathToSentenceModelFile();
 			if (arguments.isPathToOutputFile()) {
 				pathToOutputFile = arguments.getPathToOutputFile();
 			}			
@@ -67,9 +70,9 @@ public class App {
 		}
 
         //initializing ChemSpot with a CRF model file and an LINNAEUS automaton (the latter is optional)
-		ChemSpot chemspot = new ChemSpot(pathToModelFile, pathToDictionaryFile);
+		ChemSpot chemspot = new ChemSpot(pathToModelFile, pathToDictionaryFile, pathToSentenceFile);
 
-		TypeSystemDescription typeSystem = TypeSystemDescriptionFactory.createTypeSystemDescription("desc/TypeSystem");
+        TypeSystemDescription typeSystem = UIMAFramework.getXMLParser().parseTypeSystemDescription(new XMLInputSource(chemspot.getClass().getClassLoader().getResource("desc/TypeSystem.xml")));
 
         if (tagFromCommandLine != null) {
             List<Mention> mentions = chemspot.tag(tagFromCommandLine);
@@ -83,7 +86,10 @@ public class App {
             if (arguments.isPathToOutputFile()) outputFile = new FileWriter(new File(pathToOutputFile));
 
             if (arguments.isPathToIOBCorpora()) {
-                CollectionReader reader = CollectionReaderFactory.createCollectionReaderFromPath("desc/cr/ScaiCorpusCR.xml", "InputDirectory", pathToCorpora, "UseGoldStandardAnnotations", true, "GoldstandardTypeSuffix" , "", "BrowseSubdirectories", true, "IncludeSuffixes", new String[]{"iob", "iob2"});
+                //CollectionReader reader = CollectionReaderFactory.createCollectionReaderFromPath("desc/cr/ScaiCorpusCR.xml", "InputDirectory", pathToCorpora, "UseGoldStandardAnnotations", true, "GoldstandardTypeSuffix" , "", "BrowseSubdirectories", true, "IncludeSuffixes", new String[]{"iob", "iob2"});
+                CollectionReader reader = CollectionReaderFactory.createCollectionReader(UIMAFramework.getXMLParser().parseCollectionReaderDescription(new XMLInputSource(typeSystem.getClass().getClassLoader()
+                        .getResource("desc/cr/ScaiCorpusCR.xml"))), "InputDirectory", pathToCorpora, "UseGoldStandardAnnotations", true, "GoldstandardTypeSuffix" , "", "BrowseSubdirectories", true, "IncludeSuffixes", new String[]{"iob", "iob2"});
+
                 while (reader.hasNext()) {
                     JCas jcas = JCasFactory.createJCas(typeSystem);
                     reader.getNext(jcas.getCas());
@@ -110,6 +116,7 @@ public class App {
 		System.out.println("\t-c path to a directory containing corpora in IOB format (optional)");
 		System.out.println("\t-t path to a text file that should be tagged (optional)");
 		System.out.println("\t-m path to a CRF model file");
+        System.out.println("\t-s path to a OpenNLP sentence model file");
 		System.out.println("\t-d path to a linnaeus dictionary file (optional)");
 		System.out.println("\t-o path to an output file (IOB format)");
 		System.out.println("\t-e if this parameter is set, the performance of ChemSpot on the IOB gold-standard corpus (cf. -c) is evaluated");	System.exit(0);

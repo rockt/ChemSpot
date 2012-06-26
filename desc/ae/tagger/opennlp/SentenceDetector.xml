@@ -68,7 +68,6 @@
         <name>SentDetectGeniaResource</name>
         <description/>
         <fileResourceSpecifier>
-<!--          <fileUrl>/vol/fob-vol5/mi06/trocktae/workspace/Pipeline/resources/genia/SentDetectGenia.bin.gz</fileUrl>-->
         <fileUrl>resources/genia/SentDetectGenia.bin.gz</fileUrl>
         </fileResourceSpecifier>
         <implementationName>opennlp.uima.util.MaxentModelResource_impl</implementationName>

@@ -18,7 +18,6 @@ import de.berlin.hu.wbi.common.research.Evaluator;
 import org.apache.uima.UIMAException;
 import org.apache.uima.UIMAFramework;
 import org.apache.uima.analysis_engine.AnalysisEngine;
-import org.apache.uima.analysis_engine.AnalysisEngineDescription;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.cas.CAS;
 import org.apache.uima.examples.SourceDocumentInformation;
@@ -53,8 +52,8 @@ public class ChemSpot {
      * Initializes ChemSpot without a dictionary automaton.
      * @param pathToModelFile the Path to a CRF model
      */
-    public ChemSpot(String pathToModelFile) {
-        new ChemSpot(pathToModelFile, "");
+    public ChemSpot(String pathToModelFile, String pathToSentenceModelFile) {
+        new ChemSpot(pathToModelFile, "", pathToSentenceModelFile);
     }
 
     /**
@@ -62,22 +61,32 @@ public class ChemSpot {
      * @param pathToModelFile the path to a CRF model
      * @param pathToDictionaryFile the ath to a dictionary automaton
      */
-    public ChemSpot(String pathToModelFile, String pathToDictionaryFile) {
+    public ChemSpot(String pathToModelFile, String pathToDictionaryFile, String pathToSentenceModelFile) {
         try {
             //FIXME: find a way to access the descriptors in the jar rather than outside
             //typeSystem = TypeSystemDescriptionFactory.createTypeSystemDescription("desc/TypeSystem");
             typeSystem = UIMAFramework.getXMLParser().parseTypeSystemDescription(new XMLInputSource(this.getClass().getClassLoader().getResource("desc/TypeSystem.xml")));
-            AnalysisEngineDescription tokenizerDesc = UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader().getResource("desc/ae/tokenizer/FineGrainedTokenizerAE.xml")));
-            fineTokenizer = AnalysisEngineFactory.createAnalysisEngine(tokenizerDesc, CAS.NAME_DEFAULT_SOFA);
-            sentenceDetector = AnalysisEngineFactory.createAnalysisEngine("desc/ae/tagger/opennlp/SentenceDetector");
-            sentenceConverter = AnalysisEngineFactory.createAnalysisEngine("desc/ae/converter/OpenNLPToUCompareSentenceConverterAE");
+            fineTokenizer = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+                    .getResource("desc/ae/tokenizer/FineGrainedTokenizerAE.xml"))), CAS.NAME_DEFAULT_SOFA);
+            sentenceDetector = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+                    .getResource("desc/ae/tagger/opennlp/SentenceDetector.xml"))), "opennlp.uima.ModelName", pathToSentenceModelFile);
+            sentenceConverter = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+                    .getResource("desc/ae/converter/OpenNLPToUCompareSentenceConverterAE.xml"))), CAS.NAME_DEFAULT_SOFA);
             System.out.println("Loading CRF...");
-            bannerTagger = AnalysisEngineFactory.createAnalysisEngine("desc/banner/tagger/BANNERTaggerAE", "BannerModelFile", pathToModelFile);
+            bannerTagger = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+                    .getResource("desc/banner/tagger/BANNERTaggerAE.xml"))),  "BannerModelFile", pathToModelFile);
             if (pathToDictionaryFile!= null) System.out.println("Loading dictionary..."); else System.out.println("No dictionary location specified! Tagging without dictionary...");
-            if (pathToDictionaryFile != null) linnaeusTagger = AnalysisEngineFactory.createAnalysisEngine("desc/ae/tagger/DictionaryTaggerAE", "DrugBankMatcherDictionaryAutomat", pathToDictionaryFile);
-            annotationMerger = AnalysisEngineFactory.createAnalysisEngine("desc/ae/AnnotationMergerAE");
-            normalizer = AnalysisEngineFactory.createAnalysisEngine("desc/ae/normalizer/IUPACToInChIAE");
-            stopwordFilter = AnalysisEngineFactory.createAnalysisEngine("desc/ae/filter/StopwordFilterAE");
+            if (pathToDictionaryFile != null) {
+                //linnaeusTagger = AnalysisEngineFactory.createAnalysisEngine("desc/ae/tagger/DictionaryTaggerAE", "DrugBankMatcherDictionaryAutomat", pathToDictionaryFile);
+                linnaeusTagger = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+                        .getResource("desc/ae/tagger/DictionaryTaggerAE.xml"))), "DrugBankMatcherDictionaryAutomat", pathToDictionaryFile);
+            }
+            annotationMerger = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+                    .getResource("desc/ae/AnnotationMergerAE.xml"))), CAS.NAME_DEFAULT_SOFA);
+            normalizer = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+                    .getResource("desc/ae/normalizer/IUPACToInChIAE.xml"))), CAS.NAME_DEFAULT_SOFA);
+            stopwordFilter = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+                    .getResource("desc/ae/filter/StopwordFilterAE.xml"))), CAS.NAME_DEFAULT_SOFA);
             System.out.println("Finished initializing ChemSpot.");
         } catch (UIMAException e) {
             System.err.println("Failed initializing ChemSpot.");

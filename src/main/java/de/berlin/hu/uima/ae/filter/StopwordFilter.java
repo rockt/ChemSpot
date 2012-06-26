@@ -22,14 +22,14 @@ public class StopwordFilter extends JCasAnnotator_ImplBase {
 	private int numberOfFilteredEntities = 0;
 	private List<NamedEntity> invalidChemicals = null;	
 	private HashSet<String> stopwords = new HashSet<String>();
-	
-	@Override
+
+    @Override
 	public void initialize(UimaContext aContext)
 			throws ResourceInitializationException {
 		super.initialize(aContext);
-		File stopwordFile = new File("./resources/chemspot_stop_words.txt");
+        InputStream stopwordFile = this.getClass().getClassLoader().getResourceAsStream("resources/chemspot_stop_words.txt");
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader(stopwordFile));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(stopwordFile));
 			String line = "";
 			while(null != (line = reader.readLine()) ) {
 			  stopwords.add(line);
