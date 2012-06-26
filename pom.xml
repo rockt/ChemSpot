@@ -185,9 +185,17 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
         </dependency>
 	</dependencies>
 
-
-
 	<build>
+        <resources>
+            <resource>
+                <targetPath>${basedir}/target/classes/resources</targetPath>
+                <directory>${basedir}/resources</directory>
+            </resource>
+            <resource>
+                <targetPath>${basedir}/target/classes/desc</targetPath>
+                <directory>${basedir}/desc</directory>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                  <groupId>org.codehaus.mojo</groupId>
