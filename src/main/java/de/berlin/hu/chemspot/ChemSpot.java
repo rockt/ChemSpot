@@ -16,16 +16,19 @@ import de.berlin.hu.types.PubmedDocument;
 import de.berlin.hu.uima.cc.eval.ComparableAnnotation;
 import de.berlin.hu.wbi.common.research.Evaluator;
 import org.apache.uima.UIMAException;
+import org.apache.uima.UIMAFramework;
 import org.apache.uima.analysis_engine.AnalysisEngine;
+import org.apache.uima.analysis_engine.AnalysisEngineDescription;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
+import org.apache.uima.cas.CAS;
 import org.apache.uima.examples.SourceDocumentInformation;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.metadata.TypeSystemDescription;
+import org.apache.uima.util.XMLInputSource;
 import org.u_compare.shared.semantic.NamedEntity;
 import org.u_compare.shared.syntactic.Token;
 import org.uimafit.factory.AnalysisEngineFactory;
 import org.uimafit.factory.JCasFactory;
-import org.uimafit.factory.TypeSystemDescriptionFactory;
 import org.uimafit.util.JCasUtil;
 
 import java.io.*;
@@ -62,8 +65,10 @@ public class ChemSpot {
     public ChemSpot(String pathToModelFile, String pathToDictionaryFile) {
         try {
             //FIXME: find a way to access the descriptors in the jar rather than outside
-            typeSystem = TypeSystemDescriptionFactory.createTypeSystemDescription("desc/TypeSystem");
-            fineTokenizer = AnalysisEngineFactory.createAnalysisEngine("desc/ae/tokenizer/FineGrainedTokenizerAE");
+            //typeSystem = TypeSystemDescriptionFactory.createTypeSystemDescription("desc/TypeSystem");
+            typeSystem = UIMAFramework.getXMLParser().parseTypeSystemDescription(new XMLInputSource(this.getClass().getClassLoader().getResource("desc/TypeSystem.xml")));
+            AnalysisEngineDescription tokenizerDesc = UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader().getResource("desc/ae/tokenizer/FineGrainedTokenizerAE.xml")));
+            fineTokenizer = AnalysisEngineFactory.createAnalysisEngine(tokenizerDesc, CAS.NAME_DEFAULT_SOFA);
             sentenceDetector = AnalysisEngineFactory.createAnalysisEngine("desc/ae/tagger/opennlp/SentenceDetector");
             sentenceConverter = AnalysisEngineFactory.createAnalysisEngine("desc/ae/converter/OpenNLPToUCompareSentenceConverterAE");
             System.out.println("Loading CRF...");
