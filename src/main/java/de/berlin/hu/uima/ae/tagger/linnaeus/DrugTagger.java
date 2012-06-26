@@ -30,7 +30,7 @@ public class DrugTagger extends JCasAnnotator_ImplBase {
 		suffixes = new HashSet<String>();
 
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader(new File("resources/suffixes.txt")));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("resources/suffixes.txt")));
 			String line = reader.readLine();
 			while (line != null) {
 				suffixes.add(line);
@@ -109,7 +109,7 @@ public class DrugTagger extends JCasAnnotator_ImplBase {
 
 		Chemical lastChemical = null;
 		for (Chemical chemical : entities) {
-			if ("linnaeus".equals(chemical.getSource())) {
+			if (Constants.DICTIONARY.equals(chemical.getSource())) {
 				//if they cross
 				if (lastChemical != null && (
 						lastChemical.getBegin() <= chemical.getBegin() && chemical.getEnd() <= lastChemical.getEnd()
