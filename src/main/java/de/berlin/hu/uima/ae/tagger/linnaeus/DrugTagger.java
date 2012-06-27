@@ -44,7 +44,6 @@ public class DrugTagger extends JCasAnnotator_ImplBase {
 		} catch (IOException e) {
 			throw new ResourceInitializationException(e);
 		}
-        System.out.println(matcher.size());
 	}
 
 
