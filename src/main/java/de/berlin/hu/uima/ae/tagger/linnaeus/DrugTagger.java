@@ -66,10 +66,6 @@ public class DrugTagger extends JCasAnnotator_ImplBase {
             else throw new AnalysisEngineProcessException(e);
 		}
 
-        System.out.println("# matching...");
-        System.out.println(matches.size());
-
-
 		Comparator<Mention> comp = new Comparator<Mention>() {
 			public int compare(Mention m1, Mention m2) {
 				return m1.getStart() - m2.getStart(); 
@@ -246,7 +242,6 @@ public class DrugTagger extends JCasAnnotator_ImplBase {
 		}
 		drug.setSource(Constants.DICTIONARY);
 		drug.addToIndexes();
-        System.out.println(drug.getCoveredText());
 		return drug;
 	}
 
