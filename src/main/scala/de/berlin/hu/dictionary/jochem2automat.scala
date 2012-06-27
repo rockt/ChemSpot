@@ -23,7 +23,7 @@ import java.io.{PrintWriter, FileOutputStream}
  * Time: 4:01 PM
  */
 
-object jochem2dict extends App {
+object jochem2automat extends App {
   val dictionary = Source.fromFile(args(0)).getLines()
   val automatonOutput =  new FileOutputStream(args(1))
   val idMapOutput = new PrintWriter(args(2))
