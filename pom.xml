@@ -143,6 +143,15 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
             <scope>system</scope>
             <systemPath>${basedir}/lib/linnaeus.jar</systemPath>
         </dependency>
+        <!--
+        <dependency>
+            <groupId>linnaeus</groupId>
+            <artifactId>linnaeus</artifactId>
+            <version>2012-06-25</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/linnaeus-2.0.jar</systemPath>
+        </dependency>
+        -->
         <dependency>
             <groupId>dragontool</groupId>
             <artifactId>dragontool</artifactId>
@@ -176,9 +185,17 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
         </dependency>
 	</dependencies>
 
-
-
 	<build>
+        <resources>
+            <resource>
+                <targetPath>${basedir}/target/classes/resources</targetPath>
+                <directory>${basedir}/resources</directory>
+            </resource>
+            <resource>
+                <targetPath>${basedir}/target/classes/desc</targetPath>
+                <directory>${basedir}/desc</directory>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                  <groupId>org.codehaus.mojo</groupId>
