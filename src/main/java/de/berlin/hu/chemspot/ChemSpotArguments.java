@@ -4,8 +4,11 @@ import uk.co.flamingpenguin.jewel.cli.Option;
 
 public interface ChemSpotArguments {
 	  @Option(shortName="m")
-	  String getPathToModelFile();
-	  
+	  String getPathToCRFModelFile();
+
+      @Option(shortName="s")
+ 	  String getPathToSentenceModelFile();
+
 	  @Option(shortName="d")
 	  String getPathToDictionary();
 	  boolean isPathToDictionary();

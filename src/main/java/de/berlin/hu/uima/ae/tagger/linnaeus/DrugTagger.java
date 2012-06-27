@@ -30,7 +30,7 @@ public class DrugTagger extends JCasAnnotator_ImplBase {
 		suffixes = new HashSet<String>();
 
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader(new File("resources/suffixes.txt")));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("resources/suffixes.txt")));
 			String line = reader.readLine();
 			while (line != null) {
 				suffixes.add(line);
@@ -43,7 +43,7 @@ public class DrugTagger extends JCasAnnotator_ImplBase {
 			throw new ResourceInitializationException(e);
 		} catch (IOException e) {
 			throw new ResourceInitializationException(e);
-		} 
+		}
 	}
 
 
@@ -59,9 +59,10 @@ public class DrugTagger extends JCasAnnotator_ImplBase {
 			//System.out.println("Tagging with LINNAEUS took " + time + "ms");
 			System.out.println("Start post-processing...");
 		} catch (Error e) {
-			// TODO: what goes wrong here?
-		} catch (Exception e) {
-			// TODO: what goes wrong here?
+			throw new AnalysisEngineProcessException(e);
+		} catch (IllegalStateException e) {
+            if (e.toString().contains("Automaton matched the empty string")); //FIXME: What goes wrong here?
+            else throw new AnalysisEngineProcessException(e);
 		}
 
 		Comparator<Mention> comp = new Comparator<Mention>() {
@@ -109,7 +110,7 @@ public class DrugTagger extends JCasAnnotator_ImplBase {
 
 		Chemical lastChemical = null;
 		for (Chemical chemical : entities) {
-			if ("linnaeus".equals(chemical.getSource())) {
+			if (Constants.DICTIONARY.equals(chemical.getSource())) {
 				//if they cross
 				if (lastChemical != null && (
 						lastChemical.getBegin() <= chemical.getBegin() && chemical.getEnd() <= lastChemical.getEnd()
