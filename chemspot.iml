@@ -17,11 +17,12 @@
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/scala" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/resources" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/desc" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: org.scala-lang:scala-library:2.9.2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.uima:uimaj-core:2.3.0-incubating" level="project" />
     <orderEntry type="library" name="Maven: org.apache.uima:uimaj-adapter-vinci:2.3.0-incubating" level="project" />
     <orderEntry type="library" name="Maven: org.apache.uima:jVinci:2.3.0-incubating" level="project" />

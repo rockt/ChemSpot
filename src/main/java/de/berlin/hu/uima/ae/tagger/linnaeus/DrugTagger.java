@@ -43,7 +43,8 @@ public class DrugTagger extends JCasAnnotator_ImplBase {
 			throw new ResourceInitializationException(e);
 		} catch (IOException e) {
 			throw new ResourceInitializationException(e);
-		} 
+		}
+        System.out.println(matcher.size());
 	}
 
 
@@ -59,10 +60,15 @@ public class DrugTagger extends JCasAnnotator_ImplBase {
 			//System.out.println("Tagging with LINNAEUS took " + time + "ms");
 			System.out.println("Start post-processing...");
 		} catch (Error e) {
-			// TODO: what goes wrong here?
-		} catch (Exception e) {
-			// TODO: what goes wrong here?
+			throw new AnalysisEngineProcessException(e);
+		} catch (IllegalStateException e) {
+            if (e.toString().contains("Automaton matched the empty string")); //FIXME: What goes wrong here?
+            else throw new AnalysisEngineProcessException(e);
 		}
+
+        System.out.println("# matching...");
+        System.out.println(matches.size());
+
 
 		Comparator<Mention> comp = new Comparator<Mention>() {
 			public int compare(Mention m1, Mention m2) {
@@ -240,6 +246,7 @@ public class DrugTagger extends JCasAnnotator_ImplBase {
 		}
 		drug.setSource(Constants.DICTIONARY);
 		drug.addToIndexes();
+        System.out.println(drug.getCoveredText());
 		return drug;
 	}
 
