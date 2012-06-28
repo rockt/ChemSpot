@@ -29,12 +29,13 @@ object jochem2automat extends App {
     println("Usage: jochem2automat jochem.ontology output.automat output.ids numberOfThreads")
     exit(-1)
   }
+
+  println("Reading Jochem dictionary...")
   val dictionary = Source.fromFile(args(0)).getLines()
   val automatonOutput =  new FileOutputStream(args(1))
   val idMapOutput = new PrintWriter(args(2))
   val numberOfThreads = args(3).toInt
   var chemicals = List[String]()
-  println("Reading Jochem dictionary...")
 
   val records = dictionary.mkString("\n").split("\n--\n").drop(12)
   for (record <- records) {
@@ -45,21 +46,14 @@ object jochem2automat extends App {
     val inChI = if (inChIOption.isDefined) inChIOption.get.substring(8) else ""
     val terms = lines.filter((s: String) => s.startsWith("TM ")).map((t: String) => t.split("\t")(0).substring(3))
     for (term <- terms) {
-      if (term.length > 2) idMapOutput.println(cas + ":" + inChI + "\t" + term)
+      if (term.length > 2) idMapOutput.println(term + "\t" + cas + "\t" + inChI)
       chemicals = term :: chemicals
     }
   }
   idMapOutput.close()
 
-//  val chemicals = List("water", "oxygen", "silver", "gold", "titanium", "h2o", "atp", "aspirin", "penecilin",
-//    "crystal", "natrium", "sugar",
-//    "aaa", "ddp", "cci", "bba", "eei")
-//
   println("Generating automata...")
   val automata = chemicals.map((name: String) => BasicAutomata.makeString(name))
-  println("Merging into one automata...")
-
-  //val automaton = BasicOperations.union(automata)
 
   class Merger(val n:Int) extends Actor {
     var automaton:Automaton = null
@@ -75,7 +69,7 @@ object jochem2automat extends App {
             else automaton = BasicOperations.union(automaton :: as)
           }
           case "exit" => {
-            reply("finished")
+            reply(n + "finished")
             exit()
           }
         }
@@ -84,11 +78,17 @@ object jochem2automat extends App {
     }
     def getAutomaton = automaton
   }
+
+  println("Merging into one automata using " + numberOfThreads + " threads...")
+  //initializing actors
   val mergers = for (i <- 0 until numberOfThreads) yield new Merger(i)
   mergers.foreach((m:Merger) => m.start())
+  //distributing automata
   for (i <- 0 until automata.size) mergers(i % numberOfThreads) ! automata(i)
+  //wait for actors to finish
   mergers.foreach((m:Merger) => m !? "exit")
   val automaton = BasicOperations.union(mergers.map((m:Merger) => m.getAutomaton))
+
   println("Removing dead transitions...")
   automaton.removeDeadTransitions()
   println("Minimizing autotmaton...")
