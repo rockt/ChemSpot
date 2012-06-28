@@ -22,11 +22,12 @@ import java.io.{File, FileInputStream}
  */
 
 object brics extends App {
-  println("Loading automat...")
+  println("Loading automaton...")
   val automaton = Automaton.load(new FileInputStream(new File(args(0))))
   //val automaton = BasicAutomata.makeString("water")
   val text = args(1)
   //val text = "This is a test sentence containing the word water. I would love a glas of water now."
+  println("Generating RunAutomaton")
   val runAutomaton = new RunAutomaton(automaton)
   println("Creating matcher...")
   val matcher:AutomatonMatcher = runAutomaton.newMatcher(text)
