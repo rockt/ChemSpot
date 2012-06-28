@@ -13,9 +13,10 @@
 package de.berlin.hu.dictionary
 
 import io.Source
-import dk.brics.automaton.{BasicOperations, BasicAutomata}
+import dk.brics.automaton.{Automaton, RunAutomaton, BasicOperations, BasicAutomata}
 import collection.JavaConversions._
 import java.io.{PrintWriter, FileOutputStream}
+import actors.Actor
 
 /**
  * User: Tim Rocktaeschel
@@ -24,11 +25,16 @@ import java.io.{PrintWriter, FileOutputStream}
  */
 
 object jochem2automat extends App {
+  if (args.length != 4) {
+    println("Usage: jochem2automat jochem.ontology output.automat output.ids numberOfThreads")
+    exit(-1)
+  }
   val dictionary = Source.fromFile(args(0)).getLines()
   val automatonOutput =  new FileOutputStream(args(1))
   val idMapOutput = new PrintWriter(args(2))
-
+  val numberOfThreads = args(3).toInt
   var chemicals = List[String]()
+  println("Reading Jochem dictionary...")
 
   val records = dictionary.mkString("\n").split("\n--\n").drop(12)
   for (record <- records) {
@@ -45,7 +51,51 @@ object jochem2automat extends App {
   }
   idMapOutput.close()
 
+//  val chemicals = List("water", "oxygen", "silver", "gold", "titanium", "h2o", "atp", "aspirin", "penecilin",
+//    "crystal", "natrium", "sugar",
+//    "aaa", "ddp", "cci", "bba", "eei")
+//
+  println("Generating automata...")
   val automata = chemicals.map((name: String) => BasicAutomata.makeString(name))
-  val automaton = BasicOperations.union(automata)
-  automaton.store(automatonOutput)
+  println("Merging into one automata...")
+
+  //val automaton = BasicOperations.union(automata)
+
+  class Merger(val n:Int) extends Actor {
+    var automaton:Automaton = null
+    def act() {
+      loop {
+        react {
+          case a:Automaton => {
+            if (automaton == null) automaton = a
+            else automaton = BasicOperations.union(a :: automaton :: Nil)
+          }
+          case as:List[Automaton] => {
+            if (automaton == null) automaton = BasicOperations.union(as)
+            else automaton = BasicOperations.union(automaton :: as)
+          }
+          case "exit" => {
+            reply("finished")
+            exit()
+          }
+        }
+      }
+      if (automaton != null && mailboxSize == 0) exit()
+    }
+    def getAutomaton = automaton
+  }
+  val mergers = for (i <- 0 until numberOfThreads) yield new Merger(i)
+  mergers.foreach((m:Merger) => m.start())
+  for (i <- 0 until automata.size) mergers(i % numberOfThreads) ! automata(i)
+  mergers.foreach((m:Merger) => m !? "exit")
+  val automaton = BasicOperations.union(mergers.map((m:Merger) => m.getAutomaton))
+  println("Removing dead transitions...")
+  automaton.removeDeadTransitions()
+  println("Minimizing autotmaton...")
+  automaton.minimize()
+  println("Generating RunAutomaton...")
+  val runAutomaton = new RunAutomaton(automaton) //TODO: perhaps tablelize
+  println("Storing RunAutomaton to " + args(1))
+  runAutomaton.store(automatonOutput)
+  println("Finished!")
 }
