@@ -63,8 +63,6 @@ public class ChemSpot {
      */
     public ChemSpot(String pathToModelFile, String pathToDictionaryFile, String pathToSentenceModelFile) {
         try {
-            //FIXME: find a way to access the descriptors in the jar rather than outside
-            //typeSystem = TypeSystemDescriptionFactory.createTypeSystemDescription("desc/TypeSystem");
             typeSystem = UIMAFramework.getXMLParser().parseTypeSystemDescription(new XMLInputSource(this.getClass().getClassLoader().getResource("desc/TypeSystem.xml")));
             fineTokenizer = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
                     .getResource("desc/ae/tokenizer/FineGrainedTokenizerAE.xml"))), CAS.NAME_DEFAULT_SOFA);

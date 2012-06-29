@@ -20,7 +20,7 @@ public class DrugTagger extends JCasAnnotator_ImplBase {
 	private boolean matchExpansion = true;
 	protected static final Pattern idPattern = Pattern.compile("(DB[0-9]+)");
     //list of invalid suffixes taken from Hettne et al. (2009)
-	private Set<String> suffixes;
+	private Set<String> suffixes; //FIXME: implement another AE for that
 	private AutomatonMatcher matcher;
 
 	@Override
