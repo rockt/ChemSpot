@@ -71,11 +71,8 @@ object jochem2automat extends App {
           case "merge" => {
             println("\t\tActor " + n + " starts merging " + automata.size + " automata...")
             automaton = BasicOperations.union(automata)
-          }
-          case "exit" => {
             println("\t\tActor " + n + " finished!")
             reply(n + "finished")
-            exit()
           }
         }
       }
@@ -91,15 +88,15 @@ object jochem2automat extends App {
   println("\tDistributing automata...")
   val slices = automata.grouped(math.ceil(automata.size/numberOfThreads.toDouble).toInt).toList
   for (i <- 0 until numberOfThreads) mergers(i) ! slices(i)
-  mergers.foreach((m:Merger) => m ! "merge")
-  //wait for actors to finish
-  mergers.foreach((m:Merger) => m !? "exit")
-  println("\tGetting automata from Actors and merging into a single autotmaton...")
-  val automaton = BasicOperations.union(mergers.map((m:Merger) => m.getAutomaton))
+  mergers.foreach((m:Merger) => m !? "merge")
+  println("\tGetting automata from Actors...")
+  val temp = mergers.map((m:Merger) => m.getAutomaton)
+  println("\tMerging " + temp.size + " autotmata into a single automaton...")
+  val automaton = BasicOperations.union(temp)
   println("\tFinished merging!")
   println("Removing dead transitions...")
   automaton.removeDeadTransitions()
-  println("Minimizing autotmaton...")
+  println("Minimizing automaton...")
   automaton.minimize()
   println("Generating RunAutomaton...")
   val runAutomaton = new RunAutomaton(automaton) //TODO: perhaps tableize
