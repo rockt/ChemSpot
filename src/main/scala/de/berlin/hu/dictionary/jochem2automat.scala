@@ -59,6 +59,7 @@ object jochem2automat extends App {
   class Merger(val n:Int) extends Actor {
     var automaton:Automaton = null
     var automata:List[Automaton] = Nil
+    var finished = false
     def act() {
       loop {
         react {
@@ -69,10 +70,16 @@ object jochem2automat extends App {
             if (automata.isEmpty) automata = as else automata.addAll(as)
           }
           case "merge" => {
+            finished = false
             println("\t\tActor " + n + " starts merging " + automata.size + " automata...")
             automaton = BasicOperations.union(automata)
-            println("\t\tActor " + n + " finished!")
-            reply(n + "finished")
+            finished = true
+          }
+          case "exit" => {
+            if (finished) {
+              println("\t\tActor " + n + " finished!")
+              reply(n + "finished")
+            }
           }
         }
       }
@@ -88,7 +95,9 @@ object jochem2automat extends App {
   println("\tDistributing automata...")
   val slices = automata.grouped(math.ceil(automata.size/numberOfThreads.toDouble).toInt).toList
   for (i <- 0 until numberOfThreads) mergers(i) ! slices(i)
-  mergers.foreach((m:Merger) => m !? "merge")
+  mergers.foreach((m:Merger) => m ! "merge")
+  //wait for actors to finish
+  mergers.foreach((m:Merger) => m !? "exit")
   println("\tGetting automata from Actors...")
   val temp = mergers.map((m:Merger) => m.getAutomaton)
   println("\tMerging " + temp.size + " autotmata into a single automaton...")
