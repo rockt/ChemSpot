@@ -57,18 +57,22 @@ object jochem2automat extends App {
 
   class Merger(val n:Int) extends Actor {
     var automaton:Automaton = null
+    var automata:List[Automaton] = Nil
     def act() {
       loop {
         react {
           case a:Automaton => {
-            if (automaton == null) automaton = a
-            else automaton = BasicOperations.union(a :: automaton :: Nil)
+            a :: automata
           }
           case as:List[Automaton] => {
-            if (automaton == null) automaton = BasicOperations.union(as)
-            else automaton = BasicOperations.union(automaton :: as)
+            as ++ automata
+          }
+          case "merge" => {
+            System.out.println("\t\tActor " + n + " starts merging " + automata.size + " automata...")
+            automaton = BasicOperations.union(automata)
           }
           case "exit" => {
+            System.out.println("\t\tActor " + n + " finished!")
             reply(n + "finished")
             exit()
           }
@@ -79,16 +83,18 @@ object jochem2automat extends App {
     def getAutomaton = automaton
   }
 
-  println("Merging into one automata using " + numberOfThreads + " threads...")
+  println("Merging " + automata.size + " into one automata using " + numberOfThreads + " threads...")
   //initializing actors
   val mergers = for (i <- 0 until numberOfThreads) yield new Merger(i)
   mergers.foreach((m:Merger) => m.start())
-  //distributing automata
+  System.out.println("\tDistributing automata...")
   for (i <- 0 until automata.size) mergers(i % numberOfThreads) ! automata(i)
+  mergers.foreach((m:Merger) => m ! "merge")
   //wait for actors to finish
   mergers.foreach((m:Merger) => m !? "exit")
+  System.out.println("\tGetting automaton from Actors and merging into a single autotmaton...")
   val automaton = BasicOperations.union(mergers.map((m:Merger) => m.getAutomaton))
-
+  System.out.println("\tFinished merging!")
   println("Removing dead transitions...")
   automaton.removeDeadTransitions()
   println("Minimizing autotmaton...")
