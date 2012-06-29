@@ -17,6 +17,7 @@ import dk.brics.automaton.{Automaton, RunAutomaton, BasicOperations, BasicAutoma
 import collection.JavaConversions._
 import java.io.{PrintWriter, FileOutputStream}
 import actors.Actor
+import java.util.ArrayList
 
 /**
  * User: Tim Rocktaeschel
@@ -57,22 +58,22 @@ object jochem2automat extends App {
 
   class Merger(val n:Int) extends Actor {
     var automaton:Automaton = null
-    var automata:List[Automaton] = Nil
+    var automata:ArrayList[Automaton] = new ArrayList[Automaton]()
     def act() {
       loop {
         react {
           case a:Automaton => {
-            a :: automata
+            automata.add(a)
           }
           case as:List[Automaton] => {
-            as ++ automata
+            automata.addAll(as)
           }
           case "merge" => {
-            System.out.println("\t\tActor " + n + " starts merging " + automata.size + " automata...")
+            println("\t\tActor " + n + " starts merging " + automata.size + " automata...")
             automaton = BasicOperations.union(automata)
           }
           case "exit" => {
-            System.out.println("\t\tActor " + n + " finished!")
+            println("\t\tActor " + n + " finished!")
             reply(n + "finished")
             exit()
           }
@@ -83,18 +84,21 @@ object jochem2automat extends App {
     def getAutomaton = automaton
   }
 
-  println("Merging " + automata.size + " into one automata using " + numberOfThreads + " threads...")
+  println("Merging " + automata.size + " automata into a single automaton using " + numberOfThreads + " threads...")
   //initializing actors
   val mergers = for (i <- 0 until numberOfThreads) yield new Merger(i)
   mergers.foreach((m:Merger) => m.start())
-  System.out.println("\tDistributing automata...")
-  for (i <- 0 until automata.size) mergers(i % numberOfThreads) ! automata(i)
+  println("\tDistributing automata...")
+  for (i <- 0 until automata.size) {
+    mergers(i % numberOfThreads) ! automata(i)
+    println("\t\t" + (i/automata.size.toDouble) + "%\r")
+  }
   mergers.foreach((m:Merger) => m ! "merge")
   //wait for actors to finish
   mergers.foreach((m:Merger) => m !? "exit")
-  System.out.println("\tGetting automaton from Actors and merging into a single autotmaton...")
+  println("\tGetting automata from Actors and merging into a single autotmaton...")
   val automaton = BasicOperations.union(mergers.map((m:Merger) => m.getAutomaton))
-  System.out.println("\tFinished merging!")
+  println("\tFinished merging!")
   println("Removing dead transitions...")
   automaton.removeDeadTransitions()
   println("Minimizing autotmaton...")
