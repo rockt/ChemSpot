@@ -91,7 +91,7 @@ object jochem2automat extends App {
   println("\tDistributing automata...")
   for (i <- 0 until automata.size) {
     mergers(i % numberOfThreads) ! automata(i)
-    println("\t\t" + (i/automata.size.toDouble) + "%\r")
+    print("\t\t%.4f%\r".format((i/automata.size.toDouble)))
   }
   mergers.foreach((m:Merger) => m ! "merge")
   //wait for actors to finish
