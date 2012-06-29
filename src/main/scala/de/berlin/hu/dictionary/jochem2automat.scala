@@ -17,7 +17,6 @@ import dk.brics.automaton.{Automaton, RunAutomaton, BasicOperations, BasicAutoma
 import collection.JavaConversions._
 import java.io.{PrintWriter, FileOutputStream}
 import actors.Actor
-import java.util.ArrayList
 
 /**
  * User: Tim Rocktaeschel
@@ -31,6 +30,7 @@ object jochem2automat extends App {
     exit(-1)
   }
 
+  val start = System.currentTimeMillis()
   println("Reading Jochem dictionary...")
   val dictionary = Source.fromFile(args(0)).getLines()
   val automatonOutput =  new FileOutputStream(args(1))
@@ -58,7 +58,7 @@ object jochem2automat extends App {
 
   class Merger(val n:Int) extends Actor {
     var automaton:Automaton = null
-    var automata:ArrayList[Automaton] = new ArrayList[Automaton]()
+    var automata:List[Automaton] = Nil
     def act() {
       loop {
         react {
@@ -66,7 +66,7 @@ object jochem2automat extends App {
             automata.add(a)
           }
           case as:List[Automaton] => {
-            automata.addAll(as)
+            if (automata.isEmpty) automata = as else automata.addAll(as)
           }
           case "merge" => {
             println("\t\tActor " + n + " starts merging " + automata.size + " automata...")
@@ -89,10 +89,8 @@ object jochem2automat extends App {
   val mergers = for (i <- 0 until numberOfThreads) yield new Merger(i)
   mergers.foreach((m:Merger) => m.start())
   println("\tDistributing automata...")
-  for (i <- 0 until automata.size) {
-    mergers(i % numberOfThreads) ! automata(i)
-    print("\t\t%.4f%\r".format((i/automata.size.toDouble)))
-  }
+  val slices = automata.grouped(math.ceil(automata.size/numberOfThreads.toDouble).toInt).toList
+  for (i <- 0 until numberOfThreads) mergers(i) ! slices(i)
   mergers.foreach((m:Merger) => m ! "merge")
   //wait for actors to finish
   mergers.foreach((m:Merger) => m !? "exit")
@@ -104,8 +102,8 @@ object jochem2automat extends App {
   println("Minimizing autotmaton...")
   automaton.minimize()
   println("Generating RunAutomaton...")
-  val runAutomaton = new RunAutomaton(automaton) //TODO: perhaps tablelize
+  val runAutomaton = new RunAutomaton(automaton) //TODO: perhaps tableize
   println("Storing RunAutomaton to " + args(1))
   runAutomaton.store(automatonOutput)
-  println("Finished!")
+  println("Finished after " + ((System.currentTimeMillis() - start) / 60000) + " minutes!")
 }
