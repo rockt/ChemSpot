@@ -105,8 +105,8 @@ object jochem2automat extends App {
   println("\tFinished merging!")
   println("Removing dead transitions...")
   automaton.removeDeadTransitions()
-  println("Minimizing automaton...")
-  automaton.minimize()
+//  println("Minimizing automaton...")
+//  automaton.minimize()
   println("Generating RunAutomaton...")
   val runAutomaton = new RunAutomaton(automaton) //TODO: perhaps tableize
   println("Storing RunAutomaton to " + args(1))
