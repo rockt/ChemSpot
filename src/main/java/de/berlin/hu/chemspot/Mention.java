@@ -37,7 +37,12 @@ public class Mention {
         else this.source = source;
 	}
 
-	public int getStart() {
+    public Mention(int start, int end) {
+        this.start = start;
+        this.end = end;
+    }
+
+    public int getStart() {
 		return start;
 	}
 	public void setStart(int start) {

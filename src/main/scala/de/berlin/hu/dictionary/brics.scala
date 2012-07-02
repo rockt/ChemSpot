@@ -13,7 +13,10 @@
 package de.berlin.hu.dictionary
 
 import dk.brics.automaton._
-import java.io.{File, FileInputStream}
+import java.io.{FileOutputStream, File}
+import de.berlin.hu.uima.ae.tagger.linnaeus.BricsMatcher
+import de.berlin.hu.chemspot.Mention
+import scala.collection.JavaConversions._
 
 /**
  * User: Tim Rocktaeschel
@@ -22,17 +25,36 @@ import java.io.{File, FileInputStream}
  */
 
 object brics extends App {
-  println("Loading automaton...")
-  val automaton = Automaton.load(new FileInputStream(new File(args(0))))
-  //val automaton = BasicAutomata.makeString("water")
-  val text = args(1)
-  //val text = "This is a test sentence containing the word water. I would love a glas of water now."
-  println("Generating RunAutomaton")
-  val runAutomaton = new RunAutomaton(automaton)
-  println("Creating matcher...")
-  val matcher:AutomatonMatcher = runAutomaton.newMatcher(text)
-  println("Finding chemicals in: " + text)
-  while (matcher.find) {
-    println(matcher.start, matcher.end)
+  automatonWriterPrototype()
+  automatonMatcherPrototype()
+
+  def automatonWriterPrototype() {
+    val a1 = BasicAutomata.makeStringUnion(
+      "alpha", "beta", "gamma"
+    )
+    val a2 = BasicAutomata.makeStringUnion(
+      "epsilon", "theta", "chi"
+    )
+
+    a1.removeDeadTransitions()
+    a1.minimize()
+    a2.removeDeadTransitions()
+    a2.minimize()
+
+    val r1 = new RunAutomaton(a1)
+    val r2 = new RunAutomaton(a2)
+    r1.store(new FileOutputStream(new File("../r1")))
+    r2.store(new FileOutputStream(new File("../r2")))
+  }
+
+  def automatonMatcherPrototype() {
+    val matcher:BricsMatcher = new BricsMatcher("../r.zip")
+    val matches = matcher.`match`("This is a sample text containing the words alpha and theta.").toList.sortWith(
+      (a: Mention, b: Mention) => a.getStart <= b.getStart
+    )
+
+    for (mention:Mention <- matches) {
+      println(mention.getStart, mention.getEnd)
+    }
   }
 }

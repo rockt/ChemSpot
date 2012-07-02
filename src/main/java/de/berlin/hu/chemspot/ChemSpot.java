@@ -57,7 +57,7 @@ public class ChemSpot {
     }
 
     /**
-     * Initializes ChemSpot with a CRF model and a dictionary automaton.
+     * Initializes ChemSpot with a CRF model, an OpenNLP sentence model and a dictionary automaton.
      * @param pathToModelFile the path to a CRF model
      * @param pathToDictionaryFile the ath to a dictionary automaton
      */
