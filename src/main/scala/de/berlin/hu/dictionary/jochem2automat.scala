@@ -33,7 +33,6 @@ object jochem2automat extends App {
   val start = System.currentTimeMillis()
   println("Reading Jochem dictionary...")
   val dictionary = Source.fromFile(args(0)).getLines()
-  val automatonOutput =  new FileOutputStream(args(1))
   val idMapOutput = new PrintWriter(args(2))
   val numberOfThreads = args(3).toInt
   var chemicals = List[String]()
@@ -56,10 +55,9 @@ object jochem2automat extends App {
   println("Generating automata...")
   val automata = chemicals.map((name: String) => BasicAutomata.makeString(name))
 
-  class Merger(val n:Int) extends Actor {
+  class Merger(val n:Int, val output:String) extends Actor {
     var automaton:Automaton = null
     var automata:List[Automaton] = Nil
-    var finished = false
     def act() {
       loop {
         react {
@@ -70,16 +68,22 @@ object jochem2automat extends App {
             if (automata.isEmpty) automata = as else automata.addAll(as)
           }
           case "merge" => {
-            finished = false
             println("\t\tActor " + n + " starts merging " + automata.size + " automata...")
             automaton = BasicOperations.union(automata)
-            finished = true
+          }
+          case "optimize" => {
+            println("\t\tActor " + n + " starts optimizing automaton...")
+            automaton.removeDeadTransitions()
+            automaton.minimize()
+          }
+          case "store" => {
+            println("\t\tActor " + n + " starts generating and storing RunAutomator...")
+            val runAutomaton = new RunAutomaton(automaton)
+            runAutomaton.store(new FileOutputStream(output + "." + n))
           }
           case "exit" => {
-            if (finished) {
-              println("\t\tActor " + n + " finished!")
-              reply(n + "finished")
-            }
+            println("\t\tActor " + n + " finished!")
+            reply(n + "finished")
           }
         }
       }
@@ -88,28 +92,17 @@ object jochem2automat extends App {
     def getAutomaton = automaton
   }
 
-  println("Merging " + automata.size + " automata into a single automaton using " + numberOfThreads + " threads...")
+  println("Merging and storing " + automata.size + " automata into " + numberOfThreads + " automata...")
   //initializing actors
-  val mergers = for (i <- 0 until numberOfThreads) yield new Merger(i)
+  val mergers = for (i <- 0 until numberOfThreads) yield new Merger(i, args(1))
   mergers.foreach((m:Merger) => m.start())
   println("\tDistributing automata...")
   val slices = automata.grouped(math.ceil(automata.size/numberOfThreads.toDouble).toInt).toList
   for (i <- 0 until numberOfThreads) mergers(i) ! slices(i)
   mergers.foreach((m:Merger) => m ! "merge")
+  mergers.foreach((m:Merger) => m ! "optimize")
+  mergers.foreach((m:Merger) => m ! "store")
   //wait for actors to finish
   mergers.foreach((m:Merger) => m !? "exit")
-  println("\tGetting automata from Actors...")
-  val temp = mergers.map((m:Merger) => m.getAutomaton)
-  println("\tMerging " + temp.size + " autotmata into a single automaton...")
-  val automaton = BasicOperations.union(temp)
-  println("\tFinished merging!")
-  println("Removing dead transitions...")
-  automaton.removeDeadTransitions()
-//  println("Minimizing automaton...")
-//  automaton.minimize()
-  println("Generating RunAutomaton...")
-  val runAutomaton = new RunAutomaton(automaton) //TODO: perhaps tableize
-  println("Storing RunAutomaton to " + args(1))
-  runAutomaton.store(automatonOutput)
   println("Finished after " + ((System.currentTimeMillis() - start) / 60000) + " minutes!")
 }
