@@ -60,7 +60,7 @@ object jochem2automat extends App {
     var automaton:Automaton = null
     var automata:List[Automaton] = Nil
     def act() {
-      loop {
+      //loop {
         react {
           case a:Automaton => {
             automata.add(a)
@@ -80,8 +80,9 @@ object jochem2automat extends App {
             automaton.minimize()
           }
           case "store" => {
-            println("Actor " + n + " starts generating and storing RunAutomator...")
+            println("Actor " + n + " starts generating RunAutomaton...")
             val runAutomaton = new RunAutomaton(automaton)
+            println("Actor " + n + " starts storing RunAutomaton...")
             runAutomaton.store(new FileOutputStream(output + "." + n))
           }
           case "exit" => {
@@ -89,7 +90,7 @@ object jochem2automat extends App {
             reply(n + "finished")
           }
         }
-      }
+      //}
       if (automaton != null && mailboxSize == 0) exit()
     }
     def getAutomaton = automaton
@@ -103,7 +104,7 @@ object jochem2automat extends App {
   val slices = automata.grouped(math.ceil(automata.size/numberOfThreads.toDouble).toInt).toList
   for (i <- 0 until numberOfThreads) mergers(i) ! slices(i)
   mergers.foreach((m:Merger) => m ! "merge")
-  mergers.foreach((m:Merger) => m ! "optimize")
+  //mergers.foreach((m:Merger) => m ! "optimize")
   mergers.foreach((m:Merger) => m ! "store")
   //wait for actors to finish
   mergers.foreach((m:Merger) => m !? "exit")
