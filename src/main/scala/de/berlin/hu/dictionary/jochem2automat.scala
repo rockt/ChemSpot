@@ -109,22 +109,31 @@ object jochem2automat extends App {
   mergers.foreach((m:Merger) => m ! "merge")
   //wait for actors to finish
   mergers.foreach((m:Merger) => m !? "exit")
+  println("Running garbage collection...")
+  System.gc()
   //due to  main memory constraints, start processing iteratively
   println("Removing dead transitions...")
   val mergedAutomata = for (merger <- mergers) yield merger.getAutomaton
   for (i <- 0 until mergedAutomata.size) {
-    println("Removing dead transitions from " + i + "th automaton...")
+    print((100 * (i / mergedAutomata.size.toDouble)) + "%\r")
     mergedAutomata(i).removeDeadTransitions
   }
+  println
+  println("Running garbage collection...")
+  System.gc()
+  println("Minimizing automata...")
   for (i <- 0 until mergedAutomata.size) {
-    println("Minimizing" + i + "th automaton...")
+    print((100 * (i / mergedAutomata.size.toDouble)) + "%\r")
     mergedAutomata(i).minimize
+    System.gc()
   }
+  println
+  println("Generating and storing RunAutomata...")
   for (i <- 0 until mergedAutomata.size) {
-    println("Generating RunAutomaton from " + i + "th automaton...")
+    print((100 * (i / mergedAutomata.size.toDouble)) + "%\r")
     val runAutomaton = new RunAutomaton(mergedAutomata(i))
-    println("Storing " + i + "th RunAutomaton to " + args(1) + "." + i)
     runAutomaton.store(new FileOutputStream(args(1) + "." + i))
   }
+  println
   println("Finished after " + ((System.currentTimeMillis() - start) / 60000) + " minutes!")
 }
