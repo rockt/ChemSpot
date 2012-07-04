@@ -32,6 +32,12 @@ import java.util.zip.ZipFile;
 public class BricsMatcher {
     private Collection<RunAutomaton> matchers = new ArrayList<RunAutomaton>();
 
+    /**
+     * BricsMatcher loads a set of brics dictionary matchers packed in a zip file.
+     * @param pathToZippedBinaries Path to the zip file containing a set of brics dictionary matchers.
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public BricsMatcher(String pathToZippedBinaries) throws IOException, ClassNotFoundException {
         ZipFile zipFile = new ZipFile(pathToZippedBinaries);
         Enumeration<? extends ZipEntry> entries = zipFile.entries();
@@ -41,6 +47,11 @@ public class BricsMatcher {
         }
     }
 
+    /**
+     * Uses the set of brics dictionary matchers to extract mentions of chemical entities in natural language text.
+     * @param text Input natural language text.
+     * @return
+     */
     public Collection<Mention> match(String text) {
         Collection<Mention> matches = new HashSet<Mention>();
         for (RunAutomaton automat : matchers) {

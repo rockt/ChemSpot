@@ -56,7 +56,7 @@ object jochem2automat extends App {
   //sorted for better compression when using several automata
   val automata = chemicals.sorted.map((name: String) => BasicAutomata.makeString(name))
 
-  class Merger(val n:Int, val output:String) extends Actor {
+  class Merger(val n:Int) extends Actor {
     var automaton:Automaton = null
     var automata:List[Automaton] = Nil
     def act() {
@@ -72,7 +72,8 @@ object jochem2automat extends App {
             println("Actor " + n + " starts merging " + automata.size + " automata...")
             automaton = BasicOperations.union(automata)
           }
-          case "optimize" => {
+/*
+            case "optimize" => {
             println("Actor " + n + " starts optimizing automaton...")
             println("\tActor " + n + " starts removing dead transitions...")
             automaton.removeDeadTransitions()
@@ -85,6 +86,7 @@ object jochem2automat extends App {
             println("Actor " + n + " starts storing RunAutomaton...")
             runAutomaton.store(new FileOutputStream(output + "." + n))
           }
+*/
           case "exit" => {
             println("Actor " + n + " finished!")
             reply(n + "finished")
@@ -93,20 +95,36 @@ object jochem2automat extends App {
       }
       if (automaton != null && mailboxSize == 0) exit()
     }
+
     def getAutomaton = automaton
   }
 
   println("Start merging and storing " + automata.size + " automata into " + numberOfThreads + " automata...")
   //initializing actors
-  val mergers = for (i <- 0 until numberOfThreads) yield new Merger(i, args(1))
+  val mergers = for (i <- 0 until numberOfThreads) yield new Merger(i)
   mergers.foreach((m:Merger) => m.start())
   println("Distributing automata...")
   val slices = automata.grouped(math.ceil(automata.size/numberOfThreads.toDouble).toInt).toList
   for (i <- 0 until numberOfThreads) mergers(i) ! slices(i)
   mergers.foreach((m:Merger) => m ! "merge")
-  //mergers.foreach((m:Merger) => m ! "optimize")
-  mergers.foreach((m:Merger) => m ! "store")
   //wait for actors to finish
   mergers.foreach((m:Merger) => m !? "exit")
+  //due to  main memory constraints, start processing iteratively
+  println("Removing dead transitions...")
+  val mergedAutomata = for (merger <- mergers) yield merger.getAutomaton
+  for (i <- 0 until mergedAutomata.size) {
+    println("Removing dead transitions from " + i + "th automaton...")
+    mergedAutomata(i).removeDeadTransitions
+  }
+  for (i <- 0 until mergedAutomata.size) {
+    println("Minimizing" + i + "th automaton...")
+    mergedAutomata(i).minimize
+  }
+  for (i <- 0 until mergedAutomata.size) {
+    println("Generating RunAutomaton from " + i + "th automaton...")
+    val runAutomaton = new RunAutomaton(mergedAutomata(i))
+    println("Storing " + i + "th RunAutomaton to " + args(1) + "." + i)
+    runAutomaton.store(new FileOutputStream(args(1) + "." + i))
+  }
   println("Finished after " + ((System.currentTimeMillis() - start) / 60000) + " minutes!")
 }
