@@ -60,7 +60,7 @@ object jochem2automat extends App {
     var automaton:Automaton = null
     var automata:List[Automaton] = Nil
     def act() {
-      //loop {
+      loop {
         react {
           case a:Automaton => {
             automata.add(a)
@@ -90,7 +90,7 @@ object jochem2automat extends App {
             reply(n + "finished")
           }
         }
-      //}
+      }
       if (automaton != null && mailboxSize == 0) exit()
     }
     def getAutomaton = automaton
