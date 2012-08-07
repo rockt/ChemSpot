@@ -27,7 +27,7 @@ import scala.collection.JavaConversions._
 object brics extends App {
   //automatonWriterPrototype()
   //automatonMatcherPrototype()
-  jochemMatcherPrototybe()
+  jochemMatcherPrototype()
 
   def automatonWriterPrototype() {
     val a1 = BasicAutomata.makeStringUnion(
