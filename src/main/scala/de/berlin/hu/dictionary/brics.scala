@@ -61,10 +61,12 @@ object brics extends App {
 
   def jochemMatcherPrototype() {
     val matcher = new BricsMatcher(args(0))
-    matcher.`match`(
+    for (mention <- matcher.`match`(
       """Hypersensitivity may occur shortly, within 15 minutes or longer, up to 24 hours after NSAID intake. In general it develops within 1 to 4 hours [3]. Some patients might have life-threatening reactions, especially those with aspirin-exacerbated respiratory diseases (AERDs, Widal syndrome), which associate aspirin sensitivity, asthma, nasal polyposis, and airway remodelling [1].
         |
         |In most patients the adverse reaction is nonallergic. Those with eicosanoid metabolism dysfunction or other alterations are prone to hypersensitivity when NSAIDs inhibit the enzyme cylooxygenase-1 (Cox-1) [3–14]. Selective NSAIDs strongly inhibit COX-2, but they are weak inhibitors of COX-1, so they are well tolerated in patients with NSAID-sensitive asthma or CIU [4, 5]. The concentration inhibiting efficiently COX-1 or COX-2 may differ as much as 3 logs between the strongest and weakest inhibitors (Table 1) [15–17]. Pharmacological profiles as well as hypersensitivity depend on their inhibitory activities."""
-    )
+    )) {
+      println(mention.getStart, mention.getEnd, mention.getText)
+    }
   }
 }

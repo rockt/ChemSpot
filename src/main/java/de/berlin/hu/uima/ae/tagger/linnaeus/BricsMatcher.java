@@ -50,7 +50,7 @@ public class BricsMatcher {
     /**
      * Uses the set of brics dictionary matchers to extract mentions of chemical entities in natural language text.
      * @param text Input natural language text.
-     * @return
+     * @return a collection of Mentions.
      */
     public Collection<Mention> match(String text) {
         Collection<Mention> matches = new HashSet<Mention>();
