@@ -59,7 +59,7 @@ public class ChemSpot {
     /**
      * Initializes ChemSpot with a CRF model and a dictionary automaton.
      * @param pathToModelFile the path to a CRF model
-     * @param pathToDictionaryFile the ath to a dictionary automaton
+     * @param pathToDictionaryFile the path to a dictionary automaton
      */
     public ChemSpot(String pathToModelFile, String pathToDictionaryFile, String pathToSentenceModelFile) {
         try {
