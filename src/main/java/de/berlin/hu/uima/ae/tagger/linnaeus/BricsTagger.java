@@ -84,7 +84,7 @@ public class BricsTagger extends JCasAnnotator_ImplBase {
 
    		try {
    			long start = System.currentTimeMillis();
-   			matches = (List<Mention>) matcher.match(docText);
+   			matches = new ArrayList<Mention>(matcher.match(docText));
    			long time = System.currentTimeMillis() - start;
    			//System.out.println("Tagging with LINNAEUS took " + time + "ms");
    			System.out.println("Start post-processing...");
