@@ -12,6 +12,8 @@
 
 package de.berlin.hu.chemspot;
 
+import de.berlin.hu.util.Constants;
+
 public class Mention {
 	private int start;
 	private int end;
@@ -36,6 +38,13 @@ public class Mention {
         else if ("linnaeus".equals(source)) this.source = "Dictionary";
         else this.source = source;
 	}
+
+    public Mention(int start, int end, String text) {
+   		this.start = start;
+   		this.end = end;
+   		this.text = text;
+        this.source = Constants.DICTIONARY;
+   	}
 
     public Mention(int start, int end) {
         this.start = start;

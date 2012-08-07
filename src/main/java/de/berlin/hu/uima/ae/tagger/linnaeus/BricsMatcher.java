@@ -57,7 +57,7 @@ public class BricsMatcher {
         for (RunAutomaton automat : matchers) {
             AutomatonMatcher matcher = automat.newMatcher(text);
             while (matcher.find()) {
-              matches.add(new Mention(matcher.start(), matcher.end()));
+              matches.add(new Mention(matcher.start(), matcher.end(), text.substring(matcher.start(), matcher.end())));
             }
         }
         return matches;
