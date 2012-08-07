@@ -45,9 +45,11 @@ object jochem2automat extends App {
     val inChIOption = lines.find((s: String) => s.startsWith("DB INCH_"))
     val inChI = if (inChIOption.isDefined) inChIOption.get.substring(8) else ""
     val terms = lines.filter((s: String) => s.startsWith("TM ")).map((t: String) => t.split("\t")(0).substring(3))
+    val isChemIDplus = lines.filter((s: String) => s.startsWith("DB CHID")).length > 0
     for (term <- terms) {
       if (term.length > 2) idMapOutput.println(term + "\t" + cas + "\t" + inChI)
-      chemicals = term :: chemicals
+      //only keep terms of the ChemIDplus dictionary
+      if (isChemIDplus) chemicals = term :: chemicals
     }
   }
   idMapOutput.close()
