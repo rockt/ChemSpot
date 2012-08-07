@@ -77,7 +77,8 @@ public class ChemSpot {
             if (pathToDictionaryFile != null) {
                 //linnaeusTagger = AnalysisEngineFactory.createAnalysisEngine("desc/ae/tagger/DictionaryTaggerAE", "DrugBankMatcherDictionaryAutomat", pathToDictionaryFile);
                 linnaeusTagger = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
-                        .getResource("desc/ae/tagger/DictionaryTaggerAE.xml"))), "DrugBankMatcherDictionaryAutomat", pathToDictionaryFile);
+                        //.getResource("desc/ae/tagger/DictionaryTaggerAE.xml"))), "DrugBankMatcherDictionaryAutomat", pathToDictionaryFile);
+                        .getResource("desc/ae/tagger/BricsTaggerAE.xml"))), "DrugBankMatcherDictionaryAutomat", pathToDictionaryFile);
             }
             annotationMerger = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
                     .getResource("desc/ae/AnnotationMergerAE.xml"))), CAS.NAME_DEFAULT_SOFA);

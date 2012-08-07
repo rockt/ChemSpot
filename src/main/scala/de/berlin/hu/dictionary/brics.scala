@@ -60,9 +60,16 @@ object brics extends App {
   }
 
   def jochemMatcherPrototype() {
+    val start = System.currentTimeMillis()
+    println("Starting initialization...")
     val matcher = new BricsMatcher(args(0))
-    for (mention <- matcher.`match`(args(1))) {
+    val stop = System.currentTimeMillis()
+    println("Initialization took " + ((stop - start) / 1000.0))
+    for (mention <- matcher.`match`(args(1)).toList.sortWith(
+      (a: Mention, b: Mention) => a.getStart <= b.getStart
+    )) {
       println(mention.getStart, mention.getEnd, mention.getText)
     }
+    println("Tagging took " + ((System.currentTimeMillis() - stop) / 1000.0))
   }
 }
