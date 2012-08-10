@@ -23,6 +23,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: automaton:automaton:2012-06-28" level="project" />
     <orderEntry type="library" name="Maven: org.apache.uima:uimaj-core:2.3.0-incubating" level="project" />
     <orderEntry type="library" name="Maven: org.apache.uima:uimaj-adapter-vinci:2.3.0-incubating" level="project" />
     <orderEntry type="library" name="Maven: org.apache.uima:jVinci:2.3.0-incubating" level="project" />

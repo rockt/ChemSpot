@@ -49,7 +49,7 @@ object jochem2automat extends App {
     for (term <- terms) {
       if (term.length > 2) idMapOutput.println(term + "\t" + cas + "\t" + inChI)
       //only keep terms of the ChemIDplus dictionary
-      if (isChemIDplus) chemicals = term :: chemicals
+      if (term.length > 2 && isChemIDplus) chemicals = term :: chemicals
     }
   }
   idMapOutput.close()
