@@ -61,7 +61,7 @@ public class BricsMatcher {
                 //only add if not within a text
                 char left = text.charAt(matcher.start() - 1);
                 char right = text.charAt(matcher.end() + 1);
-                if (delimiters.contains(left) || delimiters.contains(right)) {
+                if (delimiters.contains(left) && delimiters.contains(right)) {
                     matches.add(new Mention(matcher.start(), matcher.end(), text.substring(matcher.start(), matcher.end())));
                 }
             }
