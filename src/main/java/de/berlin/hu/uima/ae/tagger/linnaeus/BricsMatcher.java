@@ -17,10 +17,7 @@ import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.RunAutomaton;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.HashSet;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -31,6 +28,9 @@ import java.util.zip.ZipFile;
  */
 public class BricsMatcher {
     private Collection<RunAutomaton> matchers = new ArrayList<RunAutomaton>();
+    private HashSet<Character> delimiters = new HashSet<Character>(Arrays.asList(
+            new Character[] {'.', '-', ' ', '/', '\\', '\'', ',', ';', '+', '—'}));
+
 
     /**
      * BricsMatcher loads a set of brics dictionary matchers packed in a zip file.
@@ -58,7 +58,12 @@ public class BricsMatcher {
         for (RunAutomaton automat : matchers) {
             AutomatonMatcher matcher = automat.newMatcher(text);
             while (matcher.find()) {
-                matches.add(new Mention(matcher.start(), matcher.end(), text.substring(matcher.start(), matcher.end())));
+                //only add if not within a text
+                char left = text.charAt(matcher.start() - 1);
+                char right = text.charAt(matcher.end() + 1);
+                if (delimiters.contains(left) || delimiters.contains(right)) {
+                    matches.add(new Mention(matcher.start(), matcher.end(), text.substring(matcher.start(), matcher.end())));
+                }
             }
         }
         return matches;
