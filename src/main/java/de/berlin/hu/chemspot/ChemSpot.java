@@ -312,13 +312,6 @@ public class ChemSpot {
             FP += evaluator.getFalsePositives().size();
             FN += evaluator.getFalseNegatives().size();
 
-            for (ComparableAnnotation fp : evaluator.getFalsePositives()) {
-                String doctex = fp.getCAS().getDocumentText();
-                String debug = doctex.substring(fp.getBegin() - 15, fp.getBegin())
-                        + "**" + fp.getText() + "**" + doctex.substring(fp.getEnd(), fp.getEnd() + 15);
-                System.out.println(debug);
-            }
-
             System.out.format("True Positives:\t\t%d\nFalse Positives:\t%d\nFalse Negatives:\t%d\n", TP, FP, FN);
             double precision = (double) TP / ((double) TP + FP);
             double recall = (double) TP / ((double) TP + FN);
