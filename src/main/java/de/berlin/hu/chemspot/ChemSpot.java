@@ -314,7 +314,8 @@ public class ChemSpot {
 
             for (ComparableAnnotation fp : evaluator.getFalsePositives()) {
                 String doctex = fp.getCAS().getDocumentText();
-                String debug = doctex.substring(fp.getBegin() - 5, fp.getEnd() + 5);
+                String debug = doctex.substring(fp.getBegin() - 5, fp.getBegin())
+                        + "**" + fp.getText() + "**" + doctex.substring(fp.getEnd(), fp.getEnd() + 5);
                 System.out.println(debug);
             }
 
