@@ -45,6 +45,7 @@ public class BricsMatcher {
             ZipEntry entry = entries.nextElement();
             matchers.add(RunAutomaton.load(zipFile.getInputStream(entry)));
         }
+        System.out.println("Loaded " + matchers.size() + " automata!");
     }
 
     /**

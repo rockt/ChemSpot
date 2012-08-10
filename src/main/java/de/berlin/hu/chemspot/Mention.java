@@ -44,6 +44,7 @@ public class Mention {
    		this.end = end;
    		this.text = text;
         this.source = Constants.DICTIONARY;
+        System.out.println("Found: " + text);
    	}
 
     public Mention(int start, int end) {
