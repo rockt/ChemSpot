@@ -88,7 +88,7 @@ public class App {
             if (arguments.isPathToIOBCorpora()) {
                 //CollectionReader reader = CollectionReaderFactory.createCollectionReaderFromPath("desc/cr/ScaiCorpusCR.xml", "InputDirectory", pathToCorpora, "UseGoldStandardAnnotations", true, "GoldstandardTypeSuffix" , "", "BrowseSubdirectories", true, "IncludeSuffixes", new String[]{"iob", "iob2"});
                 CollectionReader reader = CollectionReaderFactory.createCollectionReader(UIMAFramework.getXMLParser().parseCollectionReaderDescription(new XMLInputSource(typeSystem.getClass().getClassLoader()
-                        .getResource("desc/cr/ScaiCorpusCR.xml"))), "InputDirectory", pathToCorpora, "UseGoldStandardAnnotations", true, "GoldstandardTypeSuffix" , "", "BrowseSubdirectories", true, "IncludeSuffixes", new String[]{"iob", "iob2"});
+                        .getResource("desc/cr/ScaiCorpusCR.xml"))), "InputDirectory", pathToCorpora, "UseGoldStandardAnnotations", true, "GoldstandardTypeSuffix" , "SUM", "BrowseSubdirectories", true, "IncludeSuffixes", new String[]{"iob", "iob2"});
 
                 while (reader.hasNext()) {
                     JCas jcas = JCasFactory.createJCas(typeSystem);

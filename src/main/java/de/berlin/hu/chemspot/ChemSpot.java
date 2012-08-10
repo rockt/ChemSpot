@@ -43,6 +43,7 @@ public class ChemSpot {
     private AnalysisEngine sentenceConverter;
     private AnalysisEngine bannerTagger;
     private AnalysisEngine linnaeusTagger;
+    private AnalysisEngine chemicalFormulaTagger;
     private AnalysisEngine annotationMerger;
     private AnalysisEngine fineTokenizer;
     private AnalysisEngine stopwordFilter;
@@ -81,6 +82,8 @@ public class ChemSpot {
                 linnaeusTagger = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
                         .getResource("desc/ae/tagger/DictionaryTaggerAE.xml"))), "DrugBankMatcherDictionaryAutomat", pathToDictionaryFile);
             }
+            chemicalFormulaTagger = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+                    .getResource("desc/ae/tagger/ChemicalFormulaTaggerAE.xml"))), CAS.NAME_DEFAULT_SOFA);
             annotationMerger = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
                     .getResource("desc/ae/AnnotationMergerAE.xml"))), CAS.NAME_DEFAULT_SOFA);
             normalizer = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
@@ -198,8 +201,9 @@ public class ChemSpot {
         fineTokenizer.process(jcas);
         sentenceDetector.process(jcas);
         sentenceConverter.process(jcas);
-        bannerTagger.process(jcas);
-        if (linnaeusTagger != null) linnaeusTagger.process(jcas);
+        //bannerTagger.process(jcas);
+        //if (linnaeusTagger != null) linnaeusTagger.process(jcas);
+        chemicalFormulaTagger.process(jcas);
         annotationMerger.process(jcas);
         normalizer.process(jcas);
         stopwordFilter.process(jcas);
