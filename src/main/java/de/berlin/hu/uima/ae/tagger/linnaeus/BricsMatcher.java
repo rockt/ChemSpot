@@ -29,7 +29,9 @@ import java.util.zip.ZipFile;
 public class BricsMatcher {
     private Collection<RunAutomaton> matchers = new ArrayList<RunAutomaton>();
     private HashSet<Character> delimiters = new HashSet<Character>(Arrays.asList(
-            new Character[] {'.', '-', ' ', '/', '\\', '\'', ',', ';', '+', '—'}));
+            new Character[] {'.', '-', ' ', '/', '\\', '\'', ',', ';',
+                    '+', '—', '\t', '\n', '\r', '|', '=', '&', ':',
+                    '(', ')', '{', '}', '[', ']', '<', '>', '!', '?', '#', '$', '~'}));
 
 
     /**
