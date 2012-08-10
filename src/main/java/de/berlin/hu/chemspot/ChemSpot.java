@@ -183,6 +183,12 @@ public class ChemSpot {
         JCas jcas = JCasFactory.createJCas(typeSystem);
         readGZFile(jcas, pathToGZ);
         tagJCas(jcas, false, false);
+        Iterator<NamedEntity> annotations = JCasUtil.iterator(jcas, NamedEntity.class);
+        while (annotations.hasNext()) {
+            NamedEntity entity = annotations.next();
+            // offset fix for GeneView
+            entity.setEnd(entity.getEnd()-1);
+        }
         serializeAnnotations(jcas);
     }
 
