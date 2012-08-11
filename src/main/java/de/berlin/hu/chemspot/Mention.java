@@ -12,6 +12,8 @@
 
 package de.berlin.hu.chemspot;
 
+import de.berlin.hu.util.Constants;
+
 public class Mention {
 	private int start;
 	private int end;
@@ -37,7 +39,19 @@ public class Mention {
         else this.source = source;
 	}
 
-	public int getStart() {
+    public Mention(int start, int end, String text) {
+   		this.start = start;
+   		this.end = end;
+   		this.text = text;
+        this.source = Constants.DICTIONARY;
+   	}
+
+    public Mention(int start, int end) {
+        this.start = start;
+        this.end = end;
+    }
+
+    public int getStart() {
 		return start;
 	}
 	public void setStart(int start) {
@@ -52,14 +66,8 @@ public class Mention {
 	public String getText() {
 		return text;
 	}
-	public void setText(String text) {
-		this.text = text;
-	}
 	public String getId() {
 		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
 	}
 	public String getSource() {
 		return source;

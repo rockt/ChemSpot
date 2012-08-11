@@ -20,10 +20,6 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * @author trocktae
- *
- */
 public class ConfigUtil {
 	public static Dataset getDataset(HierarchicalConfiguration config)
 	{

@@ -242,6 +242,7 @@ public class IupacToInChIAE extends JCasAnnotator_ImplBase {
     @Override
     public void initialize(UimaContext aContext) throws ResourceInitializationException {
         try {
+            //initializing OPSIN
             nameToInChi = new NameToInchi();
         } catch (NameToStructureException e) {
             System.err.println("Failed initializing OPSIN!");

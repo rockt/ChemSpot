@@ -47,8 +47,7 @@ public class AnnotationMergerAE extends JCasAnnotator_ImplBase {
 			List<NamedEntity> chemicals = new ArrayList<NamedEntity>();
 			boolean filtered = false;
 			
-			//FIXME: use drug if it is identical to CRF match to obtain ChemIDplus ID
-			
+			//FIXME: use drug if it is identical to CRF match to obtain CAS Registry ID
 			NamedEntity lastEntity = null;
 			for (NamedEntity entity : entities) {
 				if (lastEntity != null 
@@ -106,7 +105,6 @@ public class AnnotationMergerAE extends JCasAnnotator_ImplBase {
 		if (lastEntity.getBegin() <= entity.getBegin() && entity.getBegin() <= lastEntity.getEnd()) {
 			return true;
 		}
-		
 		return false;
 	}
 
