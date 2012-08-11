@@ -10,7 +10,7 @@
  * http://www.opensource.org/licenses/cpl1.0
  */
 
-package de.berlin.hu.uima.ae.tagger.linnaeus;
+package de.berlin.hu.uima.ae.tagger.brics;
 
 import de.berlin.hu.chemspot.Mention;
 import de.berlin.hu.util.Constants;

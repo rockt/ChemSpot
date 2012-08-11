@@ -10,7 +10,7 @@
  * http://www.opensource.org/licenses/cpl1.0
  */
 
-package de.berlin.hu.uima.ae.tagger.linnaeus;
+package de.berlin.hu.uima.ae.tagger.brics;
 
 import de.berlin.hu.chemspot.Mention;
 import dk.brics.automaton.AutomatonMatcher;
@@ -45,7 +45,7 @@ public class BricsMatcher {
             ZipEntry entry = entries.nextElement();
             matchers.add(RunAutomaton.load(zipFile.getInputStream(entry)));
         }
-        System.out.println("Loaded " + matchers.size() + " automata!");
+        System.out.println("Loaded " + matchers.size() + " brics automata.");
     }
 
     /**
@@ -62,7 +62,7 @@ public class BricsMatcher {
                 char right = text.charAt(matcher.end());
                 String coveredText = text.substring(matcher.start(), matcher.end());
 
-                //only add if not within a text
+                //only add if not within a text and longer than two characters
                 if (coveredText.length() > 2 &&
                         !(Character.isAlphabetic(left) || Character.isAlphabetic(right))) {
                     matches.add(new Mention(matcher.start(), matcher.end(), text.substring(matcher.start(), matcher.end())));

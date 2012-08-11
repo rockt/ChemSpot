@@ -74,21 +74,6 @@ object jochem2automat extends App {
             println("Actor " + n + " starts merging " + automata.size + " automata...")
             automaton = BasicOperations.union(automata)
           }
-/*
-            case "optimize" => {
-            println("Actor " + n + " starts optimizing automaton...")
-            println("\tActor " + n + " starts removing dead transitions...")
-            automaton.removeDeadTransitions()
-            println("\tActor " + n + " starts minimizing automaton...")
-            automaton.minimize()
-          }
-          case "store" => {
-            println("Actor " + n + " starts generating RunAutomaton...")
-            val runAutomaton = new RunAutomaton(automaton)
-            println("Actor " + n + " starts storing RunAutomaton...")
-            runAutomaton.store(new FileOutputStream(output + "." + n))
-          }
-*/
           case "exit" => {
             println("Actor " + n + " finished!")
             reply(n + "finished")

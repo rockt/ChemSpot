@@ -19,7 +19,6 @@ import java.util.List;
  * Filters annotations according to a stopword list generated from the Google-N-Gram corpus.
  */
 public class StopwordFilter extends JCasAnnotator_ImplBase {
-	private int numberOfFilteredEntities = 0;
 	private List<NamedEntity> invalidChemicals = null;	
 	private HashSet<String> stopwords = new HashSet<String>();
 
@@ -52,15 +51,12 @@ public class StopwordFilter extends JCasAnnotator_ImplBase {
 			if (!Constants.GOLDSTANDARD.equals(chemical.getSource())) {
 				if (stopwords.contains(chemical.getCoveredText())) {
 					invalidChemicals.add(chemical);
-					numberOfFilteredEntities++;
 				}
 			}
 		}
 		
 		for (NamedEntity invalidChemical : invalidChemicals) {
-			//System.out.println("filtered: " + invalidChemical.getCoveredText());			
 			invalidChemical.removeFromIndexes();
-		}		
-		//System.out.println("StopwordFilter: " + numberOfFilteredEntities);
+		}
 	}
 }

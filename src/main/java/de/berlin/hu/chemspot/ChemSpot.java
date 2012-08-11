@@ -336,13 +336,11 @@ public class ChemSpot {
             String s = reader.readLine();
             if (s != null) {
                 //split line into pmid and text
-                //String[] two = new String[2];
                 String pmid = s.substring(0, s.indexOf("\t"));
                 String annot = s.substring(s.indexOf("\t"));
                 //two = splitFirst(s, "\t");
                 pmdoc.setPmid(pmid);
 
-                //String annot = new String(two[1]);
                 //append text
                 textBuffer.append(annot).append("\n");
                 pmdoc.setBegin(currindex + 1);

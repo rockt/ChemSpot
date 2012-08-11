@@ -40,8 +40,6 @@ public class SuffixFilter extends JCasAnnotator_ImplBase {
 		for (NamedEntity invalidChemical : invalidChemicals) {
 			invalidChemical.removeFromIndexes();
 		}
-		
-		System.out.println("SuffixFilter: " + numberOfFilteredEntities);
 	}
 	
 	private boolean isInvalid(String entity) {
