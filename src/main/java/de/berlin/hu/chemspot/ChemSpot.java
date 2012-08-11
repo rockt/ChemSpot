@@ -190,7 +190,7 @@ public class ChemSpot {
      * @return a string representing the output in IOB format
      * @throws AnalysisEngineProcessException
      */
-    //FIXME: split this method in two parts: tagging and writing IOB
+    //FIXME: split this method into two parts: tagging and writing IOB
     public String tagJCas(JCas jcas, boolean evaluate, boolean convertToIOB) throws AnalysisEngineProcessException {
         //TODO change to buffered string builder!
         StringBuilder sb = new StringBuilder();
