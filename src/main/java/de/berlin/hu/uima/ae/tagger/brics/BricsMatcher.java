@@ -83,7 +83,6 @@ public class BricsMatcher {
                 //only add if not within a text and longer than two characters
                 if (coveredText.length() > 2 && (
                         !(Character.isAlphabetic(left) || Character.isAlphabetic(right))
-                        || (!Character.isAlphabetic(left) && suffixes.contains(right) && !Character.isAlphabetic(nright))
                 )) {
                     matches.add(new Mention(matcher.start(), matcher.end(), text.substring(matcher.start(), matcher.end())));
                 }
