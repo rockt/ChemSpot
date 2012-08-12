@@ -17,10 +17,7 @@ import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.RunAutomaton;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.HashSet;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -31,6 +28,11 @@ import java.util.zip.ZipFile;
  */
 public class BricsMatcher {
     private Collection<RunAutomaton> matchers = new ArrayList<RunAutomaton>();
+    private HashSet<String> suffixes = new HashSet<String>(Arrays.asList(new String[] {
+            "s",
+            "es",
+            "ies"
+    }));
 
     /**
      * BricsMatcher loads a set of brics dictionary matchers packed in a zip file.
@@ -58,13 +60,31 @@ public class BricsMatcher {
         for (RunAutomaton automat : matchers) {
             AutomatonMatcher matcher = automat.newMatcher(text);
             while (matcher.find()) {
-                char left = text.charAt(matcher.start() - 1);
-                char right = text.charAt(matcher.end());
+                char left = ' ';
+                char right = ' ';
+                char nright = ' ';
+                try {
+                    left = text.charAt(matcher.start() - 1);
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    //ignore
+                }
+                try {
+                    right = text.charAt(matcher.end());
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    //ignore
+                }
+                try {
+                    nright = text.charAt(matcher.end() + 1);
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    //ignore
+                }
                 String coveredText = text.substring(matcher.start(), matcher.end());
 
                 //only add if not within a text and longer than two characters
-                if (coveredText.length() > 2 &&
-                        !(Character.isAlphabetic(left) || Character.isAlphabetic(right))) {
+                if (coveredText.length() > 2 && (
+                        !(Character.isAlphabetic(left) || Character.isAlphabetic(right))
+                        || (!Character.isAlphabetic(left) && suffixes.contains(right) && !Character.isAlphabetic(nright))
+                )) {
                     matches.add(new Mention(matcher.start(), matcher.end(), text.substring(matcher.start(), matcher.end())));
                 }
             }
