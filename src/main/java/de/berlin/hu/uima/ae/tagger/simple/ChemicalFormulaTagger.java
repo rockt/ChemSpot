@@ -17,7 +17,7 @@ public class ChemicalFormulaTagger extends JCasAnnotator_ImplBase {
 	private static final String MOLECULE_PATTERN = "(" + ELEMENT_PATTERN + "\\\\d?\\\\d?[\\\\+\\\\-]?)";
 	private static final Pattern FORMULA_PATTERN = Pattern.compile("(\\d\\d?|\\(\\d\\d?\\))?(%s|\\((%s+|\\d?\\d?[\\+\\-]|\\d\\d?[\\+\\-]?)\\)[0-9a-z]?)+".replaceAll("%s", MOLECULE_PATTERN));
 	private static final Pattern MUST_CONTAIN = Pattern.compile("\\p{Alpha}.*[0-9]|[0-9].*\\p{Alpha}");
-	private static final Pattern DOES_NOT_MATCH = Pattern.compile("\\p{Alpha}{2}[0-9]");
+	private static final Pattern DOES_NOT_MATCH = Pattern.compile("\\p{Alpha}{2}[0-9]|.*[2-9]\\d.*");
 	//private static final Pattern FORMULA_PATTERN = Pattern.compile("\\d?(%s\\d?|\\((%s\\d?)+\\)[0-9a-z]?)*(%s\\d|\\((%s\\d?)*(%s\\d)+(%s\\d?)*\\)[0-9a-z]?)(%s|\\(%s+\\)[0-9a-z]?)+".replaceAll("%s", ELEMENT_PATTERN));
 	//private static final Pattern FORMULA_PATTERN = Pattern.compile("\\S*[\\(\\)A-Z]+[0-9]([A-Z][A-Z]?[0-9]?[\\(\\)]?)+\\S*", Pattern.CASE_INSENSITIVE);
 	
