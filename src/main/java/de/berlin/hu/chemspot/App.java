@@ -122,12 +122,13 @@ public class App {
 
 	private static void usage() {
 		System.out.println("usage:");
-		System.out.println("\t-c path to a directory containing corpora in IOB format (optional)");
-		System.out.println("\t-t path to a text file that should be tagged (optional)");
-		System.out.println("\t-m path to a CRF model file");
+        System.out.println("\t-m path to a CRF model file");
         System.out.println("\t-s path to a OpenNLP sentence model file");
-		System.out.println("\t-d path to a linnaeus dictionary file (optional)");
+        System.out.println("\t-d path to a zipped set of brics dictionary automata (optional)");
+		System.out.println("\t-c path to a directory containing corpora in IOB format that should be tagged (optional)");
+		System.out.println("\t-t path to a text file that should be tagged (optional)");
 		System.out.println("\t-o path to an output file (IOB format)");
-		System.out.println("\t-e if this parameter is set, the performance of ChemSpot on the IOB gold-standard corpus (cf. -c) is evaluated");	System.exit(0);
+		System.out.println("\t-e if this parameter is set, the performance of ChemSpot on a IOB gold-standard corpus (cf. -c) is evaluated");
+        System.exit(0);
 	}
 }

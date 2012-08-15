@@ -59,14 +59,12 @@ public class ChemSpot {
     }
 
     /**
-     * Initializes ChemSpot with a CRF model and a dictionary automaton.
+     * Initializes ChemSpot with a CRF model, an OpenNLP sentence model and a dictionary automaton.
      * @param pathToModelFile the path to a CRF model
      * @param pathToDictionaryFile the path to a dictionary automaton
      */
     public ChemSpot(String pathToModelFile, String pathToDictionaryFile, String pathToSentenceModelFile) {
         try {
-            //FIXME: find a way to access the descriptors in the jar rather than outside
-            //typeSystem = TypeSystemDescriptionFactory.createTypeSystemDescription("desc/TypeSystem");
             typeSystem = UIMAFramework.getXMLParser().parseTypeSystemDescription(new XMLInputSource(this.getClass().getClassLoader().getResource("desc/TypeSystem.xml")));
             fineTokenizer = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
                     .getResource("desc/ae/tokenizer/FineGrainedTokenizerAE.xml"))), CAS.NAME_DEFAULT_SOFA);
@@ -81,7 +79,8 @@ public class ChemSpot {
             if (pathToDictionaryFile != null) {
                 //linnaeusTagger = AnalysisEngineFactory.createAnalysisEngine("desc/ae/tagger/DictionaryTaggerAE", "DrugBankMatcherDictionaryAutomat", pathToDictionaryFile);
                 linnaeusTagger = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
-                        .getResource("desc/ae/tagger/DictionaryTaggerAE.xml"))), "DrugBankMatcherDictionaryAutomat", pathToDictionaryFile);
+                        //.getResource("desc/ae/tagger/DictionaryTaggerAE.xml"))), "DrugBankMatcherDictionaryAutomat", pathToDictionaryFile);
+                        .getResource("desc/ae/tagger/BricsTaggerAE.xml"))), "DrugBankMatcherDictionaryAutomat", pathToDictionaryFile);
             }
             chemicalFormulaTagger = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
                     .getResource("desc/ae/tagger/ChemicalFormulaTaggerAE.xml"))), CAS.NAME_DEFAULT_SOFA);
@@ -203,7 +202,7 @@ public class ChemSpot {
      * @return a string representing the output in IOB format
      * @throws AnalysisEngineProcessException
      */
-    //FIXME: split this method in two parts: tagging and writing IOB
+    //FIXME: split this method into two parts: tagging and writing IOB
     public String tagJCas(JCas jcas, boolean evaluate, boolean convertToIOB) throws AnalysisEngineProcessException {
         //TODO change to buffered string builder!
         StringBuilder sb = new StringBuilder();
@@ -351,13 +350,11 @@ public class ChemSpot {
             String s = reader.readLine();
             if (s != null) {
                 //split line into pmid and text
-                //String[] two = new String[2];
                 String pmid = s.substring(0, s.indexOf("\t"));
                 String annot = s.substring(s.indexOf("\t"));
                 //two = splitFirst(s, "\t");
                 pmdoc.setPmid(pmid);
 
-                //String annot = new String(two[1]);
                 //append text
                 textBuffer.append(annot).append("\n");
                 pmdoc.setBegin(currindex + 1);

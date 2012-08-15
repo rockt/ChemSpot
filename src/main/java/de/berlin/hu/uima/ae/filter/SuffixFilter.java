@@ -18,22 +18,7 @@ public class SuffixFilter extends JCasAnnotator_ImplBase {
 	
 	
 	private String[] invalidSuffixes = {
-			"ase",
-//			"ine",
-//			"ate",
-//			"ide",
-//			"tro",
-//			"LDL",
-//			"IC(",
-//			"(2)",
-//			"NCA",
-//			"one",
-//			"pha",
-//			"lic",
-//			"nes",
-//			"NxE",
-//			"HRH",
-//			"HFR"
+			"ase"
 			};
 	
 	@Override
@@ -55,8 +40,6 @@ public class SuffixFilter extends JCasAnnotator_ImplBase {
 		for (NamedEntity invalidChemical : invalidChemicals) {
 			invalidChemical.removeFromIndexes();
 		}
-		
-		System.out.println("SuffixFilter: " + numberOfFilteredEntities);
 	}
 	
 	private boolean isInvalid(String entity) {

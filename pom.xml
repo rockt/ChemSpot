@@ -137,22 +137,6 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
             <systemPath>${basedir}/lib/banner.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>linnaeus</groupId>
-            <artifactId>linnaeus</artifactId>
-            <version>2011-10-12</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/linnaeus.jar</systemPath>
-        </dependency>
-        <!--
-        <dependency>
-            <groupId>linnaeus</groupId>
-            <artifactId>linnaeus</artifactId>
-            <version>2012-06-25</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/linnaeus-2.0.jar</systemPath>
-        </dependency>
-        -->
-        <dependency>
             <groupId>dragontool</groupId>
             <artifactId>dragontool</artifactId>
             <version>2011-10-12</version>
@@ -165,13 +149,13 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
             <version>2011-10-12</version>
             <scope>system</scope>
             <systemPath>${basedir}/lib/heptag.jar</systemPath>
-        </dependency>       
+        </dependency>
         <dependency>
             <groupId>automaton</groupId>
             <artifactId>automaton</artifactId>
-            <version>2011-10-12</version>
+            <version>2012-06-28</version>
             <scope>system</scope>
-            <systemPath>${basedir}/lib/automaton.jar</systemPath>
+            <systemPath>${basedir}/lib/automaton-120628.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>uk.ac.cam.ch.opsin</groupId>

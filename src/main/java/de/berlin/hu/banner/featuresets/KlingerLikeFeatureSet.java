@@ -76,8 +76,6 @@ public class KlingerLikeFeatureSet extends FeatureSet {
 			OverlapOption sameType, OverlapOption differentType) {
 		ArrayList<Pipe> pipes = new ArrayList<Pipe>();
 		pipes.add(new Sentence2TokenSequence(format, mentionTypes, sameType, differentType));
-//		pipes.add((lemmatiser == null && posTagger == null) ? new Noop() : new LemmaPOS(lemmatiser, posTagger));
-//		pipes.add((preTagger == null) ? new Noop() : new Pretagger("PRETAG=", preTagger));
 		
 		//Whitespace
 		pipes.add(new LChar("LCHAR="));

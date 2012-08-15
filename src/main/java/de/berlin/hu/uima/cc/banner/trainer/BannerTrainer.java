@@ -167,7 +167,7 @@ public class BannerTrainer extends CasConsumer_ImplBase{
 	}
 
 	/**
-	 * @return the index of the token denoting the begin of the entity
+	 * @return the index of the token denoting the start of the entity
 	 */
 	private int getTokenPositionBegin(int currentEntityBegin,
 			List<org.u_compare.shared.syntactic.Token> tokensInSentence) {
