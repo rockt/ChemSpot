@@ -36,6 +36,7 @@ public class App {
 	private static String pathToTextFile;
     private static String tagFromCommandLine;
     private static String pathToSentenceFile;
+    private static String pathToGZCorpus;
 
     public static void main(String[] args) throws UIMAException, IOException {
 		try {
@@ -52,6 +53,8 @@ public class App {
 				pathToTextFile = arguments.getPathToTextFile();
 			} else if (arguments.isPathToIOBCorpora()) {
 				pathToCorpora = arguments.getPathToIOBCorpora();
+            } else if (arguments.isPathToGZCorpus()) {
+            	pathToGZCorpus = arguments.getPathToGZCorpus();
             } else if (arguments.isTagCommandLine()) {
                     tagFromCommandLine = arguments.getTagCommandLine();
 			} else {
@@ -85,10 +88,16 @@ public class App {
             FileWriter outputFile = null;
             if (arguments.isPathToOutputFile()) outputFile = new FileWriter(new File(pathToOutputFile));
 
-            if (arguments.isPathToIOBCorpora()) {
+            if (arguments.isPathToIOBCorpora() || arguments.isPathToGZCorpus()) {
                 //CollectionReader reader = CollectionReaderFactory.createCollectionReaderFromPath("desc/cr/ScaiCorpusCR.xml", "InputDirectory", pathToCorpora, "UseGoldStandardAnnotations", true, "GoldstandardTypeSuffix" , "", "BrowseSubdirectories", true, "IncludeSuffixes", new String[]{"iob", "iob2"});
-                CollectionReader reader = CollectionReaderFactory.createCollectionReader(UIMAFramework.getXMLParser().parseCollectionReaderDescription(new XMLInputSource(typeSystem.getClass().getClassLoader()
-                        .getResource("desc/cr/ScaiCorpusCR.xml"))), "InputDirectory", pathToCorpora, "UseGoldStandardAnnotations", true, "GoldstandardTypeSuffix" , "SUM", "BrowseSubdirectories", true, "IncludeSuffixes", new String[]{"iob", "iob2"});
+            	CollectionReader reader = null;
+            	if (arguments.isPathToIOBCorpora()) {
+                	reader = CollectionReaderFactory.createCollectionReader(UIMAFramework.getXMLParser().parseCollectionReaderDescription(new XMLInputSource(typeSystem.getClass().getClassLoader()
+                            .getResource("desc/cr/ScaiCorpusCR.xml"))), "InputDirectory", pathToCorpora, "UseGoldStandardAnnotations", true, "GoldstandardTypeSuffix" , "ABBREVIATION", "BrowseSubdirectories", true, "IncludeSuffixes", new String[]{"iob", "iob2"});
+                } else if (arguments.isPathToGZCorpus()) {
+                	reader = CollectionReaderFactory.createCollectionReader(UIMAFramework.getXMLParser().parseCollectionReaderDescription(new XMLInputSource(typeSystem.getClass().getClassLoader()
+                            .getResource("desc/cr/ZipFileCR.xml"))), "InputDirectory", pathToGZCorpus);
+                }
 
                 while (reader.hasNext()) {
                     JCas jcas = JCasFactory.createJCas(typeSystem);

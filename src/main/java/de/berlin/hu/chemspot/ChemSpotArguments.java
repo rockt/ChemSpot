@@ -17,6 +17,10 @@ public interface ChemSpotArguments {
 	  String getPathToIOBCorpora();
 	  boolean isPathToIOBCorpora();
 	  
+	  @Option(shortName="C")
+	  String getPathToGZCorpus();
+	  boolean isPathToGZCorpus();
+	  
 	  @Option(shortName="t")
 	  String getPathToTextFile();
 	  boolean isPathToTextFile();
