@@ -21,6 +21,8 @@ public class Mention {
 	private String id;
 	private String source;
 
+    private String[] idPos = {"CHID", "CHEB", "CAS", "PUBC", "PUBS", "INCH", "DRUG", "HMBD", "KEGG", "KEGD", "MESH"};
+
     /**
      * Represents a chemical entity found in a text.
      * @param start position of the start character of an annotation

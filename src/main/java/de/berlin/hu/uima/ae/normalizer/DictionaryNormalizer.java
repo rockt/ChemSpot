@@ -37,7 +37,6 @@ import java.util.zip.ZipFile;
  * Time: 3:28 PM
  */
 public class DictionaryNormalizer  extends JCasAnnotator_ImplBase {
-    private String[] idPos = {"CHID", "CHEB", "CAS", "PUBC", "PUBS", "INCH", "DRUG", "HMBD", "KEGG", "KEGD", "MESH"};
     private HashMap<String,String[]> ids = new HashMap<String,String[]>();
 
     @Override
@@ -66,22 +65,15 @@ public class DictionaryNormalizer  extends JCasAnnotator_ImplBase {
 
     @Override
     public void process(JCas jCas) throws AnalysisEngineProcessException {
-        int numberOfEntities = 0;
-        int normalized = 0;
         Iterator<NamedEntity> entities = JCasUtil.iterator(jCas, NamedEntity.class);
         while (entities.hasNext()) {
             NamedEntity entity = entities.next();
             if (!Constants.GOLDSTANDARD.equals(entity.getSource())) {
                 if (ids.containsKey(entity.getCoveredText().toLowerCase())) {
-                    System.out.println(entity.getCoveredText() + " normalized to " + Arrays.toString(ids.get(entity.getCoveredText().toLowerCase())));
-                    entity.setId(
-                            Arrays.toString(ids.get(entity.getCoveredText().toLowerCase()))
-                    );
-                    normalized++;
+                    //FIXME: use a UIMA field instead of a String here
+                    entity.setId(Arrays.toString(ids.get(entity.getCoveredText().toLowerCase())));
                 }
-                numberOfEntities++;
             }
         }
-        System.out.println(normalized + "/" + numberOfEntities);
     }
 }
