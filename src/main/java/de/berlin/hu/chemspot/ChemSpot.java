@@ -47,6 +47,7 @@ public class ChemSpot {
     private AnalysisEngine fineTokenizer;
     private AnalysisEngine stopwordFilter;
     private AnalysisEngine normalizer;
+    private AnalysisEngine dictNormalizer;
 
     /**
      * Initializes ChemSpot without a dictionary automaton.
@@ -84,6 +85,8 @@ public class ChemSpot {
                     .getResource("desc/ae/AnnotationMergerAE.xml"))), CAS.NAME_DEFAULT_SOFA);
             normalizer = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
                     .getResource("desc/ae/normalizer/IUPACToInChIAE.xml"))), CAS.NAME_DEFAULT_SOFA);
+            dictNormalizer = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+                    .getResource("desc/ae/normalizer/DictionaryNormalizerAE.xml"))), CAS.NAME_DEFAULT_SOFA);
             stopwordFilter = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
                     .getResource("desc/ae/filter/StopwordFilterAE.xml"))), CAS.NAME_DEFAULT_SOFA);
             System.out.println("Finished initializing ChemSpot.");
@@ -109,8 +112,9 @@ public class ChemSpot {
             bannerTagger.process(jcas);
             if (linnaeusTagger != null) linnaeusTagger.process(jcas);
             annotationMerger.process(jcas);
-            normalizer.process(jcas);
             stopwordFilter.process(jcas);
+            normalizer.process(jcas);
+            dictNormalizer.process(jcas);
 
             List<Mention> mentions = new ArrayList<Mention>();
             Iterator<NamedEntity> entities = JCasUtil.iterator(jcas, NamedEntity.class);
@@ -205,8 +209,9 @@ public class ChemSpot {
         bannerTagger.process(jcas);
         if (linnaeusTagger != null) linnaeusTagger.process(jcas);
         annotationMerger.process(jcas);
-        normalizer.process(jcas);
         stopwordFilter.process(jcas);
+        normalizer.process(jcas);
+        dictNormalizer.process(jcas);
 
         HashMap<String, ArrayList<NamedEntity>> goldAnnotations = new HashMap<String, ArrayList<NamedEntity>>();
         HashMap<String, ArrayList<NamedEntity>> pipelineAnnotations = new HashMap<String, ArrayList<NamedEntity>>();

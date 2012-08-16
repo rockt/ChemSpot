@@ -263,13 +263,8 @@ public class BricsTagger extends JCasAnnotator_ImplBase {
    		Chemical drug = new Chemical(aJCas);
    		drug.setBegin(begin);
    		drug.setEnd(end);
-           //only keep ChemIDplus ID if the entity matched exactly
-   		if (borderHasChanged) {
-   			drug.setId("");
-   		} else {
-   			id = id.replaceAll("CHID_[0]*", "");
-   			drug.setId(id);
-   		}
+        //ID is set by normalizer
+        drug.setId("");
    		drug.setSource(Constants.DICTIONARY);
    		drug.addToIndexes();
    		return drug;
