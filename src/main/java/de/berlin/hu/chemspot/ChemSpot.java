@@ -182,8 +182,7 @@ public class ChemSpot {
         Iterator<NamedEntity> annotations = JCasUtil.iterator(jcas, NamedEntity.class);
         while (annotations.hasNext()) {
             NamedEntity entity = annotations.next();
-            // offset fix for GeneView
-            entity.setEnd(entity.getEnd()-1);
+            entity.setEnd(entity.getEnd());
         }
         serializeAnnotations(jcas);
     }
@@ -391,8 +390,11 @@ public class ChemSpot {
             while (entityIterator.hasNext()) {
                 NamedEntity entity = entityIterator.next();
                 if (!"goldstandard".equals(entity.getSource())) {
-                    int begin = entity.getBegin() - offset;
-                    int end = entity.getEnd() - offset - 1;
+                    //offset fix for GeneView
+                    //int begin = entity.getBegin() - offset;
+                    int begin = entity.getBegin() - offset + 1;
+                    //int end = entity.getEnd() - offset - 1;
+                    int end = entity.getEnd() - offset - 2;
                     String id = entity.getId();
                     String text = entity.getCoveredText();
                     if (id == null || id.isEmpty()) {
