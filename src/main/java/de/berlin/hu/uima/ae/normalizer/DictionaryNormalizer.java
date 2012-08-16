@@ -12,6 +12,7 @@
 
 package de.berlin.hu.uima.ae.normalizer;
 
+import de.berlin.hu.util.Constants;
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
@@ -51,13 +52,10 @@ public class DictionaryNormalizer  extends JCasAnnotator_ImplBase {
                 ZipEntry entry = entries.nextElement();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(zipFile.getInputStream(entry)));
                 String line = reader.readLine();
-                int counter = 0;
                 while (line != null) {
-                    if (counter % 1000 == 0) System.out.print(counter + "\r");
                     int splitAt = line.indexOf('\t');
-                    ids.put(line.substring(0, splitAt), line.substring(splitAt).split("\t"));
+                    ids.put(line.substring(0, splitAt), line.substring(splitAt+1).split("\t"));
                     line = reader.readLine();
-                    counter++;
                 }
             }
         } catch (IOException e) {
@@ -73,14 +71,16 @@ public class DictionaryNormalizer  extends JCasAnnotator_ImplBase {
         Iterator<NamedEntity> entities = JCasUtil.iterator(jCas, NamedEntity.class);
         while (entities.hasNext()) {
             NamedEntity entity = entities.next();
-            if (ids.containsKey(entity.getCoveredText().toLowerCase())) {
-                System.out.println(entity.getCoveredText() + " normalized to " + Arrays.toString(ids.get(entity.getCoveredText().toLowerCase())));
-                entity.setId(
-                        Arrays.toString(ids.get(entity.getCoveredText().toLowerCase()))
-                );
-                normalized++;
+            if (!Constants.GOLDSTANDARD.equals(entity.getSource())) {
+                if (ids.containsKey(entity.getCoveredText().toLowerCase())) {
+                    System.out.println(entity.getCoveredText() + " normalized to " + Arrays.toString(ids.get(entity.getCoveredText().toLowerCase())));
+                    entity.setId(
+                            Arrays.toString(ids.get(entity.getCoveredText().toLowerCase()))
+                    );
+                    normalized++;
+                }
+                numberOfEntities++;
             }
-            numberOfEntities++;
         }
         System.out.println(normalized + "/" + numberOfEntities);
     }
