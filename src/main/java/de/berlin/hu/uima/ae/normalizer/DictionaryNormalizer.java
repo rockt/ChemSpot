@@ -41,6 +41,7 @@ public class DictionaryNormalizer  extends JCasAnnotator_ImplBase {
     @Override
     public void initialize(UimaContext aContext) throws ResourceInitializationException {
         super.initialize(aContext);
+        System.out.println("Initializing dictionary normalizer...");
         ZipFile zipFile = null;
         try {
             zipFile = new ZipFile("resources/ids.zip");
@@ -49,15 +50,19 @@ public class DictionaryNormalizer  extends JCasAnnotator_ImplBase {
                 ZipEntry entry = entries.nextElement();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(zipFile.getInputStream(entry)));
                 String line = reader.readLine();
+                int counter = 0;
                 while (line != null) {
+                    if (counter % 1000 == 0) System.out.print(counter + "\r");
                     int splitAt = line.indexOf('\t');
                     ids.put(line.substring(0, splitAt), line.substring(splitAt).split("\t"));
                     line = reader.readLine();
+                    counter++;
                 }
             }
         } catch (IOException e) {
             throw new ResourceInitializationException(e);
         }
+        System.out.println("Finished initializing dictionary normalizer!");
     }
 
     @Override
