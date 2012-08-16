@@ -23,6 +23,7 @@ import org.uimafit.util.JCasUtil;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -67,12 +68,20 @@ public class DictionaryNormalizer  extends JCasAnnotator_ImplBase {
 
     @Override
     public void process(JCas jCas) throws AnalysisEngineProcessException {
+        int numberOfEntities = 0;
+        int normalized = 0;
         Iterator<NamedEntity> entities = JCasUtil.iterator(jCas, NamedEntity.class);
         while (entities.hasNext()) {
             NamedEntity entity = entities.next();
             if (ids.containsKey(entity.getCoveredText().toLowerCase())) {
-                System.out.println(entity.getCoveredText() + " normalized to " + ids.get(entity.getCoveredText().toLowerCase()));
+                System.out.println(entity.getCoveredText() + " normalized to " + Arrays.toString(ids.get(entity.getCoveredText().toLowerCase())));
+                entity.setId(
+                        Arrays.toString(ids.get(entity.getCoveredText().toLowerCase()))
+                );
+                normalized++;
             }
+            numberOfEntities++;
         }
+        System.out.println(normalized + "/" + numberOfEntities);
     }
 }
