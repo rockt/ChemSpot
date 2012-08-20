@@ -79,7 +79,7 @@ public class App {
             for (Mention mention : mentions) {
                 System.out.printf("%d\t%d\t%s\t%s\t%s\n",
                      mention.getStart(), mention.getEnd(), mention.getText(),
-                     mention.getId(), mention.getSource());
+                     mention.getCHID(), mention.getSource());
             }
         } else {
             FileWriter outputFile = null;
