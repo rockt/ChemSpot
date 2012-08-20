@@ -35,10 +35,14 @@ public class Mention {
 		this.start = start;
 		this.end = end;
 		this.text = text;
-        String tempIds = ids;
-        if (tempIds.startsWith("[")) tempIds = tempIds.substring(1);
-        if (tempIds.endsWith("]")) tempIds = tempIds.substring(0, tempIds.length() - 1);
-        this.ids = tempIds.split(",");
+        if (!ids.isEmpty()) {
+            String tempIds = ids;
+            if (tempIds.startsWith("[")) tempIds = tempIds.substring(1);
+            if (tempIds.endsWith("]")) tempIds = tempIds.substring(0, tempIds.length() - 1);
+            this.ids = tempIds.split(",");
+        } else {
+            this.ids = new String[1];
+        }
         this.source = source;
 	}
 
