@@ -75,12 +75,9 @@ public class Normalizer extends JCasAnnotator_ImplBase {
     @Override
     public void process(JCas jCas) throws AnalysisEngineProcessException {
         Iterator<NamedEntity> entities = JCasUtil.iterator(jCas, NamedEntity.class);
-        int e = 0;
-        int n = 0;
         while (entities.hasNext()) {
             NamedEntity entity = entities.next();
             if (!Constants.GOLDSTANDARD.equals(entity.getSource())) {
-                e++;
                 if (ids.containsKey(entity.getCoveredText().toLowerCase())) {
                     //FIXME: use a UIMA field instead of a String here
                     String[] normalized = ids.get(entity.getCoveredText().toLowerCase());
@@ -97,11 +94,9 @@ public class Normalizer extends JCasAnnotator_ImplBase {
                             normalized = normalizedTemp;
                         }
                     }
-                    if (Arrays.toString(normalized).length() > 3) n++;
                     entity.setId(Arrays.toString(normalized));
                 }
             }
         }
-        System.out.println(n + "/" + e);
     }
 }
