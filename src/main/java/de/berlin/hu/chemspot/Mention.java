@@ -13,6 +13,7 @@
 package de.berlin.hu.chemspot;
 
 import de.berlin.hu.util.Constants;
+import org.u_compare.shared.semantic.NamedEntity;
 
 public class Mention {
 	private int start;
@@ -56,6 +57,10 @@ public class Mention {
         this.end = end;
     }
 
+    public Mention(NamedEntity entity) {
+        new Mention(entity.getBegin(), entity.getEnd(), entity.getCoveredText(), entity.getId(), entity.getSource());
+    }
+
     public int getStart() {
 		return start;
 	}
@@ -97,5 +102,10 @@ public class Mention {
             //ignore
         }
         return id;
+    }
+
+    @Override
+    public String toString() {
+        return start + " " + end + " " + text + " " + getCHID();
     }
 }

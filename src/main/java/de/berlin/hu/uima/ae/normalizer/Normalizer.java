@@ -12,6 +12,7 @@
 
 package de.berlin.hu.uima.ae.normalizer;
 
+import de.berlin.hu.chemspot.Mention;
 import de.berlin.hu.util.Constants;
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
@@ -90,6 +91,7 @@ public class Normalizer extends JCasAnnotator_ImplBase {
                     entity.setId(Arrays.toString(normalized));
                 }
             }
+            System.out.println((new Mention(entity)).toString());
         }
     }
 }
