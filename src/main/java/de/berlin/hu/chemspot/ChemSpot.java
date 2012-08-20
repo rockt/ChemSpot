@@ -394,7 +394,7 @@ public class ChemSpot {
                     int begin = entity.getBegin() - offset - 1;
                     //int end = entity.getEnd() - offset - 1;
                     int end = entity.getEnd() - offset - 2;
-                    String id = entity.getId();
+                    String id = (new Mention(entity)).getCHID();
                     String text = entity.getCoveredText();
                     if (id == null || id.isEmpty()) {
                         writer.write(pmid + "\t" + begin + "\t" + end + "\t" + text + "\t" + "\\N\n");

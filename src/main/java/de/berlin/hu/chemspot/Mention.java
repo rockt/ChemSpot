@@ -58,7 +58,7 @@ public class Mention {
     }
 
     public Mention(NamedEntity entity) {
-        new Mention(entity.getBegin(), entity.getEnd(), entity.getCoveredText(), entity.getId(), entity.getSource());
+        this(entity.getBegin(), entity.getEnd(), entity.getCoveredText(), entity.getId(), entity.getSource());
     }
 
     public int getStart() {

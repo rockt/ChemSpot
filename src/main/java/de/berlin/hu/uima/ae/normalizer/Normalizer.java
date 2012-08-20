@@ -12,7 +12,6 @@
 
 package de.berlin.hu.uima.ae.normalizer;
 
-import de.berlin.hu.chemspot.Mention;
 import de.berlin.hu.util.Constants;
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
@@ -76,9 +75,12 @@ public class Normalizer extends JCasAnnotator_ImplBase {
     @Override
     public void process(JCas jCas) throws AnalysisEngineProcessException {
         Iterator<NamedEntity> entities = JCasUtil.iterator(jCas, NamedEntity.class);
+        int e = 0;
+        int n = 0;
         while (entities.hasNext()) {
             NamedEntity entity = entities.next();
             if (!Constants.GOLDSTANDARD.equals(entity.getSource())) {
+                e++;
                 if (ids.containsKey(entity.getCoveredText().toLowerCase())) {
                     //FIXME: use a UIMA field instead of a String here
                     String[] normalized = ids.get(entity.getCoveredText().toLowerCase());
@@ -87,11 +89,19 @@ public class Normalizer extends JCasAnnotator_ImplBase {
                             String inchi = nameToInChi.parseToStdInchi(entity.getCoveredText());
                             if (inchi != null) normalized[Constants.INCH] = inchi;
                         }
+                    } else {
+                        String inchi = nameToInChi.parseToStdInchi(entity.getCoveredText());
+                        if (inchi != null) {
+                            String[] normalizedTemp = Arrays.copyOf(normalized, Constants.CHID + 1);
+                            normalizedTemp[Constants.INCH] = inchi;
+                            normalized = normalizedTemp;
+                        }
                     }
+                    if (Arrays.toString(normalized).length() > 3) n++;
                     entity.setId(Arrays.toString(normalized));
                 }
             }
-            System.out.println((new Mention(entity)).toString());
         }
+        System.out.println(n + "/" + e);
     }
 }
