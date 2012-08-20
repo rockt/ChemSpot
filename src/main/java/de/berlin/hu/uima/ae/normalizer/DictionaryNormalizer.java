@@ -20,6 +20,8 @@ import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.u_compare.shared.semantic.NamedEntity;
 import org.uimafit.util.JCasUtil;
+import uk.ac.cam.ch.wwmm.opsin.NameToInchi;
+import uk.ac.cam.ch.wwmm.opsin.NameToStructureException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -38,11 +40,12 @@ import java.util.zip.ZipFile;
  */
 public class DictionaryNormalizer  extends JCasAnnotator_ImplBase {
     private HashMap<String,String[]> ids = new HashMap<String,String[]>();
+    private NameToInchi nameToInChi;
 
     @Override
     public void initialize(UimaContext aContext) throws ResourceInitializationException {
         super.initialize(aContext);
-        System.out.println("Initializing dictionary normalizer...");
+        System.out.println("Initializing normalizer...");
         ZipFile zipFile = null;
         try {
             zipFile = new ZipFile("resources/ids.zip");
@@ -60,7 +63,13 @@ public class DictionaryNormalizer  extends JCasAnnotator_ImplBase {
         } catch (IOException e) {
             throw new ResourceInitializationException(e);
         }
-        System.out.println("Finished initializing dictionary normalizer!");
+        try {
+            //initializing OPSIN
+            nameToInChi = new NameToInchi();
+        } catch (NameToStructureException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Finished initializing normalizer.");
     }
 
     @Override
@@ -71,7 +80,12 @@ public class DictionaryNormalizer  extends JCasAnnotator_ImplBase {
             if (!Constants.GOLDSTANDARD.equals(entity.getSource())) {
                 if (ids.containsKey(entity.getCoveredText().toLowerCase())) {
                     //FIXME: use a UIMA field instead of a String here
-                    entity.setId(Arrays.toString(ids.get(entity.getCoveredText().toLowerCase())));
+                    String[] normalized = ids.get(entity.getCoveredText().toLowerCase());
+                    String inchi = nameToInChi.parseToStdInchi(entity.getCoveredText());
+                    if (inchi != null && (normalized.length < Constants.INCH | normalized[Constants.INCH] == "")) {
+                      normalized[Constants.INCH] = inchi;
+                    }
+                    entity.setId(Arrays.toString(normalized));
                 }
             }
         }

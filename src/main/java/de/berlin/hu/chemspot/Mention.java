@@ -21,8 +21,6 @@ public class Mention {
 	private String[] ids;
 	private String source;
 
-    private String[] idPos = {"CHID", "CHEB", "CAS", "PUBC", "PUBS", "INCH", "DRUG", "HMBD", "KEGG", "KEGD", "MESH"};
-
     /**
      * Represents a chemical entity found in a text.
      * @param start position of the start character of an annotation
@@ -35,13 +33,13 @@ public class Mention {
 		this.start = start;
 		this.end = end;
 		this.text = text;
-        if (!ids.isEmpty()) {
+        if (ids != null) {
             String tempIds = ids;
             if (tempIds.startsWith("[")) tempIds = tempIds.substring(1);
             if (tempIds.endsWith("]")) tempIds = tempIds.substring(0, tempIds.length() - 1);
             this.ids = tempIds.split(",");
         } else {
-            this.ids = new String[1];
+            this.ids = new String[0];
         }
         this.source = source;
 	}
@@ -84,9 +82,17 @@ public class Mention {
 	}
 
     public String getCHID() {
+        return getId(Constants.CHID);
+    }
+
+    public String getINCH() {
+        return getId(Constants.INCH);
+    }
+
+    private String getId(int pos) {
         String id = "";
         try {
-          id = ids[0];
+          id = ids[pos];
         } catch (ArrayIndexOutOfBoundsException e) {
             //ignore
         }

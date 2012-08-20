@@ -31,7 +31,10 @@ import org.uimafit.factory.JCasFactory;
 import org.uimafit.util.JCasUtil;
 
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 public class ChemSpot {
@@ -119,10 +122,6 @@ public class ChemSpot {
                 if (!"goldstandard".equals(entity.getSource())) {
                     mentions.add(new Mention(entity.getBegin(), entity.getEnd(), entity.getCoveredText(), entity.getId(), entity.getSource()));
                 }
-            }
-
-            for (Mention mention : mentions) {
-                System.out.println(mention.getText() + " " + mention.getCHID() + " " + Arrays.toString(mention.getIds()));
             }
 
             return mentions;
