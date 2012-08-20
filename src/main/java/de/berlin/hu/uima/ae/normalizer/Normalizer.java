@@ -38,7 +38,7 @@ import java.util.zip.ZipFile;
  * Date: 8/16/12
  * Time: 3:28 PM
  */
-public class DictionaryNormalizer  extends JCasAnnotator_ImplBase {
+public class Normalizer extends JCasAnnotator_ImplBase {
     private HashMap<String,String[]> ids = new HashMap<String,String[]>();
     private NameToInchi nameToInChi;
 

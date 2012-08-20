@@ -2,9 +2,9 @@
 <analysisEngineDescription xmlns="http://uima.apache.org/resourceSpecifier">
   <frameworkImplementation>org.apache.uima.java</frameworkImplementation>
   <primitive>true</primitive>
-  <annotatorImplementationName>de.berlin.hu.uima.ae.normalizer.IupacToInChIAE</annotatorImplementationName>
+  <annotatorImplementationName>de.berlin.hu.uima.ae.normalizer.Normalizer</annotatorImplementationName>
   <analysisEngineMetaData>
-    <name>IUPAC to InChI</name>
+    <name>Normalizer</name>
     <description/>
     <version>1.0</version>
     <vendor/>

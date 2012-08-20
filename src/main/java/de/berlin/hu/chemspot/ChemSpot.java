@@ -46,8 +46,7 @@ public class ChemSpot {
     private AnalysisEngine annotationMerger;
     private AnalysisEngine fineTokenizer;
     private AnalysisEngine stopwordFilter;
-    private AnalysisEngine opsinNormalizer;
-    private AnalysisEngine dictionaryNormalizer;
+    private AnalysisEngine normalizer;
 
     /**
      * Initializes ChemSpot without a dictionary automaton.
@@ -80,11 +79,9 @@ public class ChemSpot {
                         .getResource("desc/ae/tagger/BricsTaggerAE.xml"))), "DrugBankMatcherDictionaryAutomat", pathToDictionaryFile);
             }
             annotationMerger = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
-                    .getResource("desc/ae/AnnotationMergerAE.xml"))), CAS.NAME_DEFAULT_SOFA);
-            opsinNormalizer = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
-                    .getResource("desc/ae/normalizer/IUPACToInChIAE.xml"))), CAS.NAME_DEFAULT_SOFA);
-            dictionaryNormalizer = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
-                    .getResource("desc/ae/normalizer/DictionaryNormalizerAE.xml"))), CAS.NAME_DEFAULT_SOFA);
+                    .getResource("desc/ae/AnnotationMergerAE.xml"))), CAS.NAME_DEFAULT_SOFA);;
+            normalizer = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+                    .getResource("desc/ae/normalizer/NormalizerAE.xml"))), CAS.NAME_DEFAULT_SOFA);
             stopwordFilter = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
                     .getResource("desc/ae/filter/StopwordFilterAE.xml"))), CAS.NAME_DEFAULT_SOFA);
             System.out.println("Finished initializing ChemSpot.");
@@ -111,8 +108,7 @@ public class ChemSpot {
             if (dictionaryTagger != null) dictionaryTagger.process(jcas);
             annotationMerger.process(jcas);
             stopwordFilter.process(jcas);
-            opsinNormalizer.process(jcas);
-            dictionaryNormalizer.process(jcas);
+            normalizer.process(jcas);
 
             List<Mention> mentions = new ArrayList<Mention>();
             Iterator<NamedEntity> entities = JCasUtil.iterator(jcas, NamedEntity.class);
@@ -209,8 +205,7 @@ public class ChemSpot {
         if (dictionaryTagger != null) dictionaryTagger.process(jcas);
         annotationMerger.process(jcas);
         stopwordFilter.process(jcas);
-        opsinNormalizer.process(jcas);
-        dictionaryNormalizer.process(jcas);
+        normalizer.process(jcas);
 
         HashMap<String, ArrayList<NamedEntity>> goldAnnotations = new HashMap<String, ArrayList<NamedEntity>>();
         HashMap<String, ArrayList<NamedEntity>> pipelineAnnotations = new HashMap<String, ArrayList<NamedEntity>>();
