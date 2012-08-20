@@ -391,7 +391,7 @@ public class ChemSpot {
                 if (!"goldstandard".equals(entity.getSource())) {
                     //offset fix for GeneView
                     //int begin = entity.getBegin() - offset;
-                    int begin = entity.getBegin() - offset + 1;
+                    int begin = entity.getBegin() - offset - 1;
                     //int end = entity.getEnd() - offset - 1;
                     int end = entity.getEnd() - offset - 2;
                     String id = entity.getId();

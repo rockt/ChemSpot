@@ -81,9 +81,11 @@ public class Normalizer extends JCasAnnotator_ImplBase {
                 if (ids.containsKey(entity.getCoveredText().toLowerCase())) {
                     //FIXME: use a UIMA field instead of a String here
                     String[] normalized = ids.get(entity.getCoveredText().toLowerCase());
-                    String inchi = nameToInChi.parseToStdInchi(entity.getCoveredText());
-                    if (inchi != null && (normalized.length < Constants.INCH | normalized[Constants.INCH] == "")) {
-                      normalized[Constants.INCH] = inchi;
+                    if (normalized.length >= Constants.CHID) {
+                        if (normalized[Constants.CHID].isEmpty()) {
+                            String inchi = nameToInChi.parseToStdInchi(entity.getCoveredText());
+                            if (inchi != null) normalized[Constants.INCH] = inchi;
+                        }
                     }
                     entity.setId(Arrays.toString(normalized));
                 }
