@@ -8,6 +8,22 @@
     <description/>
     <version>1.0</version>
     <vendor/>
+      <configurationParameters>
+        <configurationParameter>
+          <name>PathToIDs</name>
+          <type>String</type>
+          <multiValued>false</multiValued>
+          <mandatory>true</mandatory>
+        </configurationParameter>
+      </configurationParameters>
+      <configurationParameterSettings>
+        <nameValuePair>
+          <name>PathToIDs</name>
+          <value>
+            <string>You have to specify the path to a file with ids!</string>
+          </value>
+        </nameValuePair>
+      </configurationParameterSettings>
     <typeSystemDescription>
       <imports>
         <import location="../../TypeSystem.xml"/>

@@ -50,18 +50,18 @@ public class ChemSpot {
 
     /**
      * Initializes ChemSpot without a dictionary automaton.
-     * @param pathToModelFile the Path to a CRF model
+     * @param pathToCRFModelFile the Path to a CRF model
      */
-    public ChemSpot(String pathToModelFile, String pathToSentenceModelFile) {
-        new ChemSpot(pathToModelFile, "", pathToSentenceModelFile);
+    public ChemSpot(String pathToCRFModelFile, String pathToSentenceModelFile) {
+        new ChemSpot(pathToCRFModelFile, null, pathToSentenceModelFile, null);
     }
 
     /**
      * Initializes ChemSpot with a CRF model, an OpenNLP sentence model and a dictionary automaton.
-     * @param pathToModelFile the path to a CRF model
+     * @param pathToCRFModelFile the path to a CRF model
      * @param pathToDictionaryFile the ath to a dictionary automaton
      */
-    public ChemSpot(String pathToModelFile, String pathToDictionaryFile, String pathToSentenceModelFile) {
+    public ChemSpot(String pathToCRFModelFile, String pathToDictionaryFile, String pathToSentenceModelFile, String pathToIDs) {
         try {
             typeSystem = UIMAFramework.getXMLParser().parseTypeSystemDescription(new XMLInputSource(this.getClass().getClassLoader().getResource("desc/TypeSystem.xml")));
             fineTokenizer = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
@@ -72,16 +72,18 @@ public class ChemSpot {
                     .getResource("desc/ae/converter/OpenNLPToUCompareSentenceConverterAE.xml"))), CAS.NAME_DEFAULT_SOFA);
             System.out.println("Loading CRF...");
             crfTagger = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
-                    .getResource("desc/banner/tagger/BANNERTaggerAE.xml"))),  "BannerModelFile", pathToModelFile);
-            if (pathToDictionaryFile!= null) System.out.println("Loading dictionary..."); else System.out.println("No dictionary location specified! Tagging without dictionary...");
+                    .getResource("desc/banner/tagger/BANNERTaggerAE.xml"))),  "BannerModelFile", pathToCRFModelFile);
             if (pathToDictionaryFile != null) {
+                System.out.println("Loading dictionary...");
                 dictionaryTagger = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
                         .getResource("desc/ae/tagger/BricsTaggerAE.xml"))), "DrugBankMatcherDictionaryAutomat", pathToDictionaryFile);
-            }
+            } else System.out.println("No dictionary location specified! Tagging without dictionary...");
             annotationMerger = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
-                    .getResource("desc/ae/AnnotationMergerAE.xml"))), CAS.NAME_DEFAULT_SOFA);;
-            normalizer = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+                    .getResource("desc/ae/AnnotationMergerAE.xml"))), CAS.NAME_DEFAULT_SOFA);
+            if (pathToIDs != null) {
+                normalizer = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
                     .getResource("desc/ae/normalizer/NormalizerAE.xml"))), CAS.NAME_DEFAULT_SOFA);
+            } else System.out.println("No location for ids specified! Tagging without subsequent normalization...");
             stopwordFilter = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
                     .getResource("desc/ae/filter/StopwordFilterAE.xml"))), CAS.NAME_DEFAULT_SOFA);
             System.out.println("Finished initializing ChemSpot.");
@@ -108,7 +110,7 @@ public class ChemSpot {
             if (dictionaryTagger != null) dictionaryTagger.process(jcas);
             annotationMerger.process(jcas);
             stopwordFilter.process(jcas);
-            normalizer.process(jcas);
+            if (normalizer != null) normalizer.process(jcas);
 
             List<Mention> mentions = new ArrayList<Mention>();
             Iterator<NamedEntity> entities = JCasUtil.iterator(jcas, NamedEntity.class);
@@ -205,7 +207,7 @@ public class ChemSpot {
         if (dictionaryTagger != null) dictionaryTagger.process(jcas);
         annotationMerger.process(jcas);
         stopwordFilter.process(jcas);
-        normalizer.process(jcas);
+        if (normalizer != null) normalizer.process(jcas);
 
         HashMap<String, ArrayList<NamedEntity>> goldAnnotations = new HashMap<String, ArrayList<NamedEntity>>();
         HashMap<String, ArrayList<NamedEntity>> pipelineAnnotations = new HashMap<String, ArrayList<NamedEntity>>();

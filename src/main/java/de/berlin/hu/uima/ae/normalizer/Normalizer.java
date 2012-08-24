@@ -41,6 +41,7 @@ import java.util.zip.ZipFile;
 public class Normalizer extends JCasAnnotator_ImplBase {
     private HashMap<String,String[]> ids = new HashMap<String,String[]>();
     private NameToInchi nameToInChi;
+    private static final String PATH_TO_IDS = "PathToIDs";
 
     @Override
     public void initialize(UimaContext aContext) throws ResourceInitializationException {
@@ -48,7 +49,7 @@ public class Normalizer extends JCasAnnotator_ImplBase {
         System.out.println("Initializing normalizer...");
         ZipFile zipFile = null;
         try {
-            zipFile = new ZipFile("resources/ids.zip");
+            zipFile = new ZipFile(aContext.getConfigParameterValue(PATH_TO_IDS).toString());
             Enumeration<? extends ZipEntry> entries = zipFile.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry entry = entries.nextElement();

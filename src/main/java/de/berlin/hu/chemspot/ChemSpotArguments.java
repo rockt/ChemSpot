@@ -16,6 +16,10 @@ public interface ChemSpotArguments {
 	  @Option(shortName="c")
 	  String getPathToIOBCorpora();
 	  boolean isPathToIOBCorpora();
+
+      @Option(shortName="i")
+ 	  String getPathToIDs();
+      boolean isPathToIDs();
 	  
 	  @Option(shortName="t")
 	  String getPathToTextFile();

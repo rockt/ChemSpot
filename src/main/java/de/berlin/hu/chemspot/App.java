@@ -36,6 +36,7 @@ public class App {
 	private static String pathToTextFile;
     private static String tagFromCommandLine;
     private static String pathToSentenceFile;
+    private static String pathToIDsFile;
 
     public static void main(String[] args) throws UIMAException, IOException {
 		try {
@@ -47,7 +48,10 @@ public class App {
 			}			
 			if (arguments.isPathToDictionary()) {
 				pathToDictionaryFile = arguments.getPathToDictionary();
-			} 
+			}
+            if (arguments.isPathToIDs()) {
+         		pathToIDsFile = arguments.getPathToIDs();
+            }
 			if (arguments.isPathToTextFile()) {
 				pathToTextFile = arguments.getPathToTextFile();
 			} else if (arguments.isPathToIOBCorpora()) {
@@ -70,7 +74,7 @@ public class App {
 		}
 
         //initializing ChemSpot with a CRF model file and an LINNAEUS automaton (the latter is optional)
-		ChemSpot chemspot = new ChemSpot(pathToModelFile, pathToDictionaryFile, pathToSentenceFile);
+        ChemSpot chemspot = new ChemSpot(pathToModelFile, pathToDictionaryFile, pathToSentenceFile, pathToIDsFile);
 
         TypeSystemDescription typeSystem = UIMAFramework.getXMLParser().parseTypeSystemDescription(new XMLInputSource(chemspot.getClass().getClassLoader().getResource("desc/TypeSystem.xml")));
 
@@ -116,6 +120,7 @@ public class App {
         System.out.println("\t-m path to a CRF model file");
         System.out.println("\t-s path to a OpenNLP sentence model file");
         System.out.println("\t-d path to a zipped set of brics dictionary automata (optional)");
+        System.out.println("\t-i path to a zipped tab-separated text file representing a map of terms to ids (optional)");
 		System.out.println("\t-c path to a directory containing corpora in IOB format that should be tagged (optional)");
 		System.out.println("\t-t path to a text file that should be tagged (optional)");
 		System.out.println("\t-o path to an output file (IOB format)");
