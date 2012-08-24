@@ -49,11 +49,19 @@ public class ChemSpot {
     private AnalysisEngine normalizer;
 
     /**
-     * Initializes ChemSpot without a dictionary automaton.
+     * Initializes ChemSpot without a dictionary automaton and a normalizer.
      * @param pathToCRFModelFile the Path to a CRF model
      */
     public ChemSpot(String pathToCRFModelFile, String pathToSentenceModelFile) {
         new ChemSpot(pathToCRFModelFile, null, pathToSentenceModelFile, null);
+    }
+
+    /**
+     * Initializes ChemSpot without a normalizer.
+     * @param pathToCRFModelFile the Path to a CRF model
+     */
+    public ChemSpot(String pathToCRFModelFile, String pathToDictionaryFile, String pathToSentenceModelFile) {
+        new ChemSpot(pathToCRFModelFile, pathToDictionaryFile, pathToSentenceModelFile, null);
     }
 
     /**
