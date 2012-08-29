@@ -1,9 +1,6 @@
 package de.berlin.hu.uima.ae.tagger.abbrev;
 
-import java.io.StringReader;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
@@ -23,7 +20,7 @@ public class AbbreviationTagger extends JCasAnnotator_ImplBase {
 	@Override
 	public void process(JCas aJCas) throws AnalysisEngineProcessException {
 		String text = aJCas.getDocumentText();
-		List<Mention> abbreviations = abbrevTagger.extractAbbrPairs(new StringReader(text));
+		List<Mention> abbreviations = abbrevTagger.getMentions(text);
 		
 		for (Mention abbr : abbreviations) {
 			if (abbr.getText().length() < 2) {

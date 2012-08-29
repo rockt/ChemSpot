@@ -1,9 +1,16 @@
 package de.berlin.hu.uima.ae.tagger.abbrev;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -96,9 +103,23 @@ public class ExtractAbbrev {
 		return false;
 	}
 
-	public List<Mention> extractAbbrPairs(String inFile) {
+	private String readFromFile(String file) throws IOException {
+		FileInputStream stream = new FileInputStream(new File(file));
+		  try {
+		    FileChannel fc = stream.getChannel();
+		    MappedByteBuffer bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
+		    /* Instead of using default, pass in a decoder. */
+		    return Charset.defaultCharset().decode(bb).toString();
+		  }
+		  finally {
+		    stream.close();
+		  }
+
+	}
+	
+	public List<Mention> getMentionsFromFile(String inFile) throws IOException {
 		try {
-			return extractAbbrPairs(new FileReader(inFile));
+			return getMentions(readFromFile(inFile));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -106,7 +127,7 @@ public class ExtractAbbrev {
 		return new ArrayList<Mention>();
 	}
 
-	public List<Mention> extractAbbrPairs(Reader in) {
+	public List<Mention> getMentions(String text) {
 		String str, tmpStr, longForm = "", shortForm = "";
 		String currSentence = "";
 		int openParenIndex, closeParenIndex = -1, sentenceEnd, newCloseParenIndex, tmpIndex = -1;
@@ -115,20 +136,29 @@ public class ExtractAbbrev {
 		List<Mention> result = new ArrayList<Mention>();
 
 		try {
-			BufferedReader fin = new BufferedReader(in);
 			int offset = 0;
 			int newOffset = 0;
-			while ((str = fin.readLine()) != null) {
-				offset = newOffset;
-				newOffset = offset + str.length();
-				if (str.length() == 0 || newParagraph && 
-						! Character.isUpperCase(str.charAt(0))){
+			int lineStart = 0;
+			int lineEnd = text.indexOf('\n');
+			//while (lineEnd != -1) {
+				str = text;
+				/*lineStart = lineEnd;
+				int newLineEnd = text.indexOf('\n', lineEnd+1);
+				if (newLineEnd == -1 && lineEnd < text.length()) {
+					lineEnd = text.length();
+				} else {
+					lineEnd = newLineEnd;
+				}
+				//offset = newOffset;
+				//newOffset = offset + str.length();
+				/*if (str.length() == 0 || newParagraph && !Character.isUpperCase(str.charAt(0))){
+					offset = currSentence.length();
 					currSentence = "";
 					newParagraph = true;
 					continue;
-				}
+				}*/
 				newParagraph = false;
-				str += " ";
+				//str += " ";
 				currSentence += str;
 				openParenIndex =  currSentence.indexOf(" (");
 				do {
@@ -141,6 +171,7 @@ public class ExtractAbbrev {
 					}
 					else if (openParenIndex == -1) {
 						currSentence = currSentence.substring(sentenceEnd + 2);
+						offset = sentenceEnd + 2;
 					} else if ((closeParenIndex = currSentence.indexOf(')',openParenIndex)) > -1){
 						sentenceEnd = Math.max(currSentence.lastIndexOf(". ", openParenIndex), 
 								currSentence.lastIndexOf(", ", openParenIndex));
@@ -187,7 +218,12 @@ public class ExtractAbbrev {
 								String bestLongForm = extractAbbrPair(shortForm.trim(), longForm.trim());
 								if (bestLongForm != null && !bestLongForm.isEmpty()) {
 									begin += offset;
-									end += offset-1;
+									end += offset;
+									String inText = text.substring(begin, end);
+									System.out.println(abbreviation);
+									System.out.println(bestLongForm);
+									System.out.println(inText);
+									System.out.println();
 									Mention mention = new Mention(begin, end, abbreviation, bestLongForm, "ABBREV");
 									
 									result.add(mention);
@@ -195,6 +231,7 @@ public class ExtractAbbrev {
 							}
 						}
 						currSentence = currSentence.substring(closeParenIndex + 1);
+						offset += closeParenIndex + 1;
 					} else if (openParenIndex > -1) {
 						if ((currSentence.length() - openParenIndex) > 200)
 							// Matching close paren was not found
@@ -204,8 +241,7 @@ public class ExtractAbbrev {
 					shortForm = "";
 					longForm = "";
 				} while ((openParenIndex =  currSentence.indexOf(" (")) > -1);
-			}
-			fin.close();
+			//}
 		} catch (Exception ioe) {
 			ioe.printStackTrace();
 			System.out.println(currSentence);
@@ -317,7 +353,7 @@ public class ExtractAbbrev {
 
 		if (extractAbbrev.testMode)
 			extractAbbrev.loadTrueDefinitions(testList);
-		extractAbbrev.extractAbbrPairs(filename);
+		extractAbbrev.getMentions(filename);
 		if (extractAbbrev.testMode)
 			System.out.println("TP: " + extractAbbrev.truePositives + " FP: " + extractAbbrev.falsePositives + 
 					" FN: " + extractAbbrev.falseNegatives + " TN: " + extractAbbrev.trueNegatives);
