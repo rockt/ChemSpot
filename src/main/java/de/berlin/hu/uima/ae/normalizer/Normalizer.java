@@ -110,6 +110,6 @@ public class Normalizer extends JCasAnnotator_ImplBase {
                 entity.setId(Arrays.toString(normalized));
             }
         }
-        System.out.println(nN + "/" + nE);
+        //System.out.println(nN + "/" + nE);
     }
 }

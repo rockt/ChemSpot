@@ -90,8 +90,44 @@ public class Mention {
         return getId(Constants.CHID);
     }
 
+    public String getCHEB() {
+        return getId(Constants.CHEB);
+    }
+
+    public String getCAS() {
+        return getId(Constants.CAS);
+    }
+
+    public String getPUBC() {
+        return getId(Constants.PUBC);
+    }
+
+    public String getPUBS() {
+        return getId(Constants.PUBS);
+    }
+
     public String getINCH() {
         return getId(Constants.INCH);
+    }
+
+    public String getDRUG() {
+        return getId(Constants.DRUG);
+    }
+
+    public String getHMBD() {
+        return getId(Constants.HMBD);
+    }
+
+    public String getKEGG() {
+        return getId(Constants.KEGG);
+    }
+
+    public String getKEGD() {
+        return getId(Constants.KEGD);
+    }
+
+    public String getMESH() {
+        return getId(Constants.MESH);
     }
 
     private String getId(int pos) {
