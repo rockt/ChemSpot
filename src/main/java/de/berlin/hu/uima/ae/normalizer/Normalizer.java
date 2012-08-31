@@ -76,28 +76,40 @@ public class Normalizer extends JCasAnnotator_ImplBase {
     @Override
     public void process(JCas jCas) throws AnalysisEngineProcessException {
         Iterator<NamedEntity> entities = JCasUtil.iterator(jCas, NamedEntity.class);
+        int nE = 0;
+        int nN = 0;
         while (entities.hasNext()) {
             NamedEntity entity = entities.next();
+            String inchi = nameToInChi.parseToStdInchi(entity.getCoveredText());
+
             if (!Constants.GOLDSTANDARD.equals(entity.getSource())) {
+                nE++;
+                String[] normalized = null;
+                //if entity is contained in dictionary
                 if (ids.containsKey(entity.getCoveredText().toLowerCase())) {
                     //FIXME: use a UIMA field instead of a String here
-                    String[] normalized = ids.get(entity.getCoveredText().toLowerCase());
-                    if (normalized.length >= Constants.CHID) {
-                        if (normalized[Constants.CHID].isEmpty()) {
-                            String inchi = nameToInChi.parseToStdInchi(entity.getCoveredText());
-                            if (inchi != null) normalized[Constants.INCH] = inchi;
-                        }
+                    normalized = ids.get(entity.getCoveredText().toLowerCase());
+                    if (normalized.length >= Constants.INCH) {
+                        if (normalized[Constants.INCH].isEmpty() && inchi != null) normalized[Constants.INCH] = inchi;
                     } else {
-                        String inchi = nameToInChi.parseToStdInchi(entity.getCoveredText());
                         if (inchi != null) {
-                            String[] normalizedTemp = Arrays.copyOf(normalized, Constants.CHID + 1);
+                            String[] normalizedTemp = Arrays.copyOf(normalized, Constants.INCH + 1);
                             normalizedTemp[Constants.INCH] = inchi;
                             normalized = normalizedTemp;
                         }
                     }
-                    entity.setId(Arrays.toString(normalized));
+                    nN++;
+                } else {
+                    if (inchi != null) {
+                        String[] normalizedTemp = new String[Constants.INCH + 1];
+                        normalizedTemp[Constants.INCH] = inchi;
+                        normalized = normalizedTemp;
+                        nN++;
+                    }
                 }
+                entity.setId(Arrays.toString(normalized));
             }
         }
+        System.out.println(nN + "/" + nE);
     }
 }
