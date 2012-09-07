@@ -86,7 +86,9 @@ public class BannerTagger extends JCasAnnotator_ImplBase {
 		FSIndex<Annotation> sentenceIndex = aJCas.getAnnotationIndex(Sentence.type);
 		Iterator<Annotation> sentenceIterator = sentenceIndex.iterator();
 		int sentenceCounter = 0;
-		
+        Set<Mention> mentions = new HashSet<Mention>();
+        String docText = aJCas.getDocumentText();
+
 		long start = System.currentTimeMillis();
 		while (sentenceIterator.hasNext()) {
 			Sentence sentence = (Sentence) sentenceIterator.next();
@@ -108,9 +110,31 @@ public class BannerTagger extends JCasAnnotator_ImplBase {
 			}
 
 			// annotate found entities
-			createAnnotations(aJCas, sentence.getBegin(), bannerSentence);
+            mentions.addAll(createAnnotations(aJCas, sentence.getBegin(), bannerSentence));
 			sentenceCounter++;
 		}
+
+        //propagate all findings...
+        for (Mention mention : mentions) {
+            String pattern = mention.getText();
+            int index = docText.indexOf(pattern);
+            while (index >= 0) {
+                int beginning = index;
+                int ending = beginning + pattern.length();
+                if (beginning != mention.getStart()) {
+                    NamedEntity entity = new NamedEntity(aJCas);
+                    entity.setBegin(beginning);
+                    entity.setEnd(ending);
+                 	entity.setEntityType(mention.getEntityType().getText());
+                 	entity.setConfidence(mention.getProbability());
+                 	entity.setSource(Constants.CRF);
+                 	entity.addToIndexes();
+                    assert mention.getText() == entity.getCoveredText() : mention.getText() + " != " + entity.getCoveredText();
+                }
+                index = docText.indexOf(pattern, index + 1);
+            }
+        }
+
 		long time = System.currentTimeMillis() - start;
 		//System.out.println("Tagging " + sentenceCounter + " sentences with CRF took " + time + "ms (" + (time/sentenceCounter) + "ms per sentence)");
 		documentCounter++;
@@ -119,7 +143,7 @@ public class BannerTagger extends JCasAnnotator_ImplBase {
 	/**
 	 * converts each mention into an UIMA annotation
 	 */
-	private void createAnnotations(JCas aJCas, int offset, banner.types.Sentence bannerSentence) {
+	private Set<Mention> createAnnotations(JCas aJCas, int offset, banner.types.Sentence bannerSentence) {
         List<Mention> mentions = bannerSentence.getMentions();
 		Set<Mention> mentionsToAdd = new HashSet<Mention>();		
 		//FIXME: when using NBestCRFTagger: sort mentions first!
@@ -156,5 +180,6 @@ public class BannerTagger extends JCasAnnotator_ImplBase {
 			
 			assert entity.getCoveredText().equals(mention.getText());
 		}
+        return mentionsToAdd;
 	}
 }
