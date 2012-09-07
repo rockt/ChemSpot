@@ -114,6 +114,7 @@ public class BannerTagger extends JCasAnnotator_ImplBase {
 			sentenceCounter++;
 		}
 
+/*
         //propagate all findings...
         for (Mention mention : mentions) {
             String pattern = mention.getText();
@@ -129,11 +130,13 @@ public class BannerTagger extends JCasAnnotator_ImplBase {
                  	entity.setConfidence(mention.getProbability());
                  	entity.setSource(Constants.CRF);
                  	entity.addToIndexes();
-                    assert mention.getText() == entity.getCoveredText() : mention.getText() + " != " + entity.getCoveredText();
+                    System.out.println(mention.getText() + " != " + entity.getCoveredText());
+                    //TODO: check position
                 }
                 index = docText.indexOf(pattern, index + 1);
             }
         }
+*/
 
 		long time = System.currentTimeMillis() - start;
 		//System.out.println("Tagging " + sentenceCounter + " sentences with CRF took " + time + "ms (" + (time/sentenceCounter) + "ms per sentence)");
