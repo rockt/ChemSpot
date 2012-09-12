@@ -209,9 +209,9 @@ public class ChemSpot {
         fineTokenizer.process(jcas);
         sentenceDetector.process(jcas);
         sentenceConverter.process(jcas);
-        //bannerTagger.process(jcas);
-        //if (linnaeusTagger != null) linnaeusTagger.process(jcas);
-        abbrevTagger.process(jcas);
+        bannerTagger.process(jcas);
+        if (linnaeusTagger != null) linnaeusTagger.process(jcas);
+        //abbrevTagger.process(jcas);
         chemicalFormulaTagger.process(jcas);
         annotationMerger.process(jcas);
         normalizer.process(jcas);
@@ -381,7 +381,7 @@ public class ChemSpot {
     private static void serializeAnnotations(JCas jcas) throws IOException {
         Iterator<SourceDocumentInformation> srcIterator = JCasUtil.iterator(jcas, SourceDocumentInformation.class);
         SourceDocumentInformation src = srcIterator.next();
-        String pathToFile = src.getUri().replaceFirst("file:", "") + ".chem";
+        String pathToFile = src.getUri().replaceFirst("file:.*/", "log/") + ".chem";
 
         File file = new File(pathToFile);
         file.createNewFile(); //overwrite if file already exists

@@ -93,7 +93,7 @@ public class App {
             	CollectionReader reader = null;
             	if (arguments.isPathToIOBCorpora()) {
                 	reader = CollectionReaderFactory.createCollectionReader(UIMAFramework.getXMLParser().parseCollectionReaderDescription(new XMLInputSource(typeSystem.getClass().getClassLoader()
-                            .getResource("desc/cr/ScaiCorpusCR.xml"))), "InputDirectory", pathToCorpora, "UseGoldStandardAnnotations", true, "GoldstandardTypeSuffix" , "ABBREVIATION", "BrowseSubdirectories", true, "IncludeSuffixes", new String[]{"iob", "iob2"});
+                            .getResource("desc/cr/ScaiCorpusCR.xml"))), "InputDirectory", pathToCorpora, "UseGoldStandardAnnotations", true, "GoldstandardTypeSuffix" , "", "BrowseSubdirectories", true, "IncludeSuffixes", new String[]{"iob", "iob2"});
                 } else if (arguments.isPathToGZCorpus()) {
                 	reader = CollectionReaderFactory.createCollectionReader(UIMAFramework.getXMLParser().parseCollectionReaderDescription(new XMLInputSource(typeSystem.getClass().getClassLoader()
                             .getResource("desc/cr/ZipFileCR.xml"))), "InputDirectory", pathToGZCorpus);
