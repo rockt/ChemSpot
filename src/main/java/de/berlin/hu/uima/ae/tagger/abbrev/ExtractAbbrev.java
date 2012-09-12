@@ -6,8 +6,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
@@ -128,120 +126,104 @@ public class ExtractAbbrev {
 	}
 
 	public List<Mention> getMentions(String text) {
-		String str, tmpStr, longForm = "", shortForm = "";
+		String tmpStr, longForm = "", shortForm = "";
 		String currSentence = "";
 		int openParenIndex, closeParenIndex = -1, sentenceEnd, newCloseParenIndex, tmpIndex = -1;
-		boolean newParagraph = true;
+
 		StringTokenizer shortTokenizer;
 		List<Mention> result = new ArrayList<Mention>();
 
 		try {
 			int offset = 0;
-			int newOffset = 0;
-			int lineStart = 0;
-			int lineEnd = text.indexOf('\n');
-			//while (lineEnd != -1) {
-				str = text;
-				/*lineStart = lineEnd;
-				int newLineEnd = text.indexOf('\n', lineEnd+1);
-				if (newLineEnd == -1 && lineEnd < text.length()) {
-					lineEnd = text.length();
-				} else {
-					lineEnd = newLineEnd;
+			currSentence = text;
+			openParenIndex =  currSentence.indexOf(" (");
+			do {
+				int begin = 0, end = 0;
+				
+				if (openParenIndex > -1) {
+					openParenIndex++;
 				}
-				//offset = newOffset;
-				//newOffset = offset + str.length();
-				/*if (str.length() == 0 || newParagraph && !Character.isUpperCase(str.charAt(0))){
-					offset = currSentence.length();
-					currSentence = "";
-					newParagraph = true;
-					continue;
-				}*/
-				newParagraph = false;
-				//str += " ";
-				currSentence += str;
-				openParenIndex =  currSentence.indexOf(" (");
-				do {
-					int begin = 0, end = 0;
-					if (openParenIndex > -1)
-						openParenIndex++;
-					sentenceEnd = Math.max(currSentence.lastIndexOf(". "), currSentence.lastIndexOf(", "));
-					if ((openParenIndex == -1) && (sentenceEnd == -1)) {
-						//Do nothing
+				
+				sentenceEnd = Math.max(currSentence.lastIndexOf(". "), currSentence.lastIndexOf(", "));
+				if ((openParenIndex == -1) && (sentenceEnd == -1)) {
+					//Do nothing
+				} else if (openParenIndex == -1) {
+					currSentence = currSentence.substring(sentenceEnd + 2);
+					offset = sentenceEnd + 2;
+				} else if ((closeParenIndex = currSentence.indexOf(')',openParenIndex)) > -1){
+					sentenceEnd = Math.max(currSentence.lastIndexOf(". ", openParenIndex), 
+							currSentence.lastIndexOf(", ", openParenIndex));
+					if (sentenceEnd == -1) {
+						sentenceEnd = -2;
 					}
-					else if (openParenIndex == -1) {
-						currSentence = currSentence.substring(sentenceEnd + 2);
-						offset = sentenceEnd + 2;
-					} else if ((closeParenIndex = currSentence.indexOf(')',openParenIndex)) > -1){
-						sentenceEnd = Math.max(currSentence.lastIndexOf(". ", openParenIndex), 
-								currSentence.lastIndexOf(", ", openParenIndex));
-						if (sentenceEnd == -1)
-							sentenceEnd = -2;
-						longForm = currSentence.substring(sentenceEnd + 2, openParenIndex);
-						shortForm = currSentence.substring(openParenIndex + 1, closeParenIndex);
-						begin = openParenIndex + 1;
-						end = closeParenIndex;
-					}
-					
-					if (shortForm.length() > 0 || longForm.length() > 0) {
-						if (shortForm.length() > 1 && longForm.length() > 1) {
-							if ((shortForm.indexOf('(') > -1) && 
-									((newCloseParenIndex = currSentence.indexOf(')', closeParenIndex + 1)) > -1)){
-								shortForm = currSentence.substring(openParenIndex + 1, newCloseParenIndex);
-								closeParenIndex = newCloseParenIndex;
-								begin = openParenIndex + 1;
-								end = closeParenIndex;
+					longForm = currSentence.substring(sentenceEnd + 2, openParenIndex);
+					shortForm = currSentence.substring(openParenIndex + 1, closeParenIndex);
+					begin = openParenIndex + 1;
+					end = closeParenIndex;
+				}
+				
+				if (shortForm.length() > 0 || longForm.length() > 0) {
+					if (shortForm.length() > 1 && longForm.length() > 1) {
+						if (shortForm.equals("ATP")) {
+							System.out.println("test");
+						}
+						if ((shortForm.indexOf('(') > -1) && 
+								((newCloseParenIndex = currSentence.indexOf(')', closeParenIndex + 1)) > -1)){
+							shortForm = currSentence.substring(openParenIndex + 1, newCloseParenIndex);
+							closeParenIndex = newCloseParenIndex;
+							begin = openParenIndex + 1;
+							end = closeParenIndex;
+							
+						}
+						if ((tmpIndex = shortForm.indexOf(", ")) > -1) {
+							shortForm = shortForm.substring(0, tmpIndex);
+							end = begin + tmpIndex;
+						}
+						if ((tmpIndex = shortForm.indexOf("; ")) > -1) {
+							shortForm = shortForm.substring(0, tmpIndex);
+							end = begin + tmpIndex;
+						}
+						
+						shortTokenizer = new StringTokenizer(shortForm);
+						if (shortTokenizer.countTokens() > 2 || shortForm.length() > longForm.length()) {
+							// Long form in ( )
+							tmpIndex = currSentence.lastIndexOf(" ", openParenIndex - 2);
+							tmpStr = currSentence.substring(tmpIndex + 1, openParenIndex - 1);
+							longForm = shortForm;
+							shortForm = tmpStr;
+							begin = tmpIndex + 1;
+							end = openParenIndex - 1;
+							if (! hasCapital(shortForm))
+								shortForm = "";
+						}
+						if (isValidShortForm(shortForm)) {
+							String abbreviation = currSentence.substring(begin, end);
+							String bestLongForm = extractAbbrPair(shortForm.trim(), longForm.trim());
+							if (bestLongForm != null && !bestLongForm.isEmpty()) {
+								begin += offset;
+								end += offset;
+								/*String inText = text.substring(begin, end);
+								System.out.println(abbreviation);
+								System.out.println(bestLongForm);
+								System.out.println(inText);
+								System.out.println();*/
+								Mention mention = new Mention(begin, end, abbreviation, bestLongForm, "ABBREV");
 								
-							}
-							if ((tmpIndex = shortForm.indexOf(", ")) > -1) {
-								shortForm = shortForm.substring(0, tmpIndex);
-								end = begin + tmpIndex;
-							}
-							if ((tmpIndex = shortForm.indexOf("; ")) > -1) {
-								shortForm = shortForm.substring(0, tmpIndex);
-								end = begin + tmpIndex;
-							}
-							shortTokenizer = new StringTokenizer(shortForm);
-							if (shortTokenizer.countTokens() > 2 || shortForm.length() > longForm.length()) {
-								// Long form in ( )
-								tmpIndex = currSentence.lastIndexOf(" ", openParenIndex - 2);
-								tmpStr = currSentence.substring(tmpIndex + 1, openParenIndex - 1);
-								longForm = shortForm;
-								shortForm = tmpStr;
-								begin = tmpIndex + 1;
-								end = openParenIndex - 1;
-								if (! hasCapital(shortForm))
-									shortForm = "";
-							}
-							if (isValidShortForm(shortForm)){
-								String abbreviation = currSentence.substring(begin, end);
-								String bestLongForm = extractAbbrPair(shortForm.trim(), longForm.trim());
-								if (bestLongForm != null && !bestLongForm.isEmpty()) {
-									begin += offset;
-									end += offset;
-									String inText = text.substring(begin, end);
-									System.out.println(abbreviation);
-									System.out.println(bestLongForm);
-									System.out.println(inText);
-									System.out.println();
-									Mention mention = new Mention(begin, end, abbreviation, bestLongForm, "ABBREV");
-									
-									result.add(mention);
-								}
+								result.add(mention);
 							}
 						}
-						currSentence = currSentence.substring(closeParenIndex + 1);
-						offset += closeParenIndex + 1;
-					} else if (openParenIndex > -1) {
-						if ((currSentence.length() - openParenIndex) > 200)
-							// Matching close paren was not found
-							currSentence = currSentence.substring(openParenIndex + 1);
-						break; // Read next line
 					}
-					shortForm = "";
-					longForm = "";
-				} while ((openParenIndex =  currSentence.indexOf(" (")) > -1);
-			//}
+					currSentence = currSentence.substring(closeParenIndex + 1);
+					offset += closeParenIndex + 1;
+				} else if (openParenIndex > -1) {
+					if ((currSentence.length() - openParenIndex) > 200)
+						// Matching close paren was not found
+						currSentence = currSentence.substring(openParenIndex + 1);
+					break; // Read next line
+				}
+				shortForm = "";
+				longForm = "";
+			} while ((openParenIndex =  currSentence.indexOf(" (")) > -1);
 		} catch (Exception ioe) {
 			ioe.printStackTrace();
 			System.out.println(currSentence);
