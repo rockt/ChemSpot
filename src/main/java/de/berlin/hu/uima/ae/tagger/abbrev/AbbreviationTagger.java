@@ -1,6 +1,8 @@
 package de.berlin.hu.uima.ae.tagger.abbrev;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
@@ -27,16 +29,16 @@ public class AbbreviationTagger extends JCasAnnotator_ImplBase {
 				continue;
 			}
 			
-			createAbbreviationAnnotation(aJCas, abbr.getStart(), abbr.getEnd(), abbr.getId());
+			//createAbbreviationAnnotation(aJCas, abbr.getStart(), abbr.getEnd(), abbr.getId());
 			
-			/*Pattern pattern = Pattern.compile(Pattern.quote(abbr.getText()));
+			Pattern pattern = Pattern.compile("(?<=\\b)" + Pattern.quote(abbr.getText()) + "(?=\\b)");
 			Matcher matcher = pattern.matcher(text);
 			while (matcher.find()) {
 				int begin = matcher.start();
 				int end = matcher.end();
 				
 				createAbbreviationAnnotation(aJCas, begin, end, abbr.getId());
-			}*/
+			}
 		}
 	}
 	
@@ -44,8 +46,8 @@ public class AbbreviationTagger extends JCasAnnotator_ImplBase {
 		Chemical abbreviation = new Chemical(aJCas);
 		abbreviation.setBegin(begin);
 		abbreviation.setEnd(end);
-        abbreviation.setId("abbreviation: " + id);
-		abbreviation.setSource(Constants.DICTIONARY);
+        abbreviation.setId(id);
+		abbreviation.setSource(Constants.ABBREV);
 		abbreviation.addToIndexes();
 		return abbreviation;
 	}

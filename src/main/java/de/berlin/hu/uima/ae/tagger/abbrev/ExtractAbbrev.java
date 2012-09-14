@@ -164,9 +164,6 @@ public class ExtractAbbrev {
 				
 				if (shortForm.length() > 0 || longForm.length() > 0) {
 					if (shortForm.length() > 1 && longForm.length() > 1) {
-						if (shortForm.equals("ATP")) {
-							System.out.println("test");
-						}
 						if ((shortForm.indexOf('(') > -1) && 
 								((newCloseParenIndex = currSentence.indexOf(')', closeParenIndex + 1)) > -1)){
 							shortForm = currSentence.substring(openParenIndex + 1, newCloseParenIndex);
