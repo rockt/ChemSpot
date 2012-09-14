@@ -211,8 +211,8 @@ public class ChemSpot {
         sentenceConverter.process(jcas);
         bannerTagger.process(jcas);
         if (linnaeusTagger != null) linnaeusTagger.process(jcas);
-        //abbrevTagger.process(jcas);
         chemicalFormulaTagger.process(jcas);
+        abbrevTagger.process(jcas);
         annotationMerger.process(jcas);
         normalizer.process(jcas);
         stopwordFilter.process(jcas);
