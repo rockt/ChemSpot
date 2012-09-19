@@ -30,6 +30,12 @@ public class ChemicalFormulaTagger extends JCasAnnotator_ImplBase {
 			int begin = matcher.start();
 			int end = matcher.end();
 			
+			if (formula.startsWith("(") && formula.endsWith(")")) {
+				begin++;
+				end--;
+				formula = formula.substring(1, formula.length()-1);
+			}
+			
 			if (formula.replaceAll("\\(|\\)", "").length() > 2 && (MUST_CONTAIN.matcher(formula).find()) && !DOES_NOT_MATCH.matcher(formula).matches()) {
 				createFormulaAnnotation(aJCas, begin, end, formula);
 			}
@@ -40,7 +46,7 @@ public class ChemicalFormulaTagger extends JCasAnnotator_ImplBase {
 		Chemical formula = new Chemical(aJCas);
 		formula.setBegin(begin);
 		formula.setEnd(end);
-        formula.setId("chemical substance: " + id);
+        formula.setId(id);
 		formula.setSource(Constants.SUM_TAGGER);
 		formula.addToIndexes();
 		return formula;
