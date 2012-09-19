@@ -31,7 +31,7 @@ public class AbbreviationTagger extends JCasAnnotator_ImplBase {
 			
 			//createAbbreviationAnnotation(aJCas, abbr.getStart(), abbr.getEnd(), abbr.getId());
 			
-			Pattern pattern = Pattern.compile("(?<=\\b)" + Pattern.quote(abbr.getText()) + "(?=\\b)");
+			Pattern pattern = Pattern.compile("(?<!\\p{Alpha})" + Pattern.quote(abbr.getText()) + "(?!\\p{Alpha})");
 			Matcher matcher = pattern.matcher(text);
 			while (matcher.find()) {
 				int begin = matcher.start();
