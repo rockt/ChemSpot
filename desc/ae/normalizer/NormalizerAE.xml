@@ -2,12 +2,28 @@
 <analysisEngineDescription xmlns="http://uima.apache.org/resourceSpecifier">
   <frameworkImplementation>org.apache.uima.java</frameworkImplementation>
   <primitive>true</primitive>
-  <annotatorImplementationName>de.berlin.hu.uima.ae.normalizer.IupacToInChIAE</annotatorImplementationName>
+  <annotatorImplementationName>de.berlin.hu.uima.ae.normalizer.Normalizer</annotatorImplementationName>
   <analysisEngineMetaData>
-    <name>IUPAC to InChI</name>
+    <name>Normalizer</name>
     <description/>
     <version>1.0</version>
     <vendor/>
+      <configurationParameters>
+        <configurationParameter>
+          <name>PathToIDs</name>
+          <type>String</type>
+          <multiValued>false</multiValued>
+          <mandatory>true</mandatory>
+        </configurationParameter>
+      </configurationParameters>
+      <configurationParameterSettings>
+        <nameValuePair>
+          <name>PathToIDs</name>
+          <value>
+            <string>You have to specify the path to a file with ids!</string>
+          </value>
+        </nameValuePair>
+      </configurationParameterSettings>
     <typeSystemDescription>
       <imports>
         <import location="../../TypeSystem.xml"/>

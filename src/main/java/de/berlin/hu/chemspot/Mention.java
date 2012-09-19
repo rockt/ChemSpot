@@ -13,12 +13,13 @@
 package de.berlin.hu.chemspot;
 
 import de.berlin.hu.util.Constants;
+import org.u_compare.shared.semantic.NamedEntity;
 
 public class Mention {
 	private int start;
 	private int end;
 	private String text;
-	private String id;
+	private String[] ids;
 	private String source;
 
     /**
@@ -26,17 +27,22 @@ public class Mention {
      * @param start position of the start character of an annotation
      * @param end position of the end character of an annotation (exclusive)
      * @param text covered text
-     * @param id ChemIDplus or InChI identifier if entities is normalized, empty otherwise
-     * @param source indicates whether found by BANNER's CRF, ChemIDplus LINNAEUS dictionary or taken from goldstandard
+     * @param ids a string representation of an array of identifiers of the form: [0] CHID, [1] CHEB, [2] CAS, [3] PUBC, [4] PUBS, [5] INCH, [6] DRUG, [7] HMBD, [8] KEGG, [9] KEGD, [10] MESH
+     * @param source indicates whether found by the CRF, the dictionary or taken from goldstandard
      */
-	public Mention(int start, int end, String text, String id, String source) {
+	public Mention(int start, int end, String text, String ids, String source) {
 		this.start = start;
 		this.end = end;
 		this.text = text;
-        this.id = id;
-        if ("banner".equals(source)) this.source = "CRF";
-        else if ("linnaeus".equals(source)) this.source = "Dictionary";
-        else this.source = source;
+        if (ids != null) {
+            String tempIds = ids;
+            if (tempIds.startsWith("[")) tempIds = tempIds.substring(1);
+            if (tempIds.endsWith("]")) tempIds = tempIds.substring(0, tempIds.length() - 1);
+            this.ids = tempIds.split(",");
+        } else {
+            this.ids = new String[0];
+        }
+        this.source = source;
 	}
 
     public Mention(int start, int end, String text) {
@@ -49,6 +55,10 @@ public class Mention {
     public Mention(int start, int end) {
         this.start = start;
         this.end = end;
+    }
+
+    public Mention(NamedEntity entity) {
+        this(entity.getBegin(), entity.getEnd(), entity.getCoveredText(), entity.getId(), entity.getSource());
     }
 
     public int getStart() {
@@ -66,8 +76,8 @@ public class Mention {
 	public String getText() {
 		return text;
 	}
-	public String getId() {
-		return id;
+	public String[] getIds() {
+		return ids;
 	}
 	public String getSource() {
 		return source;
@@ -75,4 +85,63 @@ public class Mention {
 	public void setSource(String source) {
 		this.source = source;
 	}
+
+    public String getCHID() {
+        return getId(Constants.CHID);
+    }
+
+    public String getCHEB() {
+        return getId(Constants.CHEB);
+    }
+
+    public String getCAS() {
+        return getId(Constants.CAS);
+    }
+
+    public String getPUBC() {
+        return getId(Constants.PUBC);
+    }
+
+    public String getPUBS() {
+        return getId(Constants.PUBS);
+    }
+
+    public String getINCH() {
+        return getId(Constants.INCH);
+    }
+
+    public String getDRUG() {
+        return getId(Constants.DRUG);
+    }
+
+    public String getHMBD() {
+        return getId(Constants.HMBD);
+    }
+
+    public String getKEGG() {
+        return getId(Constants.KEGG);
+    }
+
+    public String getKEGD() {
+        return getId(Constants.KEGD);
+    }
+
+    public String getMESH() {
+        return getId(Constants.MESH);
+    }
+
+    private String getId(int pos) {
+        String id = "";
+        try {
+          id = ids[pos];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            //ignore
+        }
+        return id;
+    }
+
+    @Override
+    public String toString() {
+        return start + " " + end + " " + text + " " + getCHID();
+    }
 }

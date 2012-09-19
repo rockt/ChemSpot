@@ -17,7 +17,10 @@ import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.RunAutomaton;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -28,11 +31,6 @@ import java.util.zip.ZipFile;
  */
 public class BricsMatcher {
     private Collection<RunAutomaton> matchers = new ArrayList<RunAutomaton>();
-    private HashSet<String> suffixes = new HashSet<String>(Arrays.asList(new String[] {
-            "s",
-            "es",
-            "ies"
-    }));
 
     /**
      * BricsMatcher loads a set of brics dictionary matchers packed in a zip file.

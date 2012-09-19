@@ -37,7 +37,7 @@ public class AbbreviationTagger extends JCasAnnotator_ImplBase {
 				int begin = matcher.start();
 				int end = matcher.end();
 				
-				createAbbreviationAnnotation(aJCas, begin, end, abbr.getId());
+				createAbbreviationAnnotation(aJCas, begin, end, abbr.getCHID());
 			}
 		}
 	}

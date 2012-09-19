@@ -41,8 +41,8 @@ public class ChemSpot {
     private TypeSystemDescription typeSystem;
     private AnalysisEngine sentenceDetector;
     private AnalysisEngine sentenceConverter;
-    private AnalysisEngine bannerTagger;
-    private AnalysisEngine linnaeusTagger;
+    private AnalysisEngine crfTagger;
+    private AnalysisEngine dictionaryTagger;
     private AnalysisEngine chemicalFormulaTagger;
     private AnalysisEngine abbrevTagger;
     private AnalysisEngine annotationMerger;
@@ -51,19 +51,27 @@ public class ChemSpot {
     private AnalysisEngine normalizer;
 
     /**
-     * Initializes ChemSpot without a dictionary automaton.
-     * @param pathToModelFile the Path to a CRF model
+     * Initializes ChemSpot without a dictionary automaton and a normalizer.
+     * @param pathToCRFModelFile the Path to a CRF model
      */
-    public ChemSpot(String pathToModelFile, String pathToSentenceModelFile) {
-        new ChemSpot(pathToModelFile, "", pathToSentenceModelFile);
+    public ChemSpot(String pathToCRFModelFile, String pathToSentenceModelFile) {
+        new ChemSpot(pathToCRFModelFile, null, pathToSentenceModelFile, null);
+    }
+
+    /**
+     * Initializes ChemSpot without a normalizer.
+     * @param pathToCRFModelFile the Path to a CRF model
+     */
+    public ChemSpot(String pathToCRFModelFile, String pathToDictionaryFile, String pathToSentenceModelFile) {
+        new ChemSpot(pathToCRFModelFile, pathToDictionaryFile, pathToSentenceModelFile, null);
     }
 
     /**
      * Initializes ChemSpot with a CRF model, an OpenNLP sentence model and a dictionary automaton.
-     * @param pathToModelFile the path to a CRF model
-     * @param pathToDictionaryFile the path to a dictionary automaton
+     * @param pathToCRFModelFile the path to a CRF model
+     * @param pathToDictionaryFile the ath to a dictionary automaton
      */
-    public ChemSpot(String pathToModelFile, String pathToDictionaryFile, String pathToSentenceModelFile) {
+    public ChemSpot(String pathToCRFModelFile, String pathToDictionaryFile, String pathToSentenceModelFile, String pathToIDs) {
         try {
             typeSystem = UIMAFramework.getXMLParser().parseTypeSystemDescription(new XMLInputSource(this.getClass().getClassLoader().getResource("desc/TypeSystem.xml")));
             fineTokenizer = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
@@ -73,23 +81,23 @@ public class ChemSpot {
             sentenceConverter = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
                     .getResource("desc/ae/converter/OpenNLPToUCompareSentenceConverterAE.xml"))), CAS.NAME_DEFAULT_SOFA);
             System.out.println("Loading CRF...");
-            bannerTagger = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
-                    .getResource("desc/banner/tagger/BANNERTaggerAE.xml"))),  "BannerModelFile", pathToModelFile);
-            if (pathToDictionaryFile!= null) System.out.println("Loading dictionary..."); else System.out.println("No dictionary location specified! Tagging without dictionary...");
+            crfTagger = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+                    .getResource("desc/banner/tagger/BANNERTaggerAE.xml"))),  "BannerModelFile", pathToCRFModelFile);
             if (pathToDictionaryFile != null) {
-                //linnaeusTagger = AnalysisEngineFactory.createAnalysisEngine("desc/ae/tagger/DictionaryTaggerAE", "DrugBankMatcherDictionaryAutomat", pathToDictionaryFile);
-                linnaeusTagger = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
-                        //.getResource("desc/ae/tagger/DictionaryTaggerAE.xml"))), "DrugBankMatcherDictionaryAutomat", pathToDictionaryFile);
+                System.out.println("Loading dictionary...");
+                dictionaryTagger = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
                         .getResource("desc/ae/tagger/BricsTaggerAE.xml"))), "DrugBankMatcherDictionaryAutomat", pathToDictionaryFile);
-            }
+            } else System.out.println("No dictionary location specified! Tagging without dictionary...");
             chemicalFormulaTagger = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
                     .getResource("desc/ae/tagger/ChemicalFormulaTaggerAE.xml"))), CAS.NAME_DEFAULT_SOFA);
             abbrevTagger = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
                     .getResource("desc/ae/tagger/AbbreviationTaggerAE.xml"))), CAS.NAME_DEFAULT_SOFA);
             annotationMerger = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
                     .getResource("desc/ae/AnnotationMergerAE.xml"))), CAS.NAME_DEFAULT_SOFA);
-            normalizer = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
-                    .getResource("desc/ae/normalizer/IUPACToInChIAE.xml"))), CAS.NAME_DEFAULT_SOFA);
+            if (pathToIDs != null) {
+                normalizer = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+                                        .getResource("desc/ae/normalizer/NormalizerAE.xml"))), "PathToIDs", pathToIDs);
+            } else System.out.println("No location for ids specified! Tagging without subsequent normalization...");
             stopwordFilter = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
                     .getResource("desc/ae/filter/StopwordFilterAE.xml"))), CAS.NAME_DEFAULT_SOFA);
             System.out.println("Finished initializing ChemSpot.");
@@ -112,11 +120,11 @@ public class ChemSpot {
             fineTokenizer.process(jcas);
             sentenceDetector.process(jcas);
             sentenceConverter.process(jcas);
-            bannerTagger.process(jcas);
-            if (linnaeusTagger != null) linnaeusTagger.process(jcas);
+            crfTagger.process(jcas);
+            if (dictionaryTagger != null) dictionaryTagger.process(jcas);
             annotationMerger.process(jcas);
-            normalizer.process(jcas);
             stopwordFilter.process(jcas);
+            if (normalizer != null) normalizer.process(jcas);
 
             List<Mention> mentions = new ArrayList<Mention>();
             Iterator<NamedEntity> entities = JCasUtil.iterator(jcas, NamedEntity.class);
@@ -127,6 +135,7 @@ public class ChemSpot {
                     mentions.add(new Mention(entity.getBegin(), entity.getEnd(), entity.getCoveredText(), entity.getId(), entity.getSource()));
                 }
             }
+
             return mentions;
         } catch (AnalysisEngineProcessException e) {
             System.err.println("Failed to extract chemicals from text.");
@@ -188,8 +197,7 @@ public class ChemSpot {
         Iterator<NamedEntity> annotations = JCasUtil.iterator(jcas, NamedEntity.class);
         while (annotations.hasNext()) {
             NamedEntity entity = annotations.next();
-            // offset fix for GeneView
-            entity.setEnd(entity.getEnd()-1);
+            entity.setEnd(entity.getEnd());
         }
         serializeAnnotations(jcas);
     }
@@ -209,13 +217,13 @@ public class ChemSpot {
         fineTokenizer.process(jcas);
         sentenceDetector.process(jcas);
         sentenceConverter.process(jcas);
-        bannerTagger.process(jcas);
-        if (linnaeusTagger != null) linnaeusTagger.process(jcas);
+        crfTagger.process(jcas);
+        if (dictionaryTagger != null) dictionaryTagger.process(jcas);
         chemicalFormulaTagger.process(jcas);
         abbrevTagger.process(jcas);
         annotationMerger.process(jcas);
-        normalizer.process(jcas);
         stopwordFilter.process(jcas);
+        if (normalizer != null) normalizer.process(jcas);
 
         HashMap<String, ArrayList<NamedEntity>> goldAnnotations = new HashMap<String, ArrayList<NamedEntity>>();
         HashMap<String, ArrayList<NamedEntity>> pipelineAnnotations = new HashMap<String, ArrayList<NamedEntity>>();
@@ -399,9 +407,12 @@ public class ChemSpot {
             while (entityIterator.hasNext()) {
                 NamedEntity entity = entityIterator.next();
                 if (!"goldstandard".equals(entity.getSource())) {
-                    int begin = entity.getBegin() - offset;
-                    int end = entity.getEnd() - offset - 1;
-                    String id = entity.getId();
+                    //offset fix for GeneView
+                    //int begin = entity.getBegin() - offset;
+                    int begin = entity.getBegin() - offset - 1;
+                    //int end = entity.getEnd() - offset - 1;
+                    int end = entity.getEnd() - offset - 2;
+                    String id = (new Mention(entity)).getCHID();
                     String text = entity.getCoveredText();
                     if (id == null || id.isEmpty()) {
                         writer.write(pmid + "\t" + begin + "\t" + end + "\t" + text + "\t" + "\\N\n");

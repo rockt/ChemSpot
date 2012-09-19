@@ -25,6 +25,13 @@ import actors.Actor
  */
 
 object jochem2automat extends App {
+  def getIds(lines:Array[String]):String = {
+    (for (db <- List("CHID", "CHEB", "CAS", "PUBC", "PUBS", "INCH", "DRUG", "HMBD", "KEGG", "KEGD", "MESH")) yield {
+      val option = lines.find((s: String) => s.startsWith("DB " + db))
+      if (option.isDefined) option.get.substring(4 + db.length) else ""
+    }).mkString("\t")
+  }
+
   if (args.length != 4) {
     println("Usage: jochem2automat jochem.ontology output.automat output.ids numberOfThreads")
     exit(-1)
@@ -40,14 +47,10 @@ object jochem2automat extends App {
   val records = dictionary.mkString("\n").split("\n--\n").drop(12)
   for (record <- records) {
     val lines = record.split("\n")
-    val casOption = lines.find((s: String) => s.startsWith("DB CAS_"))
-    val cas = if (casOption.isDefined) casOption.get.substring(7) else ""
-    val inChIOption = lines.find((s: String) => s.startsWith("DB INCH_"))
-    val inChI = if (inChIOption.isDefined) inChIOption.get.substring(8) else ""
     val terms = lines.filter((s: String) => s.startsWith("TM ")).map((t: String) => t.split("\t")(0).substring(3))
     val isChemIDplus = lines.filter((s: String) => s.startsWith("DB CHID")).length > 0
     for (term <- terms) {
-      if (term.length > 2) idMapOutput.println(term + "\t" + cas + "\t" + inChI)
+      if (term.length > 2) idMapOutput.println(term.toLowerCase() + "\t" + getIds(lines))
       //only keep terms of the ChemIDplus dictionary
       if (term.length > 2 && isChemIDplus) chemicals = term :: chemicals
     }

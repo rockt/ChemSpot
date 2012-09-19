@@ -86,8 +86,7 @@ public class BricsTagger extends JCasAnnotator_ImplBase {
    			long start = System.currentTimeMillis();
    			matches = new ArrayList<Mention>(matcher.match(docText));
    			long time = System.currentTimeMillis() - start;
-   			//System.out.println("Tagging with LINNAEUS took " + time + "ms");
-   			System.out.println("Start post-processing...");
+
    		} catch (Error e) {
    			throw new AnalysisEngineProcessException(e);
    		} catch (IllegalStateException e) {
@@ -263,13 +262,8 @@ public class BricsTagger extends JCasAnnotator_ImplBase {
    		Chemical drug = new Chemical(aJCas);
    		drug.setBegin(begin);
    		drug.setEnd(end);
-           //only keep ChemIDplus ID if the entity matched exactly
-   		if (borderHasChanged) {
-   			drug.setId("");
-   		} else {
-   			id = id.replaceAll("CHID_[0]*", "");
-   			drug.setId(id);
-   		}
+        //ID is set by normalizer
+        drug.setId("");
    		drug.setSource(Constants.DICTIONARY);
    		drug.addToIndexes();
    		return drug;
