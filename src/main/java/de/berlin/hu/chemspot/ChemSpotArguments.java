@@ -25,9 +25,16 @@ public interface ChemSpotArguments {
 	  String getPathToGZCorpus();
 	  boolean isPathToGZCorpus();
 	  
+	  @Option(shortName="S")
+	  boolean isSerialize();
+	  
 	  @Option(shortName="t")
 	  String getPathToTextFile();
 	  boolean isPathToTextFile();
+	  
+	  @Option(shortName="T")
+	  int getThreadNr();
+	  boolean isThreadNr();
 	  
 	  @Option(shortName="e")
 	  boolean isRunEvaluation();

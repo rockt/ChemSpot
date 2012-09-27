@@ -82,7 +82,7 @@ public class BannerTagger extends JCasAnnotator_ImplBase {
 	}
 
 	@Override
-	public void process(JCas aJCas) throws AnalysisEngineProcessException {
+	public synchronized void process(JCas aJCas) throws AnalysisEngineProcessException {
 		FSIndex<Annotation> sentenceIndex = aJCas.getAnnotationIndex(Sentence.type);
 		Iterator<Annotation> sentenceIterator = sentenceIndex.iterator();
 		int sentenceCounter = 0;

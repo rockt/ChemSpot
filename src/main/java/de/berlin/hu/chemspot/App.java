@@ -14,17 +14,22 @@ package de.berlin.hu.chemspot;
 
 import org.apache.uima.UIMAException;
 import org.apache.uima.UIMAFramework;
+import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
+import org.apache.uima.collection.CollectionException;
 import org.apache.uima.collection.CollectionReader;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.metadata.TypeSystemDescription;
 import org.apache.uima.util.XMLInputSource;
 import org.uimafit.factory.CollectionReaderFactory;
 import org.uimafit.factory.JCasFactory;
+
 import uk.co.flamingpenguin.jewel.cli.ArgumentValidationException;
 import uk.co.flamingpenguin.jewel.cli.CliFactory;
 
 import java.io.*;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class App {
 	private static String pathToCorpora;
@@ -33,6 +38,8 @@ public class App {
 	private static String pathToOutputFile;
 	private static ChemSpotArguments arguments;
 	private static boolean evaluate = false;
+	private static boolean threaded = false;
+	private static int threadNr = 1;
 	private static String pathToTextFile;
     private static String tagFromCommandLine;
     private static String pathToSentenceFile;
@@ -52,6 +59,10 @@ public class App {
 			} 
 			if (arguments.isPathToIDs()) {
          		pathToIDsFile = arguments.getPathToIDs();
+            }
+			if (arguments.isThreadNr()) {
+				threaded = true;
+         		threadNr = arguments.getThreadNr();
             }
 			if (arguments.isPathToTextFile()) {
 				pathToTextFile = arguments.getPathToTextFile();
@@ -103,12 +114,7 @@ public class App {
                             .getResource("desc/cr/ZipFileCR.xml"))), "InputDirectory", pathToGZCorpus);
                 }
 
-                while (reader.hasNext()) {
-                    JCas jcas = JCasFactory.createJCas(typeSystem);
-                    reader.getNext(jcas.getCas());
-                    String output = chemspot.tagJCas(jcas, evaluate, true);
-                    if (outputFile != null) outputFile.write(output);
-                }
+            	tagCollection(chemspot, typeSystem, reader, threaded, threadNr);
             } else {
                 if (arguments.isZippedTextFile()) {
                     chemspot.tagGZ(pathToTextFile);
@@ -123,15 +129,71 @@ public class App {
             if (outputFile != null) outputFile.close();
         }
 	}
+    
+    private static void tagCollection(ChemSpot chemspot, TypeSystemDescription typeSystem, CollectionReader reader, boolean threaded, int threads) throws CollectionException, UIMAException, IOException {
+    	ExecutorService threadPool = threaded ? Executors.newFixedThreadPool(threads) : null;
+    	int theadNr = 1;
+    	
+    	while (reader.hasNext()) {
+            JCas jcas = JCasFactory.createJCas(typeSystem);
+            reader.getNext(jcas.getCas());
+            
+            if (threaded) {
+	            ChemSpotRun run = new ChemSpotRun(theadNr++, chemspot, jcas, arguments.isSerialize());
+	            threadPool.submit(run);
+            } else {
+            	String output = chemspot.tagJCas(jcas, evaluate, true);
+            	
+            	FileWriter outputFile = arguments.isPathToOutputFile() ? new FileWriter(new File(pathToOutputFile)) : null;
+                if (outputFile != null) outputFile.write(output);
+            }
+        }
+    	
+    	if (threaded) {
+    		threadPool.shutdown();
+    	}
+    }
+    
+    private static class ChemSpotRun implements Runnable {
+    	private int threadNr = -1;
+    	private ChemSpot chemspot = null;
+    	private JCas jCas = null;
+    	private boolean serialize = false;
+    	
+    	public ChemSpotRun (int threadNr, ChemSpot chemspot, JCas jCas, boolean serialize) {
+    		this.threadNr = threadNr;
+    		this.chemspot = chemspot;
+    		this.jCas = jCas;
+    		this.serialize = serialize;
+    	}
+    	
+		@Override
+		public void run() {
+			try {
+				System.out.println("Starting thread " + threadNr);
+				chemspot.tagJCas(jCas, evaluate, false);
+				if (serialize) ChemSpot.serializeAnnotations(jCas);
+				System.out.println("Thread " + threadNr + " finished");
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (AnalysisEngineProcessException e) {
+				e.printStackTrace();
+			}
+		}
+    	
+    }
 
 	private static void usage() {
 		System.out.println("usage:");
         System.out.println("\t-m path to a CRF model file");
         System.out.println("\t-s path to a OpenNLP sentence model file");
+        System.out.println("\t-S serialize annotation  (optional)");
         System.out.println("\t-d path to a zipped set of brics dictionary automata (optional)");
 		System.out.println("\t-i path to a zipped tab-separated text file representing a map of terms to ids (optional)");
 		System.out.println("\t-c path to a directory containing corpora in IOB format that should be tagged (optional)");
+		System.out.println("\t-c path to a directory containing gzipped text files that should be tagged (optional)");
 		System.out.println("\t-t path to a text file that should be tagged (optional)");
+		System.out.println("\t-T number of threads to use when processing a document collection  (optional)");
 		System.out.println("\t-o path to an output file (IOB format)");
 		System.out.println("\t-e if this parameter is set, the performance of ChemSpot on a IOB gold-standard corpus (cf. -c) is evaluated");
         System.exit(0);

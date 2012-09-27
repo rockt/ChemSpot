@@ -386,7 +386,7 @@ public class ChemSpot {
         srcDocInfo.addToIndexes();
     }
 
-    private static void serializeAnnotations(JCas jcas) throws IOException {
+    public static void serializeAnnotations(JCas jcas) throws IOException {
         Iterator<SourceDocumentInformation> srcIterator = JCasUtil.iterator(jcas, SourceDocumentInformation.class);
         SourceDocumentInformation src = srcIterator.next();
         String pathToFile = src.getUri().replaceFirst("file:.*/", "log/") + ".chem";
