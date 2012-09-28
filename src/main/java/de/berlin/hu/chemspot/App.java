@@ -142,7 +142,7 @@ public class App {
 	            ChemSpotRun run = new ChemSpotRun(theadNr++, chemspot, jcas, arguments.isSerialize());
 	            threadPool.submit(run);
             } else {
-            	String output = chemspot.tagJCas(jcas, evaluate, true);
+            	String output = chemspot.tagJCas(jcas, evaluate, evaluate);
             	
             	FileWriter outputFile = arguments.isPathToOutputFile() ? new FileWriter(new File(pathToOutputFile)) : null;
                 if (outputFile != null) outputFile.write(output);
@@ -170,7 +170,9 @@ public class App {
 		public void run() {
 			try {
 				System.out.println("Starting thread " + threadNr);
-				chemspot.tagJCas(jCas, evaluate, false);
+				String output = chemspot.tagJCas(jCas, evaluate, evaluate);
+				FileWriter outputFile = arguments.isPathToOutputFile() ? new FileWriter(new File(pathToOutputFile)) : null;
+                if (outputFile != null) outputFile.write(output);
 				if (serialize) {
 					ChemSpot.serializeAnnotations(jCas);
 				}
