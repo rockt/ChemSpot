@@ -167,12 +167,13 @@ public class App {
     		this.serialize = serialize;
     	}
     	
-		@Override
 		public void run() {
 			try {
 				System.out.println("Starting thread " + threadNr);
 				chemspot.tagJCas(jCas, evaluate, false);
-				if (serialize) ChemSpot.serializeAnnotations(jCas);
+				if (serialize) {
+					ChemSpot.serializeAnnotations(jCas);
+				}
 				System.out.println("Thread " + threadNr + " finished");
 			} catch (IOException e) {
 				e.printStackTrace();
