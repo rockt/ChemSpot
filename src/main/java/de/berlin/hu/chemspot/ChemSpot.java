@@ -320,10 +320,14 @@ public class ChemSpot {
     private int TP = 0;
     private int FP = 0;
     private int FN = 0;
+    private Object evaluationLock = new Object();
+    private List<ComparableAnnotation> truePositives = new ArrayList<ComparableAnnotation>();
+    private List<ComparableAnnotation> falsePositives = new ArrayList<ComparableAnnotation>();
+    private List<ComparableAnnotation> falseNegatives = new ArrayList<ComparableAnnotation>();
 
     //FIXME: use Mention instead of NamedEntity
     private void evaluate(HashMap<String, ArrayList<NamedEntity>> goldAnnotations, HashMap<String, ArrayList<NamedEntity>> pipelineAnnotations) {
-        List<ComparableAnnotation> goldAnnoationsComparable = new ArrayList<ComparableAnnotation>();
+    	List<ComparableAnnotation> goldAnnoationsComparable = new ArrayList<ComparableAnnotation>();
         List<ComparableAnnotation> pipelineAnnotationsComparable = new ArrayList<ComparableAnnotation>();
 
         for (String pmid : goldAnnotations.keySet()) {
@@ -337,24 +341,32 @@ public class ChemSpot {
             }
         }
 
-        if (goldAnnoationsComparable.size() == 0) {
-            FP += pipelineAnnotationsComparable.size();
-        } else if (pipelineAnnotationsComparable.size() == 0) {
-            FN += goldAnnoationsComparable.size();
-        } else {
-            Evaluator<ComparableAnnotation,ComparableAnnotation> evaluator = new Evaluator<ComparableAnnotation,ComparableAnnotation>(pipelineAnnotationsComparable, goldAnnoationsComparable);
-            evaluator.evaluate();
-
-            TP += evaluator.getTruePositives().size();
-            FP += evaluator.getFalsePositives().size();
-            FN += evaluator.getFalseNegatives().size();
-
-            System.out.format("True Positives:\t\t%d\nFalse Positives:\t%d\nFalse Negatives:\t%d\n", TP, FP, FN);
-            double precision = (double) TP / ((double) TP + FP);
-            double recall = (double) TP / ((double) TP + FN);
-            double fscore = 2 * (precision * recall) / (precision + recall);
-            System.out.format("Precision:\t\t%f\nRecall:\t\t\t%f\nF1 Score:\t\t%f\n", precision, recall, fscore);
-            System.out.println();
+        synchronized(evaluationLock) {
+	        if (goldAnnoationsComparable.size() == 0) {
+	            FP += pipelineAnnotationsComparable.size();
+	            falsePositives.addAll(pipelineAnnotationsComparable);
+	        } else if (pipelineAnnotationsComparable.size() == 0) {
+	            FN += goldAnnoationsComparable.size();
+	            falseNegatives.addAll(goldAnnoationsComparable);
+	        } else {
+	            Evaluator<ComparableAnnotation,ComparableAnnotation> evaluator = new Evaluator<ComparableAnnotation,ComparableAnnotation>(pipelineAnnotationsComparable, goldAnnoationsComparable);
+	            evaluator.evaluate();
+	
+	            TP += evaluator.getTruePositives().size();
+	            FP += evaluator.getFalsePositives().size();
+	            FN += evaluator.getFalseNegatives().size();
+	            
+	            truePositives.addAll(evaluator.getTruePositives());
+	            falsePositives.addAll(evaluator.getFalsePositives());
+	            falseNegatives.addAll(evaluator.getFalseNegatives());
+	
+	            System.out.format("True Positives:\t\t%d\nFalse Positives:\t%d\nFalse Negatives:\t%d\n", TP, FP, FN);
+	            double precision = (double) TP / ((double) TP + FP);
+	            double recall = (double) TP / ((double) TP + FN);
+	            double fscore = precision + recall > 0 ? 2 * (precision * recall) / (precision + recall) : 0;
+	            System.out.format("Precision:\t\t%f\nRecall:\t\t\t%f\nF1 Score:\t\t%f\n", precision, recall, fscore);
+	            System.out.println();
+	        }
         }
     }
 
