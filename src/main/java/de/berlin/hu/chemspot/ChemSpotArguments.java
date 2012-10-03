@@ -16,12 +16,16 @@ public interface ChemSpotArguments {
 	  @Option(shortName="c")
 	  String getPathToIOBCorpora();
 	  boolean isPathToIOBCorpora();
+	  
+	  @Option(shortName="C")
+	  String getPathToCRAFTCorpus();
+	  boolean isPathToCRAFTCorpus();
 
       @Option(shortName="i")
  	  String getPathToIDs();
       boolean isPathToIDs();
 	  
-	  @Option(shortName="C")
+	  @Option(shortName="g")
 	  String getPathToGZCorpus();
 	  boolean isPathToGZCorpus();
 	  
