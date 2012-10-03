@@ -65,22 +65,28 @@ public class BricsMatcher {
                     left = text.charAt(matcher.start() - 1);
                 } catch (ArrayIndexOutOfBoundsException e) {
                     //ignore
+                } catch (StringIndexOutOfBoundsException e) {
+                    //ignore
                 }
                 try {
                     right = text.charAt(matcher.end());
                 } catch (ArrayIndexOutOfBoundsException e) {
+                    //ignore
+                } catch (StringIndexOutOfBoundsException e) {
                     //ignore
                 }
                 try {
                     nright = text.charAt(matcher.end() + 1);
                 } catch (ArrayIndexOutOfBoundsException e) {
                     //ignore
+                } catch (StringIndexOutOfBoundsException e) {
+                    //ignore
                 }
                 String coveredText = text.substring(matcher.start(), matcher.end());
 
                 //only add if not within a text and longer than two characters
                 if (coveredText.length() > 2 && (
-                        !(Character.isAlphabetic(left) || Character.isAlphabetic(right))
+                        !(Character.isLetter(left) || Character.isLetter(right))
                 )) {
                     matches.add(new Mention(matcher.start(), matcher.end(), text.substring(matcher.start(), matcher.end())));
                 }
