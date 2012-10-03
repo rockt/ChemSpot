@@ -1,7 +1,6 @@
 package de.berlin.hu.uima.cr.craft;
 
 import java.io.IOException;
-import java.util.Iterator;
 
 import org.apache.uima.cas.CAS;
 import org.apache.uima.cas.CASException;

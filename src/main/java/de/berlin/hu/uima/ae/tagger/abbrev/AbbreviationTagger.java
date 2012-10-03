@@ -16,7 +16,7 @@ import de.berlin.hu.types.PubmedDocument;
 import de.berlin.hu.util.Constants;
 
 public class AbbreviationTagger extends JCasAnnotator_ImplBase {
-	private static boolean TAG_PUBMED = false;
+	private static boolean TAG_PUBMED = true;
 	private ExtractAbbrev abbrevTagger = null;
 	
 	public AbbreviationTagger() {
