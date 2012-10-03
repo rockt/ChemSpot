@@ -16,7 +16,8 @@ import de.berlin.hu.types.PubmedDocument;
 import de.berlin.hu.util.Constants;
 
 public class AbbreviationTagger extends JCasAnnotator_ImplBase {
-	ExtractAbbrev abbrevTagger = null;
+	private static boolean TAG_PUBMED = false;
+	private ExtractAbbrev abbrevTagger = null;
 	
 	public AbbreviationTagger() {
 		abbrevTagger = new ExtractAbbrev();
@@ -25,20 +26,25 @@ public class AbbreviationTagger extends JCasAnnotator_ImplBase {
 	@Override
 	public void process(JCas aJCas) throws AnalysisEngineProcessException {
 		String text = aJCas.getDocumentText();
+		
+		// get abbreviations
 		List<Mention> abbreviations = abbrevTagger.getMentions(text);
+		
+		// get PubMed documents
 		Iterator<PubmedDocument> pmIterator =  JCasUtil.iterator(aJCas, PubmedDocument.class);
-		PubmedDocument currDocument = pmIterator.hasNext() ? pmIterator.next() : null;
+		PubmedDocument currDocument = TAG_PUBMED && pmIterator.hasNext() ? pmIterator.next() : null;
 		
 		for (Mention abbr : abbreviations) {
 			if (abbr.getText().length() < 2) {
 				continue;
 			} 
 			
-			//createAbbreviationAnnotation(aJCas, abbr.getStart(), abbr.getEnd(), abbr.getId());
-			while (pmIterator.hasNext() && currDocument.getEnd() < abbr.getStart()) {
+			// find PubMed document that the current abbreviation belongs to
+			while (TAG_PUBMED && pmIterator.hasNext() && currDocument.getEnd() < abbr.getStart()) {
 				currDocument = pmIterator.next();
 			}
 			
+			// select PubMed document or the whole text if there were none
 			int offset = -1;
 			if (currDocument != null) {
 				text = currDocument.getCoveredText();
@@ -48,6 +54,7 @@ public class AbbreviationTagger extends JCasAnnotator_ImplBase {
 				offset = 0;
 			}
 			
+			// tag all abbreviations in document
 			Pattern pattern = Pattern.compile("(?<!\\p{Alpha})" + Pattern.quote(abbr.getText()) + "(?!\\p{Alpha})");
 			Matcher matcher = pattern.matcher(text);
 			while (matcher.find()) {
