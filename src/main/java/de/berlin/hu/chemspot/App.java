@@ -212,12 +212,12 @@ public class App {
         System.out.println("  input control:");
 		System.out.println("\t-c path to a directory containing corpora in IOB format that should be tagged");
 		System.out.println("\t-C path to a directory containing CRAFT corpus files in UIMA XMI format that should be tagged");
-		System.out.println("\t-G path to a directory containing gzipped text files that should be tagged");
+		System.out.println("\t-g path to a directory containing gzipped text files that should be tagged");
 		System.out.println("\t-t path to a text file that should be tagged");
 		System.out.println();
         System.out.println("  output control:");
 		System.out.println("\t-o for a single document: path to an output file (IOB format)");
-		System.out.println("\t-S for document collections: serialize annotation (tsv format)");
+		System.out.println("\t-S for a document collection: path to which serialized annotation files should be written (tsv format)");
         System.exit(0);
 	}
 }
