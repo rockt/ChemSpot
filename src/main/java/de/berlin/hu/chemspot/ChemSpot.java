@@ -22,9 +22,7 @@ import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.cas.CAS;
 import org.apache.uima.examples.SourceDocumentInformation;
 import org.apache.uima.jcas.JCas;
-import org.apache.uima.resource.ResourceInitializationException;
 import org.apache.uima.resource.metadata.TypeSystemDescription;
-import org.apache.uima.util.InvalidXMLException;
 import org.apache.uima.util.XMLInputSource;
 import org.u_compare.shared.semantic.NamedEntity;
 import org.u_compare.shared.syntactic.Token;
@@ -40,7 +38,6 @@ import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 public class ChemSpot {
-	private String pathToSentenceModelFile;
     private TypeSystemDescription typeSystem;
     private AnalysisEngine sentenceDetector;
     private AnalysisEngine sentenceConverter;
@@ -76,7 +73,6 @@ public class ChemSpot {
      */
     public ChemSpot(String pathToCRFModelFile, String pathToDictionaryFile, String pathToSentenceModelFile, String pathToIDs) {
         try {
-        	this.pathToSentenceModelFile = pathToSentenceModelFile;
             typeSystem = UIMAFramework.getXMLParser().parseTypeSystemDescription(new XMLInputSource(this.getClass().getClassLoader().getResource("desc/TypeSystem.xml")));
             fineTokenizer = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
                     .getResource("desc/ae/tokenizer/FineGrainedTokenizerAE.xml"))), CAS.NAME_DEFAULT_SOFA);
@@ -203,7 +199,7 @@ public class ChemSpot {
             NamedEntity entity = annotations.next();
             entity.setEnd(entity.getEnd());
         }
-        serializeAnnotations(jcas);
+        serializeAnnotations(jcas, null);
     }
 
     /**
@@ -216,21 +212,12 @@ public class ChemSpot {
      */
     //FIXME: split this method into two parts: tagging and writing IOB
     public String tagJCas(JCas jcas, boolean evaluate, boolean convertToIOB) throws AnalysisEngineProcessException {
-        try {
-			sentenceDetector = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
-			        .getResource("desc/ae/tagger/opennlp/SentenceDetector.xml"))), "opennlp.uima.ModelName", pathToSentenceModelFile);
-		} catch (ResourceInitializationException e) {
-			throw new AnalysisEngineProcessException(e);
-		} catch (InvalidXMLException e) {
-			throw new AnalysisEngineProcessException(e);
-		} catch (IOException e) {
-			throw new AnalysisEngineProcessException(e);
-		}
-        
         //TODO change to buffered string builder!
         StringBuilder sb = new StringBuilder();
         fineTokenizer.process(jcas);
-        sentenceDetector.process(jcas);
+        synchronized (this) {
+        	sentenceDetector.process(jcas);
+        }
         sentenceConverter.process(jcas);
         crfTagger.process(jcas);
         if (dictionaryTagger != null) dictionaryTagger.process(jcas);
@@ -413,11 +400,32 @@ public class ChemSpot {
         srcDocInfo.addToIndexes();
     }
 
-    public static void serializeAnnotations(JCas jcas) throws IOException {
+    private static int runNr = 1;
+    private static Object runLock = new Object();
+    
+    public static void serializeAnnotations(JCas jcas, String path) throws IOException {
         Iterator<SourceDocumentInformation> srcIterator = JCasUtil.iterator(jcas, SourceDocumentInformation.class);
-        SourceDocumentInformation src = srcIterator.next();
-        String pathToFile = src.getUri().replaceFirst("file:.*/", "log/") + ".chem";
-
+        
+        path = path != null ? path.replaceAll("\\\\", "/") : "log/";
+        path = !path.endsWith("/") ? path + "/" : path;
+        
+        File pathFile = new File(path);
+        if (!pathFile.exists()) {
+        	synchronized (runLock) {
+        		pathFile.mkdir();
+        	}
+        }
+        
+        String pathToFile = null;
+        if (srcIterator.hasNext()) {
+	        SourceDocumentInformation src = srcIterator.next();
+	        pathToFile = src.getUri().replaceFirst("file:.*/", path) + ".chem";
+        } else {
+        	synchronized (runLock) {
+        		pathToFile = String.format("%s%04d.chem", path, runNr++);
+        	}
+        }
+        
         File file = new File(pathToFile);
         file.createNewFile(); //overwrite if file already exists
         FileWriter writer = new FileWriter(file);

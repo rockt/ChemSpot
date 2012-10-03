@@ -143,14 +143,14 @@ public class App {
     
     private static void tagCollection(ChemSpot chemspot, TypeSystemDescription typeSystem, CollectionReader reader, boolean threaded, int threads) throws CollectionException, UIMAException, IOException {
     	ExecutorService threadPool = threaded ? Executors.newFixedThreadPool(threads) : null;
-    	int theadNr = 1;
+    	int runNr = 1;
     	
     	while (reader.hasNext()) {
             JCas jcas = JCasFactory.createJCas(typeSystem);
             reader.getNext(jcas.getCas());
             
             if (threaded) {
-	            ChemSpotRun run = new ChemSpotRun(theadNr++, chemspot, jcas, arguments.isSerialize());
+	            ChemSpotRun run = new ChemSpotRun(runNr++, chemspot, jcas, arguments.isSerializeOutputPath());
 	            threadPool.submit(run);
             } else {
             	String output = chemspot.tagJCas(jcas, evaluate, evaluate);
@@ -166,13 +166,13 @@ public class App {
     }
     
     private static class ChemSpotRun implements Runnable {
-    	private int threadNr = -1;
+    	private int runNr = -1;
     	private ChemSpot chemspot = null;
     	private JCas jCas = null;
     	private boolean serialize = false;
     	
-    	public ChemSpotRun (int threadNr, ChemSpot chemspot, JCas jCas, boolean serialize) {
-    		this.threadNr = threadNr;
+    	public ChemSpotRun (int runNr, ChemSpot chemspot, JCas jCas, boolean serialize) {
+    		this.runNr = runNr;
     		this.chemspot = chemspot;
     		this.jCas = jCas;
     		this.serialize = serialize;
@@ -180,14 +180,14 @@ public class App {
     	
 		public void run() {
 			try {
-				System.out.println("Starting run " + threadNr);
+				System.out.println("Starting run " + runNr);
 				String output = chemspot.tagJCas(jCas, evaluate, evaluate);
 				FileWriter outputFile = arguments.isPathToOutputFile() ? new FileWriter(new File(pathToOutputFile)) : null;
                 if (outputFile != null) outputFile.write(output);
 				if (serialize) {
-					ChemSpot.serializeAnnotations(jCas);
+					ChemSpot.serializeAnnotations(jCas, arguments.getSerializeOutputPath());
 				}
-				System.out.println("Run " + threadNr + " finished");
+				System.out.println("Run " + runNr + " finished");
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (AnalysisEngineProcessException e) {
@@ -209,15 +209,15 @@ public class App {
         System.out.println("\t-e if this parameter is set, the performance of ChemSpot on a IOB gold-standard corpus (cf. -c) or CRAFT corpus is evaluated");
         System.out.println("\t-T number of threads to create when processing a document collection");
         System.out.println();
-        System.out.println("  input arguments:");
-		System.out.println("\t-c path to a directory containing corpora in IOB format that should be tagged (optional)");
-		System.out.println("\t-C path to a directory containing CRAFT corpus files in UIMA XMI format that should be tagged (optional)");
-		System.out.println("\t-G path to a directory containing gzipped text files that should be tagged (optional)");
-		System.out.println("\t-t path to a text file that should be tagged (optional)");
+        System.out.println("  input control:");
+		System.out.println("\t-c path to a directory containing corpora in IOB format that should be tagged");
+		System.out.println("\t-C path to a directory containing CRAFT corpus files in UIMA XMI format that should be tagged");
+		System.out.println("\t-G path to a directory containing gzipped text files that should be tagged");
+		System.out.println("\t-t path to a text file that should be tagged");
 		System.out.println();
         System.out.println("  output control:");
-		System.out.println("\t-o path to an output file (IOB format)");
-		System.out.println("\t-S serialize annotation");
+		System.out.println("\t-o for a single document: path to an output file (IOB format)");
+		System.out.println("\t-S for document collections: serialize annotation (tsv format)");
         System.exit(0);
 	}
 }

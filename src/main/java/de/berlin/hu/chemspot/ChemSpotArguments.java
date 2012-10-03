@@ -30,7 +30,8 @@ public interface ChemSpotArguments {
 	  boolean isPathToGZCorpus();
 	  
 	  @Option(shortName="S")
-	  boolean isSerialize();
+	  String getSerializeOutputPath();
+	  boolean isSerializeOutputPath();
 	  
 	  @Option(shortName="t")
 	  String getPathToTextFile();
