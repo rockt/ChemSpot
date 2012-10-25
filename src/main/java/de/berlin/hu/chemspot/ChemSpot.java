@@ -20,6 +20,8 @@ import org.apache.uima.UIMAFramework;
 import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.cas.CAS;
+import org.apache.uima.cas.CASException;
+import org.apache.uima.collection.impl.cpm.Constants;
 import org.apache.uima.examples.SourceDocumentInformation;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.metadata.TypeSystemDescription;
@@ -32,9 +34,14 @@ import org.uimafit.util.JCasUtil;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 
 public class ChemSpot {
@@ -180,7 +187,7 @@ public class ChemSpot {
         pd.setEnd(text.length());
         pd.setPmid("");
         pd.addToIndexes(jcas);
-        return tagJCas(jcas, false, true);
+        return tagJCas(jcas, false, true, false);
     }
 
     /**
@@ -193,7 +200,7 @@ public class ChemSpot {
     public void tagGZ(String pathToGZ) throws UIMAException, IOException {
         JCas jcas = JCasFactory.createJCas(typeSystem);
         readGZFile(jcas, pathToGZ);
-        tagJCas(jcas, false, false);
+        tagJCas(jcas, false, false, false);
         Iterator<NamedEntity> annotations = JCasUtil.iterator(jcas, NamedEntity.class);
         while (annotations.hasNext()) {
             NamedEntity entity = annotations.next();
@@ -211,7 +218,7 @@ public class ChemSpot {
      * @throws AnalysisEngineProcessException
      */
     //FIXME: split this method into two parts: tagging and writing IOB
-    public String tagJCas(JCas jcas, boolean evaluate, boolean convertToIOB) throws AnalysisEngineProcessException {
+    public String tagJCas(JCas jcas, boolean evaluate, boolean convertToIOB, boolean detailed) throws AnalysisEngineProcessException {
         //TODO change to buffered string builder!
         StringBuilder sb = new StringBuilder();
         fineTokenizer.process(jcas);
@@ -299,7 +306,7 @@ public class ChemSpot {
 
         if (evaluate) {
             System.out.println("Starting evaluation...");
-            evaluate(goldAnnotations, pipelineAnnotations);
+            evaluate(goldAnnotations, pipelineAnnotations, detailed);
         }
         return sb.toString();
     }
@@ -313,18 +320,18 @@ public class ChemSpot {
     private List<ComparableAnnotation> falseNegatives = new ArrayList<ComparableAnnotation>();
 
     //FIXME: use Mention instead of NamedEntity
-    private void evaluate(HashMap<String, ArrayList<NamedEntity>> goldAnnotations, HashMap<String, ArrayList<NamedEntity>> pipelineAnnotations) {
+    private void evaluate(HashMap<String, ArrayList<NamedEntity>> goldAnnotations, HashMap<String, ArrayList<NamedEntity>> pipelineAnnotations, boolean detailedOutput) {
     	List<ComparableAnnotation> goldAnnoationsComparable = new ArrayList<ComparableAnnotation>();
         List<ComparableAnnotation> pipelineAnnotationsComparable = new ArrayList<ComparableAnnotation>();
 
         for (String pmid : goldAnnotations.keySet()) {
             for (NamedEntity namedEntity : goldAnnotations.get(pmid)) {
-                goldAnnoationsComparable.add(ComparableAnnotation.createInstance(namedEntity.getBegin(), namedEntity.getEnd(), namedEntity.getCoveredText(), 0, namedEntity.getCAS(), pmid));
+                goldAnnoationsComparable.add(ComparableAnnotation.createInstance(namedEntity.getBegin(), namedEntity.getEnd(), namedEntity.getCoveredText(), 0, namedEntity.getCAS(), pmid, namedEntity.getSource()));
             }
         }
         for (String pmid : pipelineAnnotations.keySet()) {
             for (NamedEntity namedEntity : pipelineAnnotations.get(pmid)) {
-                pipelineAnnotationsComparable.add(ComparableAnnotation.createInstance(namedEntity.getBegin(), namedEntity.getEnd(), namedEntity.getCoveredText(), 0, namedEntity.getCAS(), pmid));
+                pipelineAnnotationsComparable.add(ComparableAnnotation.createInstance(namedEntity.getBegin(), namedEntity.getEnd(), namedEntity.getCoveredText(), 0, namedEntity.getCAS(), pmid, namedEntity.getSource()));
             }
         }
 
@@ -353,8 +360,125 @@ public class ChemSpot {
 	            double fscore = precision + recall > 0 ? 2 * (precision * recall) / (precision + recall) : 0;
 	            System.out.format("Precision:\t\t%f\nRecall:\t\t\t%f\nF1 Score:\t\t%f\n", precision, recall, fscore);
 	            System.out.println();
+	            
+	            if (detailedOutput) {
+	            	printDetailedEvaluationResults();
+	            }
 	        }
         }
+    }
+    
+    private static List<List<ComparableAnnotation>> sortComparableAnnotationListsBySize(List<ComparableAnnotation> list, boolean bySource) {
+    	List<List<ComparableAnnotation>> result = new ArrayList<List<ComparableAnnotation>>();
+    	
+    	Map<String, List<ComparableAnnotation>> annotationMap = new HashMap<String, List<ComparableAnnotation>>();
+    	for (ComparableAnnotation ca : list) {
+    		String key = bySource ? ca.getSource() : ca.getText();
+    		
+    		if (!annotationMap.containsKey(key)) {
+    			annotationMap.put(key, new ArrayList<ComparableAnnotation>());
+    		}
+    		
+    		annotationMap.get(key).add(ca);
+    	}
+    	
+    	for (String key : annotationMap.keySet()) {
+    		result.add(annotationMap.get(key));
+    	}
+    	
+    	Comparator<List<ComparableAnnotation>> comparator = new Comparator<List<ComparableAnnotation>>() {
+
+			public int compare(List<ComparableAnnotation> o1, List<ComparableAnnotation> o2) {
+				return o1.size() - o2.size();
+			}
+    		
+    	};
+    	
+    	Collections.sort(result, Collections.reverseOrder(comparator));
+    	
+    	return result;
+    }
+    
+    private void printList(String name, List<ComparableAnnotation> list) {
+    	List<List<ComparableAnnotation>> listBySize = sortComparableAnnotationListsBySize(list, false);
+    	
+    	System.out.printf("%n%n%n%n%n%s:%n", name);
+    	System.out.printf("%8s\t%25s\t%s%n", "#", "CHEMICAL", "SOURCE");
+    	for (List<ComparableAnnotation> annotationList : listBySize) {
+    		List<List<ComparableAnnotation>> listBySource = sortComparableAnnotationListsBySize(annotationList, true);
+    		
+    		String sources = "";
+    		for (List<ComparableAnnotation> sourceList : listBySource) {
+    			String source = !sourceList.isEmpty() ? sourceList.get(0).getSource() : "";
+    			source = source == null || source.isEmpty() ? Constants.UNKNOWN : source;
+    			
+    			if (listBySource.size() == 1) {
+    				source = (sourceList.size() > 1 ? "all " : "") + source;
+    			} else {
+    				source = sourceList.size() + " " + source;
+    			}
+    			
+    			sources += String.format("%s%s", !sources.isEmpty() ? ", " : "", source);
+    		}
+    		
+    		String annotation = !annotationList.isEmpty() ? annotationList.get(0).getText() : "";
+    		System.out.printf("%8d\t%25s\t%s%n", annotationList.size(), annotation, sources);
+    	}
+    }
+    
+    private void printContext(String name, List<ComparableAnnotation> list) {
+    	List<List<ComparableAnnotation>> listBySize = sortComparableAnnotationListsBySize(list, false);
+    	
+    	System.out.printf("%n%n%s:%n", name);
+    	
+    	Pattern startPattern = Pattern.compile("(\\S+\\s+){5}\\S*$");
+    	Pattern stopPattern = Pattern.compile("^\\S*(\\s+\\S+){5}");
+    	int maxLength = 100;
+    	try {
+    	for (List<ComparableAnnotation> annotationList : listBySize) {
+    		if (annotationList.isEmpty()) continue;
+    		System.out.printf("%n%n%s (%d):%n", annotationList.get(0).getText(), annotationList.size());
+    		
+    		int i = 0;
+    		for (ComparableAnnotation ca : annotationList) {
+    			if (i++ > 30) {
+    				System.out.println("...");
+    				break;
+    			}
+    			
+    			String text = null;
+				try {
+					text = ca.getCAS().getJCas().getDocumentText();
+				} catch (CASException e) {
+					e.printStackTrace();
+					continue;
+				}
+    			int begin = ca.getBegin();
+    			int end = ca.getEnd();
+    			
+    			Matcher matcher = startPattern.matcher(text.substring(Math.max(begin-maxLength, 0), begin));
+    			int start = matcher.find() ? Math.max(begin-maxLength, 0) + matcher.start() : Math.max(begin-30, 0);
+    			
+    			matcher = stopPattern.matcher(text.substring(end, Math.min(end+maxLength, text.length())));
+    			int stop = matcher.find() ? end + matcher.end() : Math.min(end+30, text.length());
+    			
+    			String output = String.format("...%s<%s>%s...", text.substring(start , begin), text.substring(begin, end), text.substring(end, stop));
+    			output = output.replaceAll("\r?\n", "\\\\n");
+    			System.out.println(output);
+    		}
+    	}
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    }
+    
+    private void printDetailedEvaluationResults() {
+    	synchronized (evaluationLock) {
+	    	printList("true positives", truePositives);
+	    	printList("false negatives", falseNegatives);
+	    	printList("false positives", falsePositives);
+	    	printContext("false negatives contexts", falseNegatives);
+    	}
     }
 
     private static void readGZFile(JCas jcas, String pathToFile) throws IOException {

@@ -44,6 +44,9 @@ public interface ChemSpotArguments {
 	  @Option(shortName="e")
 	  boolean isRunEvaluation();
 	  
+	  @Option(shortName="E")
+	  boolean isDetailedEvaluation();
+	  
 	  @Option(shortName="z")
 	  boolean isZippedTextFile();
 

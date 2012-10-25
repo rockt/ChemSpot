@@ -43,6 +43,7 @@ public class App {
 	private static String pathToOutputFile;
 	private static ChemSpotArguments arguments;
 	private static boolean evaluate = false;
+	private static boolean detailedEvaluation = false;
 	private static boolean threaded = false;
 	private static int threadNr = 1;
 	private static String pathToTextFile;
@@ -87,7 +88,9 @@ public class App {
 			if (arguments.isPathToTextFile()) {
 				pathToTextFile = arguments.getPathToTextFile();
 			}
-			evaluate = arguments.isRunEvaluation();
+			detailedEvaluation = arguments.isDetailedEvaluation();
+			evaluate = detailedEvaluation || arguments.isRunEvaluation();
+			
 
 		} catch(ArgumentValidationException e) {
 			System.out.println(e);
@@ -153,7 +156,7 @@ public class App {
 	            ChemSpotRun run = new ChemSpotRun(runNr++, chemspot, jcas, arguments.isSerializeOutputPath());
 	            threadPool.submit(run);
             } else {
-            	String output = chemspot.tagJCas(jcas, evaluate, evaluate);
+            	String output = chemspot.tagJCas(jcas, evaluate, evaluate, detailedEvaluation);
             	
             	FileWriter outputFile = arguments.isPathToOutputFile() ? new FileWriter(new File(pathToOutputFile)) : null;
                 if (outputFile != null) outputFile.write(output);
@@ -181,7 +184,7 @@ public class App {
 		public void run() {
 			try {
 				System.out.println("Starting run " + runNr);
-				String output = chemspot.tagJCas(jCas, evaluate, evaluate);
+				String output = chemspot.tagJCas(jCas, evaluate, evaluate, detailedEvaluation);
 				FileWriter outputFile = arguments.isPathToOutputFile() ? new FileWriter(new File(pathToOutputFile)) : null;
                 if (outputFile != null) outputFile.write(output);
 				if (serialize) {
