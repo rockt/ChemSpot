@@ -17,21 +17,24 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.uima.UIMAException;
 import org.apache.uima.UIMAFramework;
-import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.collection.CollectionException;
 import org.apache.uima.collection.CollectionReader;
+import org.apache.uima.examples.SourceDocumentInformation;
 import org.apache.uima.examples.xmi.XmiCollectionReader;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.metadata.TypeSystemDescription;
 import org.apache.uima.util.XMLInputSource;
 import org.uimafit.factory.CollectionReaderFactory;
 import org.uimafit.factory.JCasFactory;
+import org.uimafit.util.JCasUtil;
 
 import uk.co.flamingpenguin.jewel.cli.ArgumentValidationException;
 import uk.co.flamingpenguin.jewel.cli.CliFactory;
@@ -41,6 +44,7 @@ public class App {
 	private static String pathToModelFile;
 	private static String pathToDictionaryFile;
 	private static String pathToOutputFile;
+	private static boolean convertToIOB = true;
 	private static ChemSpotArguments arguments;
 	private static boolean evaluate = false;
 	private static boolean detailedEvaluation = false;
@@ -111,9 +115,6 @@ public class App {
                      mention.getCHID(), mention.getSource());
             }
         } else {
-            FileWriter outputFile = null;
-            if (arguments.isPathToOutputFile()) outputFile = new FileWriter(new File(pathToOutputFile));
-
             if (arguments.isPathToIOBCorpora() || arguments.isPathToGZCorpus() || arguments.isPathToCRAFTCorpus()) {
                 //CollectionReader reader = CollectionReaderFactory.createCollectionReaderFromPath("desc/cr/ScaiCorpusCR.xml", "InputDirectory", pathToCorpora, "UseGoldStandardAnnotations", true, "GoldstandardTypeSuffix" , "", "BrowseSubdirectories", true, "IncludeSuffixes", new String[]{"iob", "iob2"});
             	CollectionReader reader = null;
@@ -130,7 +131,8 @@ public class App {
 
             	tagCollection(chemspot, typeSystem, reader, threaded, threadNr);
             } else {
-                if (arguments.isZippedTextFile()) {
+            	// TODO adapt this
+                /*if (arguments.isZippedTextFile()) {
                     chemspot.tagGZ(pathToTextFile);
                 } else {
                     BufferedReader reader = new BufferedReader(new FileReader(new File(pathToTextFile)));
@@ -138,33 +140,96 @@ public class App {
                     while ((line = reader.readLine()) != null) {
                         if (outputFile != null) outputFile.write(chemspot.tagReturnIOB(line));
                     }
-                }
+                }*/
             }
-            if (outputFile != null) outputFile.close();
+            
         }
 	}
+    
+    private static void runChemSpot(ChemSpot chemspot, JCas jcas, String outputPath, boolean evaluate) {
+    	List<Mention> mentions = chemspot.tag(jcas);
+    	if (evaluate) {
+    		chemspot.evaluate(jcas);
+    	}
+    	
+    	String output = convertToIOB ? ChemSpot.convertToIOB(jcas) : ChemSpot.serializeAnnotations(jcas);
+    	try {
+	    	FileWriter outputFile = outputPath != null ? new FileWriter(new File(outputPath)) : null;
+	        if (outputFile != null) outputFile.write(output);
+	        System.out.println("\nOutput written to: " + outputPath);
+    	} catch (IOException e) {
+    		System.err.println("Error while writing ChemSpot output");
+    		e.printStackTrace();
+    	}
+    }
     
     private static void tagCollection(ChemSpot chemspot, TypeSystemDescription typeSystem, CollectionReader reader, boolean threaded, int threads) throws CollectionException, UIMAException, IOException {
     	ExecutorService threadPool = threaded ? Executors.newFixedThreadPool(threads) : null;
     	int runNr = 1;
     	
+    	File outputPath = arguments.getPathToOutputFile() != null ? new File(arguments.getPathToOutputFile()) : null;
+    	String filename = null;
+    	String outputPathString = null;
+    	if (outputPath != null) {
+    		if (outputPath.getName().contains(".")) {
+        		filename = outputPath.getName();
+        		outputPath = outputPath.getParentFile();
+        	}
+        	
+        	if (!outputPath.exists()) {
+        		outputPath.mkdirs();
+        	}
+        	outputPathString = outputPath.getCanonicalPath().replaceAll("\\\\", "/");
+            outputPathString = !outputPathString.endsWith("/") ? outputPathString + "/" : outputPathString;
+    	}	
+    	
     	while (reader.hasNext()) {
             JCas jcas = JCasFactory.createJCas(typeSystem);
             reader.getNext(jcas.getCas());
             
+            String outputFilePath = null;
+            String fileType = convertToIOB ? ".iob" : ".chem";
+            
+            if (outputPath != null) {
+	            Iterator<SourceDocumentInformation> srcIterator = JCasUtil.iterator(jcas, SourceDocumentInformation.class);
+	            if (filename == null && srcIterator.hasNext()) {
+	    	        SourceDocumentInformation src = srcIterator.next();
+	    	        outputFilePath = src.getUri().replaceFirst(".*/", outputPathString) + fileType;
+	            } else {
+	            	if (runNr == 1 && !reader.hasNext()) {
+	            		outputFilePath = outputPathString + filename;
+	            	} else {
+	            		String prefix = "";
+	            		if (filename != null) {
+	            			int prefixPos = filename.indexOf('.') > -1 ? filename.indexOf('.') : filename.length();
+	            			prefix = filename != null ? filename.substring(0, prefixPos) + "-" : "";
+	            		}
+		            	outputFilePath = String.format("%s%s%04d%s", outputPathString, prefix, runNr, fileType);
+	            	}
+	            }
+            }
+            
             if (threaded) {
-	            ChemSpotRun run = new ChemSpotRun(runNr++, chemspot, jcas, arguments.isSerializeOutputPath());
+	            ChemSpotRun run = new ChemSpotRun(runNr, chemspot, jcas, outputFilePath, evaluate);
 	            threadPool.submit(run);
             } else {
-            	String output = chemspot.tagJCas(jcas, evaluate, evaluate, detailedEvaluation);
-            	
-            	FileWriter outputFile = arguments.isPathToOutputFile() ? new FileWriter(new File(pathToOutputFile)) : null;
-                if (outputFile != null) outputFile.write(output);
+            	runChemSpot(chemspot, jcas, outputFilePath, evaluate);
             }
+            
+            runNr++;
         }
     	
     	if (threaded) {
-    		threadPool.shutdown();
+    		try {
+    			threadPool.shutdown();
+				threadPool.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+    	}
+    	
+    	if (detailedEvaluation) {
+    		chemspot.writeDetailedEvaluationResults(outputPathString);
     	}
     }
     
@@ -172,32 +237,22 @@ public class App {
     	private int runNr = -1;
     	private ChemSpot chemspot = null;
     	private JCas jCas = null;
-    	private boolean serialize = false;
+    	private String outputFile;
+    	private boolean evaluate;
     	
-    	public ChemSpotRun (int runNr, ChemSpot chemspot, JCas jCas, boolean serialize) {
+    	public ChemSpotRun (int runNr, ChemSpot chemspot, JCas jCas, String outputFile, boolean evaluate) {
     		this.runNr = runNr;
     		this.chemspot = chemspot;
     		this.jCas = jCas;
-    		this.serialize = serialize;
+    		this.outputFile = outputFile;
+    		this.evaluate = evaluate;
     	}
     	
 		public void run() {
-			try {
-				System.out.println("Starting run " + runNr);
-				String output = chemspot.tagJCas(jCas, evaluate, evaluate, detailedEvaluation);
-				FileWriter outputFile = arguments.isPathToOutputFile() ? new FileWriter(new File(pathToOutputFile)) : null;
-                if (outputFile != null) outputFile.write(output);
-				if (serialize) {
-					ChemSpot.serializeAnnotations(jCas, arguments.getSerializeOutputPath());
-				}
-				System.out.println("Run " + runNr + " finished");
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (AnalysisEngineProcessException e) {
-				e.printStackTrace();
-			}
+			System.out.println("Starting run " + runNr);
+			runChemSpot(chemspot, jCas, outputFile, evaluate);
+			System.out.println("Run " + runNr + " finished");
 		}
-    	
     }
 
 	private static void usage() {

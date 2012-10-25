@@ -204,7 +204,7 @@ public class ExtractAbbrev {
 								System.out.println(bestLongForm);
 								System.out.println(inText);
 								System.out.println();*/
-								Mention mention = new Mention(begin, end, abbreviation, bestLongForm, "ABBREV");
+								Mention mention = new Mention(begin, end, abbreviation, bestLongForm, "ABBREV", null);
 								
 								result.add(mention);
 							}
