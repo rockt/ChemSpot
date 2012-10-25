@@ -13,14 +13,18 @@
 package de.berlin.hu.chemspot;
 
 import de.berlin.hu.util.Constants;
+
+import org.apache.uima.cas.CAS;
+import org.apache.uima.jcas.tcas.Annotation;
 import org.u_compare.shared.semantic.NamedEntity;
 
-public class Mention {
+public class Mention implements Comparable<Object> {
 	private int start;
 	private int end;
 	private String text;
 	private String[] ids;
 	private String source;
+	private CAS cas;
 
     /**
      * Represents a chemical entity found in a text.
@@ -30,7 +34,7 @@ public class Mention {
      * @param ids a string representation of an array of identifiers of the form: [0] CHID, [1] CHEB, [2] CAS, [3] PUBC, [4] PUBS, [5] INCH, [6] DRUG, [7] HMBD, [8] KEGG, [9] KEGD, [10] MESH
      * @param source indicates whether found by the CRF, the dictionary or taken from goldstandard
      */
-	public Mention(int start, int end, String text, String ids, String source) {
+	public Mention(int start, int end, String text, String ids, String source, CAS cas) {
 		this.start = start;
 		this.end = end;
 		this.text = text;
@@ -43,6 +47,7 @@ public class Mention {
             this.ids = new String[0];
         }
         this.source = source;
+        this.cas = cas;
 	}
 
     public Mention(int start, int end, String text) {
@@ -58,7 +63,7 @@ public class Mention {
     }
 
     public Mention(NamedEntity entity) {
-        this(entity.getBegin(), entity.getEnd(), entity.getCoveredText(), entity.getId(), entity.getSource());
+        this(entity.getBegin(), entity.getEnd(), entity.getCoveredText(), entity.getId(), entity.getSource(), entity.getCAS());
     }
 
     public int getStart() {
@@ -139,9 +144,72 @@ public class Mention {
         }
         return id;
     }
+    
+    public boolean equals(Object obj) {
+    	if (this == obj) {
+    		return true;
+    	}
+    	
+    	if (obj == null || !(obj instanceof Mention)) {
+    		return false;
+    	}
+    	
+		Mention other = (Mention) obj;
+		if (getStart() != other.getStart() || getEnd() != other.getEnd()
+				|| (getText() == null && other.getText() != null) || (getText() != null && !getText().equals(other.getText()))) {
+			return false;
+		}
+
+		return true;
+    }
+    
+    @Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + getStart();
+		result = prime * result + getEnd();
+		result = prime * result + ((text == null) ? 0 : text.hashCode());
+		return result;
+	}
 
     @Override
     public String toString() {
         return start + " " + end + " " + text + " " + getCHID();
     }
+
+	public int compareTo(Object o) {
+		if (this.equals(o)) {
+			return 0;
+		}
+		
+		int otherBegin = 0;
+		int otherEnd = 0;
+		
+		if (o instanceof Mention) {
+			Mention other = (Mention) o;
+			otherBegin = other.getStart();
+			otherEnd = other.getEnd();
+		} else if (o instanceof Annotation) {
+			Annotation other = (Annotation) o;
+			otherBegin = other.getBegin();
+			otherEnd = other.getEnd();
+		} else {
+			return 0;
+		}
+		
+		if (getStart() != otherBegin) {
+			return getStart() - otherBegin;
+		} else {
+			return getEnd() - otherEnd;
+		}
+	}
+
+	public CAS getCas() {
+		return cas;
+	}
+
+	public void setCas(CAS cas) {
+		this.cas = cas;
+	}
 }
