@@ -11,6 +11,7 @@ public class Constants {
     public static final String DICTIONARY = "dictionary";
     public static final String SUM_TAGGER = "chemical formula tagger";
     public static final String GOLDSTANDARD = "goldstandard";
+    public static final String UNKNOWN = "unknown";
     public static final int CHID = 0;
     public static final int CHEB = 1;
     public static final int CAS = 2;
