@@ -24,14 +24,13 @@ public interface ChemSpotArguments {
       @Option(shortName="i")
  	  String getPathToIDs();
       boolean isPathToIDs();
+      
+      @Option(shortName="I")
+      boolean isConvertToIOB();
 	  
 	  @Option(shortName="g")
 	  String getPathToGZCorpus();
 	  boolean isPathToGZCorpus();
-	  
-	  @Option(shortName="S")
-	  String getSerializeOutputPath();
-	  boolean isSerializeOutputPath();
 	  
 	  @Option(shortName="t")
 	  String getPathToTextFile();

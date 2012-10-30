@@ -191,6 +191,13 @@ public class ChemSpot {
         pd.addToIndexes(jcas);
     }
     
+    /**
+     * Reads a text from a gzipped file and puts the content into the provided jcas.
+     * 
+     * @param jcas the jcas
+     * @param pathToFile the path to the text file
+     * @throws IOException
+     */
     public static void readGZFile(JCas jcas, String pathToFile) throws IOException {
         File file = new File(pathToFile);
         String text;

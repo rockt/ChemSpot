@@ -96,8 +96,7 @@ public class App {
 			}
 			detailedEvaluation = arguments.isDetailedEvaluation();
 			evaluate = detailedEvaluation || arguments.isRunEvaluation();
-			
-
+			convertToIOB = arguments.isConvertToIOB();
 		} catch(ArgumentValidationException e) {
 			System.out.println(e);
 			usage();
@@ -144,8 +143,7 @@ public class App {
                 }
             	
             	runChemSpot(chemspot, jcas, pathToOutputFile, false);
-            }
-            
+            }   
         }
 	}
     
@@ -303,8 +301,8 @@ public class App {
 		System.out.println("\t-t path to a text file that should be tagged");
 		System.out.println();
         System.out.println("  output control:");
-		System.out.println("\t-o for a single document: path to an output file (IOB format)");
-		System.out.println("\t-S for a document collection: path to which serialized annotation files should be written (tsv format)");
+		System.out.println("\t-o for a single document: path to an output file");
+		System.out.println("\t-I set if output should be converted to IOB format");
         System.exit(0);
 	}
 }
