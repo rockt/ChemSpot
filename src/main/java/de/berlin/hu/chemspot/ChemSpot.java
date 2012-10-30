@@ -39,6 +39,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -123,6 +126,12 @@ public class ChemSpot {
         }
     }
 
+    /**
+     * Returns all mentions (non-goldstandard entities) from a jcas object.
+     * 
+     * @param jcas the jcas
+     * @return
+     */
     public static List<Mention> getMentions(JCas jcas) {
     	List<Mention> mentions = new ArrayList<Mention>();
         Iterator<NamedEntity> entities = JCasUtil.iterator(jcas, NamedEntity.class);
@@ -137,6 +146,12 @@ public class ChemSpot {
         return mentions;
     }
     
+    /**
+     * Returns all goldstandard entities from a jcas object.
+     * 
+     * @param jcas the jcas
+     * @return
+     */
     public static List<Mention> getGoldstandardAnnotations(JCas jcas) {
     	List<Mention> result = new ArrayList<Mention>();
         Iterator<NamedEntity> entities = JCasUtil.iterator(jcas, NamedEntity.class);
@@ -148,6 +163,75 @@ public class ChemSpot {
         }
 
         return result;
+    }
+    
+    /**
+     * Reads a text from a file and puts the content into the provided jcas.
+     * 
+     * @param jcas the jcas
+     * @param pathToFile the path to the text file
+     * @throws IOException
+     */
+    public static void readFile(JCas jcas, String pathToFile) throws IOException {
+    	FileInputStream stream = new FileInputStream(new File(pathToFile));
+    	String text = null;
+		try {
+			FileChannel fc = stream.getChannel();
+			MappedByteBuffer bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
+			text = Charset.defaultCharset().decode(bb).toString();
+		} finally {
+			stream.close();
+		}
+		
+		jcas.setDocumentText(text);
+        PubmedDocument pd = new PubmedDocument(jcas);
+        pd.setBegin(0);
+        pd.setEnd(text.length());
+        pd.setPmid("");
+        pd.addToIndexes(jcas);
+    }
+    
+    public static void readGZFile(JCas jcas, String pathToFile) throws IOException {
+        File file = new File(pathToFile);
+        String text;
+        BufferedReader reader = new BufferedReader(
+                new InputStreamReader(
+                        new GZIPInputStream(
+                                new FileInputStream(file)) ) );
+
+        StringBuilder textBuffer = new StringBuilder();
+        Integer currindex = -1;
+        while(reader.ready()){
+            PubmedDocument pmdoc = new PubmedDocument(jcas);
+            String s = reader.readLine();
+            if (s != null) {
+                //split line into pmid and text
+                String pmid = s.substring(0, s.indexOf("\t"));
+                String annot = s.substring(s.indexOf("\t"));
+                //two = splitFirst(s, "\t");
+                pmdoc.setPmid(pmid);
+
+                //append text
+                textBuffer.append(annot).append("\n");
+                pmdoc.setBegin(currindex + 1);
+                Integer len = annot.length();
+                currindex = currindex + len + 1;
+                pmdoc.setEnd(currindex);
+                pmdoc.addToIndexes();
+            }
+        }
+
+        text = textBuffer.toString();
+
+        //put document in CAS
+        jcas.setDocumentText(text);
+        SourceDocumentInformation srcDocInfo = new SourceDocumentInformation(jcas);
+        srcDocInfo.setUri(file.getAbsoluteFile().toURI().toString());
+        srcDocInfo.setOffsetInSource(0);
+        srcDocInfo.setDocumentSize((int) file.length());
+        srcDocInfo.setBegin(0);
+        srcDocInfo.setEnd(currindex);
+        srcDocInfo.addToIndexes();
     }
     
     /**
@@ -195,40 +279,11 @@ public class ChemSpot {
     }
 
     /**
-     * Finds chemical entities in a {@code text} and returns the output in IOB format.
-     * @param text natural language text from which you want to extract chemical entities
-     * @return a string representing the output in IOB format
-     * @throws UIMAException
+     * Converts all annotations from jcas to the IOB format
+     * 
+     * @param jcas the jcas
+     * @return
      */
-    public String tagReturnIOB(String text) throws UIMAException {
-        JCas jcas = JCasFactory.createJCas(typeSystem);
-        jcas.setDocumentText(text);
-        PubmedDocument pd = new PubmedDocument(jcas);
-        pd.setBegin(0);
-        pd.setEnd(text.length());
-        pd.setPmid("");
-        pd.addToIndexes(jcas);
-        return convertToIOB(jcas);
-    }
-
-    /**
-     * Finds chemical entities in a zipped file containing a corpus in MutationFinder format. Subsequently, annotations are written in "{@code pathToGZ}".chemical using the same format.
-     * @param pathToGZ the path to a zipped MutationFinder corpus.
-     * @throws UIMAException
-     * @throws FileNotFoundException
-     * @throws IOException
-     */
-    public void tagGZ(String pathToGZ) throws UIMAException, IOException {
-        JCas jcas = JCasFactory.createJCas(typeSystem);
-        readGZFile(jcas, pathToGZ);
-        tag(jcas);
-        Iterator<NamedEntity> annotations = JCasUtil.iterator(jcas, NamedEntity.class);
-        while (annotations.hasNext()) {
-            NamedEntity entity = annotations.next();
-            entity.setEnd(entity.getEnd());
-        }
-    }
-
     public static String convertToIOB(JCas jcas) {
     	StringBuilder sb = new StringBuilder();
         HashMap<String, ArrayList<NamedEntity>> goldAnnotations = new HashMap<String, ArrayList<NamedEntity>>();
@@ -310,6 +365,11 @@ public class ChemSpot {
     private List<Mention> falsePositives = new ArrayList<Mention>();
     private List<Mention> falseNegatives = new ArrayList<Mention>();
 
+    /**
+     * Evaluates the annotation results.
+     * 
+     * @param jcas
+     */
     public void evaluate(JCas jcas) {
     	System.out.println("Starting evaluation...");
     	
@@ -380,7 +440,7 @@ public class ChemSpot {
     	BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(s));
     	List<List<Mention>> listBySize = sortMentionListsBySize(list, false);
     	
-    	writer.write(String.format("%s:%n", name));
+    	writer.write(String.format("%n%n%n%s:%n", name));
     	writer.write(String.format("%8s\t%25s\t%s%n", "#", "CHEMICAL", "SOURCE"));
     	for (List<Mention> annotationList : listBySize) {
     		List<List<Mention>> listBySource = sortMentionListsBySize(annotationList, true);
@@ -475,78 +535,8 @@ public class ChemSpot {
     		System.out.println("False negative contexts written to: " + falseNegativesFile.getName());
     	}
     }
-
-    private static void readGZFile(JCas jcas, String pathToFile) throws IOException {
-        File file = new File(pathToFile);
-        String text;
-        BufferedReader reader = new BufferedReader(
-                new InputStreamReader(
-                        new GZIPInputStream(
-                                new FileInputStream(file)) ) );
-
-        StringBuilder textBuffer = new StringBuilder();
-        Integer currindex = -1;
-        while(reader.ready()){
-            PubmedDocument pmdoc = new PubmedDocument(jcas);
-            String s = reader.readLine();
-            if (s != null) {
-                //split line into pmid and text
-                String pmid = s.substring(0, s.indexOf("\t"));
-                String annot = s.substring(s.indexOf("\t"));
-                //two = splitFirst(s, "\t");
-                pmdoc.setPmid(pmid);
-
-                //append text
-                textBuffer.append(annot).append("\n");
-                pmdoc.setBegin(currindex + 1);
-                Integer len = annot.length();
-                currindex = currindex + len + 1;
-                pmdoc.setEnd(currindex);
-                pmdoc.addToIndexes();
-            }
-        }
-
-        text = textBuffer.toString();
-
-        //put document in CAS
-        jcas.setDocumentText(text);
-        SourceDocumentInformation srcDocInfo = new SourceDocumentInformation(jcas);
-        srcDocInfo.setUri(file.getAbsoluteFile().toURI().toString());
-        srcDocInfo.setOffsetInSource(0);
-        srcDocInfo.setDocumentSize((int) file.length());
-        srcDocInfo.setBegin(0);
-        srcDocInfo.setEnd(currindex);
-        srcDocInfo.addToIndexes();
-    }
     
     public static String serializeAnnotations(JCas jcas) {
-        /*Iterator<SourceDocumentInformation> srcIterator = JCasUtil.iterator(jcas, SourceDocumentInformation.class);
-        
-        
-        path = path != null ? path.replaceAll("\\\\", "/") : "log/";
-        path = !path.endsWith("/") ? path + "/" : path;
-        
-        File pathFile = new File(path);
-        if (!pathFile.exists()) {
-        	synchronized (runLock) {
-        		pathFile.mkdir();
-        	}
-        }
-        
-        String pathToFile = null;
-        if (srcIterator.hasNext()) {
-	        SourceDocumentInformation src = srcIterator.next();
-	        pathToFile = src.getUri().replaceFirst("file:.", path) + ".chem";
-        } else {
-        	synchronized (runLock) {
-        		pathToFile = String.format("%s%04d.chem", path, runNr++);
-        	}
-        }
-        
-        File file = new File(pathToFile);
-        file.createNewFile(); //overwrite if file already exists
-        FileWriter writer = new FileWriter(file);*/
-
         int offset;
         StringBuilder sb = new StringBuilder();
         Iterator<PubmedDocument> documentIterator = JCasUtil.iterator(jcas, PubmedDocument.class);
