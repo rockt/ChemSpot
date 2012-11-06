@@ -567,6 +567,8 @@ public class ChemSpot {
     
     public void writeDetailedEvaluationResults(String outputPath) throws IOException {
     	synchronized (evaluationLock) {
+    		if (outputPath == null) outputPath = "";
+    		
     		File evaluationFile  = new File(outputPath + "evaluation.txt");
     		OutputStream writer = new FileOutputStream(evaluationFile);
     		writeList(writer, "true positives", truePositives);
