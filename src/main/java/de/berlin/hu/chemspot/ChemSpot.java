@@ -443,6 +443,52 @@ public class ChemSpot {
     	return result;
     }
     
+    private static void writeOverlapping(OutputStream s, String name1, List<Mention> list1,  String name2, List<Mention> list2) throws IOException {
+    	BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(s));
+    	
+    	list1 = new ArrayList<Mention>(list1);
+    	Collections.sort(list1);
+    	list2 = new ArrayList<Mention>(list2);
+    	Collections.sort(list2);
+    	
+    	Pattern startPattern = Pattern.compile("(\\S+\\s+){5}\\S*$");
+    	Pattern stopPattern = Pattern.compile("^\\S*(\\s+\\S+){5}");
+    	writer.write(String.format("Overlapping occurrences of <%s> and [%s]:%n", name1, name2));
+    	int maxLength = 100;
+    	int i = 0;
+    	for (Mention m1 : list1) {
+    		while (i < list2.size() && list2.get(i).getEnd() < m1.getStart()) i++;
+    		
+    		int j = i;
+    		while (j < list2.size() && list2.get(j).overlaps(m1)) {
+    			Mention m2 = list2.get(j++);
+    			
+    			if (!m1.getCas().getDocumentText().equals(m2.getCas().getDocumentText())) continue;
+    			
+    	    	String text = m1.getCas().getDocumentText();
+    	    	int begin = Math.min(m1.getStart(), m2.getStart());
+    			int end = Math.max(m1.getEnd(), m2.getEnd());
+    	    	
+    	    	Matcher matcher = startPattern.matcher(text.substring(Math.max(begin-maxLength, 0), begin));
+    			int start = matcher.find() ? Math.max(begin-maxLength, 0) + matcher.start() : Math.max(begin-30, 0);
+    			
+    			matcher = stopPattern.matcher(text.substring(end, Math.min(end+maxLength, text.length())));
+    			int stop = matcher.find() ? end + matcher.end() : Math.min(end+30, text.length());
+    			
+    			StringBuilder sb = new StringBuilder();
+    			sb.append(text.substring(start, stop));
+    			sb.insert(m1.getStart() - start, '<');
+    			sb.insert(m1.getEnd() - start + 1, '>');
+    			sb.insert(m2.getStart() - start + (m1.getStart() < m2.getStart() ? 1 : 0) + (m1.getStart() == m2.getStart() && m1.getEnd() > m2.getEnd() ? 1 : 0), "[");
+    			sb.insert(m2.getEnd() - start + 2 + (m1.getEnd() < m2.getEnd() || (m1.getEnd() == m2.getEnd() && m1.getStart() > m2.getStart()) ? 1 : 0), "]").toString();
+    			writer.write("..." + sb.toString().replaceAll("\r?\n", "\\\\n") + "...");
+    			writer.newLine();
+    		}
+    	}
+    	
+    	writer.flush();
+    }
+    
     private static void writeList(OutputStream s, String name, List<Mention> list) throws IOException {
     	BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(s));
     	List<List<Mention>> listBySize = sortMentionListsBySize(list, false);
@@ -540,6 +586,12 @@ public class ChemSpot {
     		writeContext(writer, "false negatives contexts", falseNegatives);
     		writer.close();
     		System.out.println("False negative contexts written to: " + falseNegativesFile.getName());
+    		
+    		File falsePositivesNegativesFile = new File(outputPath + "evaluation-FP-FNs.txt");
+    		writer = new FileOutputStream(falsePositivesNegativesFile);
+    		writeOverlapping(writer, "false negatives", falseNegatives, "false positives", falsePositives);
+    		writer.close();
+    		System.out.println("Overlapping occurrences of false positives and negatives written to: " + falsePositivesNegativesFile.getName());
     	}
     }
     
