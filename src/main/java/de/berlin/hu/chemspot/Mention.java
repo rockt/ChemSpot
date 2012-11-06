@@ -204,6 +204,14 @@ public class Mention implements Comparable<Object> {
 			return getEnd() - otherEnd;
 		}
 	}
+	
+	public boolean overlaps(Mention mention) {
+		return mention != null
+				&& ((getStart() >= mention.getStart() && getStart() < mention.getEnd())
+				|| (getEnd() >= mention.getStart() && getEnd() < mention.getEnd())
+				|| (mention.getStart() >= getStart() && mention.getStart() < getEnd())
+				|| (mention.getEnd() >= getStart() && mention.getEnd() < getEnd()));
+	}
 
 	public CAS getCas() {
 		return cas;
