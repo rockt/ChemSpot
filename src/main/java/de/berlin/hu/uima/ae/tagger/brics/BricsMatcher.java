@@ -85,10 +85,9 @@ public class BricsMatcher {
                 String coveredText = text.substring(matcher.start(), matcher.end());
 
                 //only add if not within a text and longer than two characters
-                if (coveredText.length() > 2 && (
-                        !(Character.isLetter(left) || Character.isLetter(right))
-                )) {
-                    matches.add(new Mention(matcher.start(), matcher.end(), text.substring(matcher.start(), matcher.end())));
+                if (coveredText.length() > 2 && !Character.isLetter(left) && 
+                		(!Character.isLetter(right) || (right == 's' && !Character.isLetter(nright)))) {
+                    matches.add(new Mention(matcher.start(), matcher.end() + (right == 's' ? 1 : 0), text.substring(matcher.start(), matcher.end())));
                 }
             }
         }
