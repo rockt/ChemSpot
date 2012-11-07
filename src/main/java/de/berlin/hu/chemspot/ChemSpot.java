@@ -55,8 +55,10 @@ import java.util.zip.GZIPInputStream;
 
 public class ChemSpot {
     private TypeSystemDescription typeSystem;
+    private AnalysisEngine posTagger;
     private AnalysisEngine sentenceDetector;
     private AnalysisEngine sentenceConverter;
+    private AnalysisEngine tokenConverter;
     private AnalysisEngine crfTagger;
     private AnalysisEngine dictionaryTagger;
     private AnalysisEngine chemicalFormulaTagger;
@@ -64,6 +66,7 @@ public class ChemSpot {
     private AnalysisEngine annotationMerger;
     private AnalysisEngine fineTokenizer;
     private AnalysisEngine stopwordFilter;
+    private AnalysisEngine mentionExpander;
     private AnalysisEngine normalizer;
 
     /**
@@ -92,6 +95,10 @@ public class ChemSpot {
             typeSystem = UIMAFramework.getXMLParser().parseTypeSystemDescription(new XMLInputSource(this.getClass().getClassLoader().getResource("desc/TypeSystem.xml")));
             fineTokenizer = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
                     .getResource("desc/ae/tokenizer/FineGrainedTokenizerAE.xml"))), CAS.NAME_DEFAULT_SOFA);
+            posTagger = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+                    .getResource("desc/ae/tagger/opennlp/PosTagger.xml"))), CAS.NAME_DEFAULT_SOFA);
+            tokenConverter = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+                    .getResource("desc/ae/converter/OpenNLPToUCompareTokenConverterAE.xml"))));
             sentenceDetector = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
                     .getResource("desc/ae/tagger/opennlp/SentenceDetector.xml"))), "opennlp.uima.ModelName", pathToSentenceModelFile);
             sentenceConverter = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
@@ -108,6 +115,8 @@ public class ChemSpot {
                     .getResource("desc/ae/tagger/ChemicalFormulaTaggerAE.xml"))), CAS.NAME_DEFAULT_SOFA);
             abbrevTagger = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
                     .getResource("desc/ae/tagger/AbbreviationTaggerAE.xml"))), CAS.NAME_DEFAULT_SOFA);
+            mentionExpander = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+                    .getResource("desc/ae/expander/MentionExpanderAE.xml"))), CAS.NAME_DEFAULT_SOFA);;
             annotationMerger = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
                     .getResource("desc/ae/AnnotationMergerAE.xml"))), CAS.NAME_DEFAULT_SOFA);
             if (pathToIDs != null) {
@@ -252,11 +261,14 @@ public class ChemSpot {
             synchronized (this) {
             	sentenceDetector.process(jcas);
             }
+            posTagger.process(jcas);
+            tokenConverter.process(jcas);
             sentenceConverter.process(jcas);
             crfTagger.process(jcas);
             if (dictionaryTagger != null) dictionaryTagger.process(jcas);
             chemicalFormulaTagger.process(jcas);
             abbrevTagger.process(jcas);
+            mentionExpander.process(jcas);
             annotationMerger.process(jcas);
             stopwordFilter.process(jcas);
             if (normalizer != null) normalizer.process(jcas);
@@ -417,7 +429,7 @@ public class ChemSpot {
     	
     	Map<String, List<Mention>> annotationMap = new HashMap<String, List<Mention>>();
     	for (Mention mention : list) {
-    		String key = bySource ? mention.getSource() : mention.getText();
+    		String key = bySource ? mention.getSource() : mention.getText().toLowerCase();
     		
     		if (!annotationMap.containsKey(key)) {
     			annotationMap.put(key, new ArrayList<Mention>());
