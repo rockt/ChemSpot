@@ -42,5 +42,11 @@ public class FineTokenizerAE extends JCasAnnotator_ImplBase {
 		token.setBegin(begin);
 		token.setEnd(end+1);
 		token.addToIndexes();
+		
+		// tokens for OpenNLP POS tagger
+		opennlp.uima.Token token2 = new opennlp.uima.Token(aJCas);
+		token2.setBegin(begin);
+		token2.setEnd(end+1);
+		token2.addToIndexes();
 	}
 }
