@@ -168,7 +168,7 @@ public class BricsTagger extends JCasAnnotator_ImplBase {
    			int begin, int end, String id) {
    		int originalBegin = begin;
    		int originalEnd = end;
-        boolean matchExpansion = true;
+        boolean matchExpansion = false;
    		//expand mentions (by simulating a coarse tokenizer)
    		if (matchExpansion) {
    			begin = findLeftBorder(docText, begin);
