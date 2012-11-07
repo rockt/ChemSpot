@@ -82,7 +82,7 @@ public class AnnotationMergerAE extends JCasAnnotator_ImplBase {
 					}
 				}
 				
-				if (lastEntity != null && crosses(lastEntity, entity)) {					
+				if (!filtered && lastEntity != null && crosses(lastEntity, entity)) {					
 					if (Constants.ABBREV.equals(lastEntity.getSource())) {
 						if (isReplaceByAbbreviation(lastEntity, entity) && (!Constants.ABBREV.equals(entity.getSource()) || isChemAbbreviation)) {
 							//System.out.printf("replacing %s annotation %s at [%d-%d], because it was identified as an abbreviation for %s%n", entity.getSource(), entity.getCoveredText(), entity.getBegin(), entity.getEnd(), lastEntity.getId());
@@ -123,11 +123,16 @@ public class AnnotationMergerAE extends JCasAnnotator_ImplBase {
 					}
 				}
 				
-				if (!filtered && !Constants.DICTIONARY.equals(entity.getSource())) {
-					chemicals.add(entity);
+				if (lastEntity != null && !filtered && !crosses(lastEntity, entity) && entity.getBegin() - lastEntity.getEnd() < 10) {
+					if (entity.getCAS().getDocumentText().substring(lastEntity.getEnd(), entity.getBegin()).matches("\\s+")) {
+						entity.setBegin(lastEntity.getBegin());
+						lastEntity.removeFromIndexes();
+						chemicals.remove(lastEntity);
+					}
 				}
 				
 				if (!filtered) {
+					chemicals.add(entity);
 					lastEntity = entity;
 				}
 				filtered = false;
