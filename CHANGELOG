@@ -1,0 +1,21 @@
+CHANGELOG of ChemSpot
+--------------------
+
+1.4           2012-11-15
+-------------------------
+- Improved match expansion.
+- Improved recognition of multi-token entities.
+- Improved recognition of plural forms.
+- Sanitized application parameter settings.
+- Several bug fixes and minor improvements.
+
+
+
+1.3           2012-10-08
+-------------------------
+- New tagger component for chemical formulae.
+- Integrated ABBREV tagger for recognition of biochemical abbreviations by Schwartz et al.
+- Added multi-threading functionality.
+- Improved normalization.
+- Made ChemSpot code compliant with Java version 1.6.
+- Code refactoring and bug fixes.
