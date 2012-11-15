@@ -1,0 +1,62 @@
+<assembly>
+	<formats>
+		<format>dir</format>
+		<format>tar.gz</format>
+	</formats>
+	<files>
+		<file>
+			<source>${project.basedir}/target/${project.artifactId}-${project.version}-jar-with-dependencies.jar</source>
+			<outputDirectory></outputDirectory>
+			<destName>chemspot.jar</destName>
+		</file>
+		<file>
+			<source>${project.basedir}/resources/genia/SentDetectGenia.bin.gz</source>
+			<outputDirectory></outputDirectory>
+			<destName>sentence_model.bin.gz</destName>
+		</file>
+		<file>
+			<source>${project.basedir}/resources/banner/model.bin</source>
+			<outputDirectory></outputDirectory>
+			<destName>crf_model.bin</destName>
+		</file>
+		<file>
+			<source>${project.basedir}/README</source>
+			<outputDirectory></outputDirectory>
+			<destName>README</destName>
+		</file>
+		<file>
+			<source>${project.basedir}/LICENSE</source>
+			<outputDirectory></outputDirectory>
+			<destName>LICENSE</destName>
+		</file>
+		<file>
+			<source>${project.basedir}/CHANGELOG</source>
+			<outputDirectory></outputDirectory>
+			<destName>CHANGELOG</destName>
+		</file>
+		<file>
+			<source>${project.basedir}/src/main/scala/de/berlin/hu/evaluation/eval.scala</source>
+			<outputDirectory></outputDirectory>
+			<destName>eval.scala</destName>
+		</file>
+		<file>
+			<source>${project.basedir}/resources/sample.txt</source>
+			<outputDirectory></outputDirectory>
+			<destName>sample.txt</destName>
+		</file>
+		
+		<!-- These files are not part of the ChemSpot source code. 
+		     ${project.package.data} must point to a valid location
+		     that contains these two files.-->
+		<file>
+			<source>${project.package.data}/ids.zip</source>
+			<outputDirectory></outputDirectory>
+			<destName>ids.zip</destName>
+		</file>
+		<file>
+			<source>${project.package.data}/dict.zip</source>
+			<outputDirectory></outputDirectory>
+			<destName>dict.zip</destName>
+		</file>
+	</files>
+</assembly>
