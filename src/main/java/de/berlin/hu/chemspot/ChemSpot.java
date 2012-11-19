@@ -465,7 +465,7 @@ public class ChemSpot {
     	
     	Pattern startPattern = Pattern.compile("(\\S+\\s+){5}\\S*$");
     	Pattern stopPattern = Pattern.compile("^\\S*(\\s+\\S+){5}");
-    	writer.write(String.format("Overlapping occurrences of <%s> and [%s]:%n", name1, name2));
+    	writer.write(String.format("Overlapping occurrences of <%s> and [%s]:%n%n", name1, name2));
     	int maxLength = 100;
     	int i = 0;
     	for (Mention m1 : list1) {
@@ -601,7 +601,7 @@ public class ChemSpot {
     		writer.close();
     		System.out.println("False negative contexts written to: " + falseNegativesFile.getName());
     		
-    		File falsePositivesNegativesFile = new File(outputPath + "evaluation-FP-FNs.txt");
+    		File falsePositivesNegativesFile = new File(outputPath + "evaluation-overlappings-FPs-FNs.txt");
     		writer = new FileOutputStream(falsePositivesNegativesFile);
     		writeOverlapping(writer, "false negatives", falseNegatives, "false positives", falsePositives);
     		writer.close();
