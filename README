@@ -1,4 +1,4 @@
-ChemSpot is a named entity recognition tool for identifying mentions of chemicals in natural language texts, including trivial names, drugs, abbreviations, molecular formulas and IUPAC entities. Since the different classes of relevant entities have rather different naming characteristics, ChemSpot uses a hybrid approach combining a Conditional Random Field with a dictionary. It achieves an F1 measure of 68.9% on the SCAI corpus.
+ChemSpot is a named entity recognition tool for identifying mentions of chemicals in natural language texts, including trivial names, drugs, abbreviations, molecular formulas and IUPAC entities. Since the different classes of relevant entities have rather different naming characteristics, ChemSpot uses a hybrid approach combining a Conditional Random Field with a dictionary. It achieves an F1 measure of 72.1% on the SCAI corpus.
 
 ChemSpot is released under the Common Public License 1.0 (see LICENSE).
 
@@ -8,7 +8,7 @@ Running ChemSpot:
 - Extract chemspot.tar.gz into a directory
 tar -xvf chemspot.tar.gz
 - To tag a sample text file, run
-java -jar -Xmx9G chemspot.jar -m crf_model.bin -s sentence_model.bin.gz -d dict.zip -i ids.zip -t sample.txt -o predict.iob
+java -jar -Xmx9G chemspot.jar -m crf_model.bin -s sentence_model.bin.gz -d dict.zip -i ids.zip -t sample.txt -Io predict.iob
 
 Parameters
   mandatory arguments:
@@ -28,8 +28,8 @@ Parameters
     -t path to a text file that should be tagged
 
   output control:
-    -o for a single document: path to an output file (IOB format)
-    -S for a document collection: path to which serialized annotation files should be written (tsv format)
+    -o path to output file
+    -I set if output should be converted to IOB format
 
 
 Using ChemSpot in your Code

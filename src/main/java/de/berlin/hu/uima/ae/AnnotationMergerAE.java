@@ -103,6 +103,7 @@ public class AnnotationMergerAE extends JCasAnnotator_ImplBase {
 						if (isRemove) {
 							lastEntity.removeFromIndexes(aJCas);
 							chemicals.remove(lastEntity);
+							filtered = true;
 						}
 					} else if (Constants.DICTIONARY.equals(lastEntity.getSource()) 
 							&& !Constants.DICTIONARY.equals(entity.getSource())) {

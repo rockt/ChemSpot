@@ -196,7 +196,7 @@ public class App {
     	if (outputPath != null) {
     		if (outputPath.getName().contains(".")) {
         		filename = outputPath.getName();
-        		outputPath = outputPath.getParentFile();
+        		outputPath = outputPath.getAbsoluteFile().getParentFile();
         	}
         	
         	if (!outputPath.exists()) {
@@ -301,7 +301,7 @@ public class App {
 		System.out.println("\t-t path to a text file that should be tagged");
 		System.out.println();
         System.out.println("  output control:");
-		System.out.println("\t-o for a single document: path to an output file");
+		System.out.println("\t-o path to output file");
 		System.out.println("\t-I set if output should be converted to IOB format");
         System.exit(0);
 	}
