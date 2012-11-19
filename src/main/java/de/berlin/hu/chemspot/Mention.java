@@ -138,7 +138,7 @@ public class Mention implements Comparable<Object> {
     private String getId(int pos) {
         String id = "";
         try {
-          id = ids[pos];
+          id = ids[pos].trim();
         } catch (ArrayIndexOutOfBoundsException e) {
             //ignore
         }
