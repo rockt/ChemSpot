@@ -30,6 +30,10 @@ import org.uimafit.factory.AnalysisEngineFactory;
 import org.uimafit.factory.JCasFactory;
 import org.uimafit.util.JCasUtil;
 
+import uk.ac.cam.ch.wwmm.oscar.Oscar;
+import uk.ac.cam.ch.wwmm.oscar.chemnamedict.entities.ResolvedNamedEntity;
+import uk.ac.cam.ch.wwmm.oscarMEMM.models.PubMedModel;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -97,12 +101,12 @@ public class ChemSpot {
             typeSystem = UIMAFramework.getXMLParser().parseTypeSystemDescription(new XMLInputSource(this.getClass().getClassLoader().getResource("desc/TypeSystem.xml")));
             fineTokenizer = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
                     .getResource("desc/ae/tokenizer/FineGrainedTokenizerAE.xml"))), CAS.NAME_DEFAULT_SOFA);
-            posTagger = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
-                   .getResource("desc/ae/tagger/opennlp/PosTagger.xml"))), CAS.NAME_DEFAULT_SOFA);
+            //posTagger = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+            //       .getResource("desc/ae/tagger/opennlp/PosTagger.xml"))), CAS.NAME_DEFAULT_SOFA);
             tokenConverter = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
                     .getResource("desc/ae/converter/OpenNLPToUCompareTokenConverterAE.xml"))));
-            sentenceDetector = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
-                    .getResource("desc/ae/tagger/opennlp/SentenceDetector.xml"))), "opennlp.uima.ModelName", pathToSentenceModelFile);
+            //sentenceDetector = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+            //        .getResource("desc/ae/tagger/opennlp/SentenceDetector.xml"))), "opennlp.uima.ModelName", pathToSentenceModelFile);
             sentenceConverter = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
                     .getResource("desc/ae/converter/OpenNLPToUCompareSentenceConverterAE.xml"))), CAS.NAME_DEFAULT_SOFA);
             System.out.println("Loading CRF...");
@@ -258,12 +262,12 @@ public class ChemSpot {
      * @return a list of mentions
      */
     public List<Mention> tag(JCas jcas) {
-        try {
+        /*try {
         	fineTokenizer.process(jcas);
             synchronized (this) {
             	sentenceDetector.process(jcas);
+            	posTagger.process(jcas);
             }
-            posTagger.process(jcas);
             tokenConverter.process(jcas);
             sentenceConverter.process(jcas);
             crfTagger.process(jcas);
@@ -279,9 +283,9 @@ public class ChemSpot {
             e.printStackTrace();
         }
         
-        return null;
+        return null;*/
     	
-        /*
+        
     	Oscar oscar = new Oscar();
     	//oscar.setRecogniser(new PatternRecogniser());
     	oscar.setMemmModel(new PubMedModel());
@@ -292,14 +296,14 @@ public class ChemSpot {
     	    entity.setEnd(rne.getEnd());
     	    for (String id : rne.getNamedEntity().getOntIds()) {
     	    	if (id.contains("CHEBI:")) {
-    	    		entity.setId("," + id.replace("CHEBI:", ""));
+    	    		entity.setId("," + id);
     	    	}
     	    }
     	    entity.setSource("OSCAR");
     	    entity.addToIndexes();
     	}
     	
-    	return null;*/
+    	return null;
     }
 
     /**
@@ -443,21 +447,27 @@ public class ChemSpot {
 	            double recall = (double) TP / ((double) TP + FN);
 	            double fscore = precision + recall > 0 ? 2 * (precision * recall) / (precision + recall) : 0;
 	            System.out.format("Precision:\t\t%f\nRecall:\t\t\t%f\nF1 Score:\t\t%f\n", precision, recall, fscore);
-	            System.out.format("%d of %d entities were normalized, %d correctly (%.2f %%)%n", normalizedCount, normalizedAll, normalizedCorrect, normalizedAll != 0 ? (double)normalizedCorrect / (double)normalizedAll * 100 : 0);
+	            synchronized(normalizationLock) {
+	            	if (!normalized.isEmpty()) {
+	            		double correctAllRatio = !normalizedAll.isEmpty() ? (double)normalizedCorrect.size() / (double)normalizedAll.size() : 0;
+	            		double correctNormalizedRatio = !normalized.isEmpty() ? (double)normalizedCorrect.size() / (double)normalized.size() : 0;
+	            		System.out.format("%d of %d entities were normalized, %d correctly (%.2f %% of all and %.2f %% of normalized)%n", normalized.size(), normalizedAll.size(), normalizedCorrect.size(), correctAllRatio * 100.0, correctNormalizedRatio * 100);
+	            	}
+	            }
 	            System.out.println();
 	        }
         }
     }
     
-    private int normalizedAll = 0;
-    private int normalizedCount = 0;
-    private int normalizedCorrect = 0;
+    private List<Mention> normalizedAll = new ArrayList<Mention>();
+    private List<Mention> normalized = new ArrayList<Mention>();
+    private List<Mention> normalizedCorrect = new ArrayList<Mention>();
     private Object normalizationLock = new Object();
     private double evaluateNormalization(List<Mention> tps, List<Mention> goldStandard) {
-    	Collections.sort(tps);
-    	Collections.sort(goldStandard);
-    	
     	synchronized (normalizationLock) {
+    		Collections.sort(tps);
+    		Collections.sort(goldStandard);
+    	
 	    	int i = 0;
 	    	
 	    	for (Mention m : tps) {
@@ -467,19 +477,21 @@ public class ChemSpot {
 	    			Mention s = goldStandard.get(i);
 	    			
 	    			if (s.getCHEB() != null) {
-	    				normalizedAll++;
+	    				normalizedAll.add(s);
 	    				if (m.getCHEB() != null && !m.getCHEB().isEmpty()) {
-	    					normalizedCount++;
+	    					normalized.add(m);
 	    					
 	    					if (m.getCHEB().equals(s.getCHEB())) {
-	    						normalizedCorrect++;
+	    						normalizedCorrect.add(m);
+	    					} else {
+	    						m.setCHEB(String.format("%s (correct: %s)", m.getCHEB(), s.getCHEB()));
 	    					}
 	    				}
 	    			}
 	    		}
 	    	}
 	    	
-	    	return normalizedAll != 0 ? (double)normalizedCorrect / (double)normalizedAll : 0;
+	    	return !normalizedAll.isEmpty() ? (double)normalizedCorrect.size() / (double)normalizedAll.size() : 0;
     	}
     }
     
@@ -565,7 +577,7 @@ public class ChemSpot {
     	List<List<Mention>> listBySize = sortMentionListsBySize(list, false);
     	
     	writer.write(String.format("%n%n%n%s:%n", name));
-    	writer.write(String.format("%8s\t%25s\t%30s\t%s%n", "#", "CHEMICAL", "SOURCE", "IDs"));
+    	writer.write(String.format("%8s\t%25s\t%30s\t%s%n", "#", "CHEMICAL", "SOURCE", "ChEBI ID"));
     	for (List<Mention> annotationList : listBySize) {
     		List<List<Mention>> listBySource = sortMentionListsBySize(annotationList, true);
     		
@@ -585,10 +597,9 @@ public class ChemSpot {
     		
     		Set<String> ids = new HashSet<String>();
 			for (Mention m : annotationList) {
-				for (String id : m.getIds()) {
-					if (id != null && !id.trim().isEmpty() && !"null".equals(id.trim()) && !ids.contains(id.trim())) {
-						ids.add(id.trim());
-					}
+				String id = m.getCHEB();
+				if (id != null && !id.trim().isEmpty() && !"null".equals(id.trim()) && !ids.contains(id.trim())) {
+					ids.add(id.trim());
 				}
 			}
 			String idString = "";
@@ -678,6 +689,27 @@ public class ChemSpot {
     		writeOverlapping(writer, "false negatives", falseNegatives, "false positives", falsePositives);
     		writer.close();
     		System.out.println("Overlapping occurrences of false positives and negatives written to: " + falsePositivesNegativesFile.getName());
+    		
+    		synchronized(normalizationLock) {
+    			if (!normalized.isEmpty()) {
+		    		File normalizedFile = new File(outputPath + "normalizations.txt");
+		    		writer = new FileOutputStream(normalizedFile);
+		    		
+		    		writeList(writer, "correct", normalizedCorrect);
+		    		
+		    		List<Mention> normalizedIncorrect = new ArrayList<Mention>(normalized);
+		    		normalizedIncorrect.removeAll(normalizedCorrect);
+		    		writeList(writer, "incorrect", normalizedIncorrect);
+		    		
+		    		List<Mention> notNormalized = new ArrayList<Mention>(normalizedAll);
+		    		notNormalized.removeAll(normalizedCorrect);
+		    		notNormalized.removeAll(normalizedIncorrect);
+		    		writeList(writer, "not normalized", notNormalized);
+		    		
+		    		writer.close();
+		    		System.out.println("Normalized entities written to: " + normalizedFile.getName());
+    			}
+    		}
     	}
     }
     
