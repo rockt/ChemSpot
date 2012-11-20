@@ -20,7 +20,7 @@ public class CraftCR extends XmiCollectionReader {
 		NamedEntity namedEntity = new NamedEntity(jcas);
 		namedEntity.setBegin(begin);
 		namedEntity.setEnd(end);
-		namedEntity.setId(id);
+		namedEntity.setId("," + id);
 		namedEntity.setEntityType("CHEBI");
 		namedEntity.setConfidence(1.0);
 		namedEntity.setSource(Constants.GOLDSTANDARD);
