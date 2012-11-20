@@ -13,6 +13,7 @@
 package de.berlin.hu.chemspot;
 
 import de.berlin.hu.util.Constants;
+import de.berlin.hu.util.Constants.ChemicalID;
 
 import org.apache.uima.cas.CAS;
 import org.apache.uima.jcas.tcas.Annotation;
@@ -38,13 +39,16 @@ public class Mention implements Comparable<Object> {
 		this.start = start;
 		this.end = end;
 		this.text = text;
+		this.ids = new String[ChemicalID.values().length];
         if (ids != null) {
             String tempIds = ids;
             if (tempIds.startsWith("[")) tempIds = tempIds.substring(1);
             if (tempIds.endsWith("]")) tempIds = tempIds.substring(0, tempIds.length() - 1);
-            this.ids = tempIds.split(",");
-        } else {
-            this.ids = new String[0];
+            int i = 0;
+            for (String id : tempIds.split(",")) {
+            	if (i >= this.ids.length) break;
+            	setId(ChemicalID.values()[i++], id.trim());
+            }
         }
         this.source = source;
         this.cas = cas;
@@ -92,57 +96,117 @@ public class Mention implements Comparable<Object> {
 	}
 
     public String getCHID() {
-        return getId(Constants.CHID);
+        return getId(ChemicalID.CHID);
     }
 
     public String getCHEB() {
-        return getId(Constants.CHEB);
+        return getId(ChemicalID.CHEB);
     }
 
     public String getCAS() {
-        return getId(Constants.CAS);
+        return getId(ChemicalID.CAS);
     }
 
     public String getPUBC() {
-        return getId(Constants.PUBC);
+        return getId(ChemicalID.PUBC);
     }
 
     public String getPUBS() {
-        return getId(Constants.PUBS);
+        return getId(ChemicalID.PUBS);
     }
 
     public String getINCH() {
-        return getId(Constants.INCH);
+        return getId(ChemicalID.INCH);
     }
 
     public String getDRUG() {
-        return getId(Constants.DRUG);
+        return getId(ChemicalID.DRUG);
     }
 
     public String getHMBD() {
-        return getId(Constants.HMBD);
+        return getId(ChemicalID.HMBD);
     }
 
     public String getKEGG() {
-        return getId(Constants.KEGG);
+        return getId(ChemicalID.KEGG);
     }
 
     public String getKEGD() {
-        return getId(Constants.KEGD);
+        return getId(ChemicalID.KEGD);
     }
 
     public String getMESH() {
-        return getId(Constants.MESH);
+        return getId(ChemicalID.MESH);
     }
 
-    private String getId(int pos) {
-        String id = "";
+    public String getId(ChemicalID type) {
+        String id = null;
         try {
-          id = ids[pos].trim();
+          id = ids[type.ordinal()];
         } catch (ArrayIndexOutOfBoundsException e) {
             //ignore
         }
         return id;
+    }
+    
+    public void setCHID(String id) {
+        setId(ChemicalID.CHID, id);
+    }
+
+    public void setCHEB(String id) {
+        setId(ChemicalID.CHEB, id);
+    }
+
+    public void setCAS(String id) {
+        setId(ChemicalID.CAS, id);
+    }
+
+    public void setPUBC(String id) {
+        setId(ChemicalID.PUBC, id);
+    }
+
+    public void setPUBS(String id) {
+        setId(ChemicalID.PUBS, id);
+    }
+
+    public void setINCH(String id) {
+        setId(ChemicalID.INCH, id);
+    }
+
+    public void setDRUG(String id) {
+        setId(ChemicalID.DRUG, id);
+    }
+
+    public void setHMBD(String id) {
+        setId(ChemicalID.HMBD, id);
+    }
+
+    public void setKEGG(String id) {
+        setId(ChemicalID.KEGG, id);
+    }
+
+    public void setKEGD(String id) {
+        setId(ChemicalID.KEGD, id);
+    }
+
+    public void setMESH(String id) {
+        setId(ChemicalID.MESH, id);
+    }
+    
+    public void setId(ChemicalID type, String id) {
+    	if (id != null && (id.isEmpty() || "null".equals(id))) {
+    		id = null;
+    	}
+    	
+    	if (ChemicalID.CHEB.equals(type) && id != null && !id.startsWith("CHEBI:")) {
+    		id = "CHEBI:" + id;
+    	}
+    	
+        try {
+          ids[type.ordinal()] = id != null ? id.trim() : null;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            //ignore
+        }
     }
     
     public boolean equals(Object obj) {

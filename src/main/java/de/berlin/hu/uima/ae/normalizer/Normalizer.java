@@ -13,6 +13,8 @@
 package de.berlin.hu.uima.ae.normalizer;
 
 import de.berlin.hu.util.Constants;
+import de.berlin.hu.util.Constants.ChemicalID;
+
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
@@ -89,20 +91,20 @@ public class Normalizer extends JCasAnnotator_ImplBase {
                 if (ids.containsKey(entity.getCoveredText().toLowerCase())) {
                     //FIXME: use a UIMA field instead of a String here
                     normalized = ids.get(entity.getCoveredText().toLowerCase());
-                    if (normalized.length >= Constants.INCH) {
-                        if (normalized[Constants.INCH].isEmpty() && inchi != null) normalized[Constants.INCH] = inchi;
+                    if (normalized.length >= ChemicalID.INCH.ordinal()) {
+                        if (normalized[ChemicalID.INCH.ordinal()].isEmpty() && inchi != null) normalized[ChemicalID.INCH.ordinal()] = inchi;
                     } else {
                         if (inchi != null) {
-                            String[] normalizedTemp = Arrays.copyOf(normalized, Constants.INCH + 1);
-                            normalizedTemp[Constants.INCH] = inchi;
+                            String[] normalizedTemp = Arrays.copyOf(normalized, ChemicalID.INCH.ordinal() + 1);
+                            normalizedTemp[ChemicalID.INCH.ordinal()] = inchi;
                             normalized = normalizedTemp;
                         }
                     }
                     nN++;
                 } else {
                     if (inchi != null) {
-                        String[] normalizedTemp = new String[Constants.INCH + 1];
-                        normalizedTemp[Constants.INCH] = inchi;
+                        String[] normalizedTemp = new String[ChemicalID.INCH.ordinal() + 1];
+                        normalizedTemp[ChemicalID.INCH.ordinal()] = inchi;
                         normalized = normalizedTemp;
                         nN++;
                     }
