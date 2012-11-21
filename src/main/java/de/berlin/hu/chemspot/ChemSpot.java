@@ -30,10 +30,6 @@ import org.uimafit.factory.AnalysisEngineFactory;
 import org.uimafit.factory.JCasFactory;
 import org.uimafit.util.JCasUtil;
 
-import uk.ac.cam.ch.wwmm.oscar.Oscar;
-import uk.ac.cam.ch.wwmm.oscar.chemnamedict.entities.ResolvedNamedEntity;
-import uk.ac.cam.ch.wwmm.oscarMEMM.models.PubMedModel;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -101,12 +97,12 @@ public class ChemSpot {
             typeSystem = UIMAFramework.getXMLParser().parseTypeSystemDescription(new XMLInputSource(this.getClass().getClassLoader().getResource("desc/TypeSystem.xml")));
             fineTokenizer = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
                     .getResource("desc/ae/tokenizer/FineGrainedTokenizerAE.xml"))), CAS.NAME_DEFAULT_SOFA);
-            //posTagger = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
-            //       .getResource("desc/ae/tagger/opennlp/PosTagger.xml"))), CAS.NAME_DEFAULT_SOFA);
+            posTagger = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+                   .getResource("desc/ae/tagger/opennlp/PosTagger.xml"))), CAS.NAME_DEFAULT_SOFA);
             tokenConverter = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
                     .getResource("desc/ae/converter/OpenNLPToUCompareTokenConverterAE.xml"))));
-            //sentenceDetector = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
-            //        .getResource("desc/ae/tagger/opennlp/SentenceDetector.xml"))), "opennlp.uima.ModelName", pathToSentenceModelFile);
+            sentenceDetector = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+                    .getResource("desc/ae/tagger/opennlp/SentenceDetector.xml"))), "opennlp.uima.ModelName", pathToSentenceModelFile);
             sentenceConverter = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
                     .getResource("desc/ae/converter/OpenNLPToUCompareSentenceConverterAE.xml"))), CAS.NAME_DEFAULT_SOFA);
             System.out.println("Loading CRF...");
@@ -262,7 +258,7 @@ public class ChemSpot {
      * @return a list of mentions
      */
     public List<Mention> tag(JCas jcas) {
-        /*try {
+        try {
         	fineTokenizer.process(jcas);
             synchronized (this) {
             	sentenceDetector.process(jcas);
@@ -283,10 +279,10 @@ public class ChemSpot {
             e.printStackTrace();
         }
         
-        return null;*/
+        return null;
     	
         
-    	Oscar oscar = new Oscar();
+    	/*Oscar oscar = new Oscar();
     	//oscar.setRecogniser(new PatternRecogniser());
     	oscar.setMemmModel(new PubMedModel());
     	List<ResolvedNamedEntity> entities = oscar.findAndResolveNamedEntities(jcas.getDocumentText());
@@ -303,7 +299,7 @@ public class ChemSpot {
     	    entity.addToIndexes();
     	}
     	
-    	return null;
+    	return null;*/
     }
 
     /**
