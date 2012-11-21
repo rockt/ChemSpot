@@ -50,3 +50,6 @@ Reproducing our Results
 java -jar -Xmx9G chemspot.jar -m crf_model.bin -s sentence_model.bin.gz -d dict.zip -i ids.zip -c chemicals-test-corpus-27-04-2009-v3.iob.gz -o predict.iob -e
 - Evaluate ChemSpot using the Scala script
 scala eval.scala chemicals-test-corpus-27-04-2009-v3.iob.gz predict.iob
+
+Acknowledgements
+We would like to thank Daniel Lowe and Philippe Thomas for many valuable suggestions. 
