@@ -149,7 +149,7 @@ public class ChemSpot {
         while (entities.hasNext()) {
             NamedEntity entity = entities.next();
             //disregards gold-standard mentions
-            if (!Constants.GOLDSTANDARD.equals(entity.getSource())) {
+            if (!Constants.GOLDSTANDARD.equals(entity.getSource()) && !"OSCAR".equals(entity.getSource())) {
                 mentions.add(new Mention(entity));
             }
         }
@@ -252,13 +252,38 @@ public class ChemSpot {
         srcDocInfo.addToIndexes();
     }
     
+    private List<NamedEntity> removeOtherEntities(JCas jcas) {
+    	List<NamedEntity> result = new ArrayList<NamedEntity>();
+    	List<String> sources = new ArrayList<String>();
+    	
+    	Iterator<NamedEntity> entities = JCasUtil.iterator(jcas, NamedEntity.class);
+        while (entities.hasNext()) {
+        	NamedEntity entity = entities.next();
+        	if (Constants.GOLDSTANDARD.equals(entity.getSource())) continue;
+        	if (!sources.contains(entity.getSource())) sources.add(entity.getSource());
+        	result.add(entity);
+        }
+        
+        for (NamedEntity ne : result) {
+			ne.removeFromIndexes();
+		}
+        
+        if (!sources.isEmpty()) {
+        	System.out.println("found pre-exisiting entities from: " + sources);
+        }
+    	
+    	return result;
+    }
+    
     /**
      * Finds chemical entities in the document of a {@code JCas} object and returns a list of mentions.
      * @param jcas contains the document text
      * @return a list of mentions
      */
     public List<Mention> tag(JCas jcas) {
+    	List<NamedEntity> otherEntities = null;
         try {
+        	otherEntities = removeOtherEntities(jcas);
         	fineTokenizer.process(jcas);
             synchronized (this) {
             	sentenceDetector.process(jcas);
@@ -277,26 +302,49 @@ public class ChemSpot {
         } catch (AnalysisEngineProcessException e) {
             System.err.println("Failed to extract chemicals from text.");
             e.printStackTrace();
+        } finally {
+        	if (otherEntities != null && !otherEntities.isEmpty()) {
+        		for (NamedEntity ne : otherEntities) {
+        			ne.addToIndexes();
+        		}
+        	}
         }
         
         return null;
     	
-        
     	/*Oscar oscar = new Oscar();
-    	//oscar.setRecogniser(new PatternRecogniser());
-    	oscar.setMemmModel(new PubMedModel());
-    	List<ResolvedNamedEntity> entities = oscar.findAndResolveNamedEntities(jcas.getDocumentText());
-    	for (ResolvedNamedEntity rne : entities) {
-    	    NamedEntity entity = new NamedEntity(jcas);
-    	    entity.setBegin(rne.getStart());
-    	    entity.setEnd(rne.getEnd());
-    	    for (String id : rne.getNamedEntity().getOntIds()) {
-    	    	if (id.contains("CHEBI:")) {
-    	    		entity.setId("," + id);
-    	    	}
-    	    }
-    	    entity.setSource("OSCAR");
-    	    entity.addToIndexes();
+    	ChemicalEntityRecogniser recogniser = new MEMMRecogniser(new PubMedModel(), OntologyTerms.getDefaultInstance(), new ChemNameDictRegistry(Locale.ENGLISH));
+    	
+    	List<PubmedDocument> documents = new ArrayList<PubmedDocument>();
+    	for (PubmedDocument doc : JCasUtil.iterate(jcas, PubmedDocument.class)) {
+    		documents.add(doc);
+    	}
+    	if (documents.isEmpty()) {
+    		PubmedDocument doc = new PubmedDocument(jcas);
+			doc.setBegin(0);
+			doc.setEnd(jcas.getDocumentText().length());
+			doc.setPmid("");
+			doc.addToIndexes(jcas);	
+    		documents.add(doc);
+    	}
+    	for (PubmedDocument doc : documents) {
+	    	List<uk.ac.cam.ch.wwmm.oscar.document.NamedEntity> entities = recogniser.findNamedEntities(oscar.tokenise(doc.getCoveredText()), ResolutionMode.REMOVE_BLOCKED);
+	    	for (uk.ac.cam.ch.wwmm.oscar.document.NamedEntity rne : entities) {
+	    	    if (!rne.getType().isInstance(NamedEntityType.COMPOUND)){
+					continue;
+				}
+	    		
+	    	    NamedEntity entity = new NamedEntity(jcas);
+	    	    entity.setBegin(doc.getBegin() + rne.getStart());
+	    	    entity.setEnd(doc.getBegin() + rne.getEnd());
+	    	    for (String id : rne.getOntIds()) {
+	    	    	if (id.contains("CHEBI:")) {
+	    	    		entity.setId("," + id);
+	    	    	}
+	    	    }
+	    	    entity.setSource("OSCAR");
+	    	    entity.addToIndexes();
+	    	}
     	}
     	
     	return null;*/
@@ -662,9 +710,19 @@ public class ChemSpot {
     		
     		File evaluationFile  = new File(outputPath + "evaluation.txt");
     		OutputStream writer = new FileOutputStream(evaluationFile);
+    		
+    		BufferedWriter w = new BufferedWriter(new OutputStreamWriter(writer));
+    		w.write(String.format("True Positives:\t\t%d%nFalse Positives:\t%d%nFalse Negatives:\t%d%n", TP, FP, FN));
+            double precision = (double) TP / ((double) TP + FP);
+            double recall = (double) TP / ((double) TP + FN);
+            double fscore = precision + recall > 0 ? 2 * (precision * recall) / (precision + recall) : 0;
+            w.write(String.format("Precision:\t\t%f%nRecall:\t\t\t%f%nF1 Score:\t\t%f%n", precision, recall, fscore));
+            w.flush();
+    		
     		writeList(writer, "true positives", truePositives);
     		writeList(writer, "false negatives", falseNegatives);
     		writeList(writer, "false positives", falsePositives);
+    		w.close();
     		writer.close();
     		System.out.println("Evaluation results written to: " + evaluationFile.getName());
     		
@@ -691,6 +749,16 @@ public class ChemSpot {
 		    		File normalizedFile = new File(outputPath + "normalizations.txt");
 		    		writer = new FileOutputStream(normalizedFile);
 		    		
+		    		w = new BufferedWriter(new OutputStreamWriter(writer));
+            		double correctAllRatio = !normalizedAll.isEmpty() ? (double)normalizedCorrect.size() / (double)normalizedAll.size() : 0;
+            		double correctNormalizedRatio = !normalized.isEmpty() ? (double)normalizedCorrect.size() / (double)normalized.size() : 0;
+            		w.write(String.format("entities total              : %d%n", normalizedAll.size()));
+            		w.write(String.format("entities normalized         : %d%n", normalized.size()));
+            		w.write(String.format("normalized correct          : %d%n", normalizedCorrect.size()));
+            		w.write(String.format("percent correct (all)       : %.2f %%%n" , correctAllRatio * 100.0));
+            		w.write(String.format("percent correct (normalized): %.2f %%%n" , correctNormalizedRatio * 100.0));
+            		w.flush();
+            		
 		    		writeList(writer, "correct", normalizedCorrect);
 		    		
 		    		List<Mention> normalizedIncorrect = new ArrayList<Mention>(normalized);
@@ -702,6 +770,7 @@ public class ChemSpot {
 		    		notNormalized.removeAll(normalizedIncorrect);
 		    		writeList(writer, "not normalized", notNormalized);
 		    		
+		    		w.close();
 		    		writer.close();
 		    		System.out.println("Normalized entities written to: " + normalizedFile.getName());
     			}
