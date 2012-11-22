@@ -121,6 +121,9 @@ public class AnnotationMergerAE extends JCasAnnotator_ImplBase {
 							&& Constants.SUM_TAGGER.equals(entity.getSource())) {
 						entity.removeFromIndexes(aJCas);
 						filtered = true;
+					} else if (Constants.CRF.equals(entity.getSource())) {
+						lastEntity.removeFromIndexes(aJCas);
+						chemicals.remove(lastEntity);
 					}
 				}
 				

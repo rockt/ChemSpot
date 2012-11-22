@@ -30,8 +30,6 @@ public class CraftCR extends XmiCollectionReader {
 	public void getNext(CAS aCAS) throws IOException, CollectionException {
 		super.getNext(aCAS);
 		
-		this.getProcessingResourceMetaData().getSourceUrl().getFile();
-		
 		try {
 			JCas jcas = aCAS.getJCas();
 			
