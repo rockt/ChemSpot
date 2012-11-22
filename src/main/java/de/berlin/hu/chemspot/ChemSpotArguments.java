@@ -57,8 +57,16 @@ public interface ChemSpotArguments {
       String getTagCommandLine();
  	  boolean isTagCommandLine();
  	  
- 	 @Option(shortName="x")
-     String getPathToXMICorpus();
+ 	  @Option(shortName="n")
+      String getPathToNaCTeMCorpus();
+	  boolean isPathToNaCTeMCorpus();
+	  
+ 	  @Option(shortName="p")
+      String getPathToPatentCorpus();
+	  boolean isPathToPatentCorpus();
+ 	  
+ 	  @Option(shortName="x")
+      String getPathToXMICorpus();
 	  boolean isPathToXMICorpus();
  	  
  	  @Option(shortName="X")

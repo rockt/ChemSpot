@@ -27,7 +27,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.uima.UIMAException;
 import org.apache.uima.UIMAFramework;
-import org.apache.uima.cas.CAS;
 import org.apache.uima.cas.impl.XmiCasSerializer;
 import org.apache.uima.collection.CollectionException;
 import org.apache.uima.collection.CollectionReader;
@@ -53,6 +52,8 @@ public class App {
 	private static String pathToDictionaryFile;
 	private static String pathToOutputFile;
 	private static String pathToCRAFTCorpus;
+	private static String pathToNaCTeMCorpus;
+	private static String pathToPatentCorpus;
 	private static boolean convertToIOB = true;
 	private static ChemSpotArguments arguments;
 	private static boolean evaluate = false;
@@ -101,6 +102,10 @@ public class App {
                     tagFromCommandLine = arguments.getTagCommandLine();
 			} else if (arguments.isPathToXMICorpus()) {
 				pathToXMICorpus = arguments.getPathToXMICorpus();
+			} else if (arguments.isPathToNaCTeMCorpus()) {
+				pathToNaCTeMCorpus = arguments.getPathToNaCTeMCorpus();
+			} else if (arguments.isPathToPatentCorpus()) {
+				pathToPatentCorpus = arguments.getPathToPatentCorpus();
 			} else {
                 usage();
                 throw new IllegalArgumentException("At least one corpus (IOB directory, a text file or a command line text) should be specified!");
@@ -132,7 +137,7 @@ public class App {
             }
         } else {
         	// tag document collection
-            if (arguments.isPathToIOBCorpora() || arguments.isPathToGZCorpus() || arguments.isPathToCRAFTCorpus() || arguments.isPathToXMICorpus()) {
+            if (arguments.isPathToIOBCorpora() || arguments.isPathToGZCorpus() || arguments.isPathToCRAFTCorpus() || arguments.isPathToXMICorpus() || arguments.isPathToNaCTeMCorpus() || arguments.isPathToPatentCorpus()) {
             	CollectionReader reader = null;
             	if (arguments.isPathToIOBCorpora()) {
                 	reader = CollectionReaderFactory.createCollectionReader(UIMAFramework.getXMLParser().parseCollectionReaderDescription(new XMLInputSource(typeSystem.getClass().getClassLoader()
@@ -143,6 +148,12 @@ public class App {
                 } else if (arguments.isPathToCRAFTCorpus()) {
             		reader = CollectionReaderFactory.createCollectionReader(UIMAFramework.getXMLParser().parseCollectionReaderDescription(new XMLInputSource(typeSystem.getClass().getClassLoader()
                             .getResource("desc/cr/CraftCR.xml"))), XmiCollectionReader.PARAM_INPUTDIR, pathToCRAFTCorpus);
+            	} else if (arguments.isPathToNaCTeMCorpus()) {
+            		reader = CollectionReaderFactory.createCollectionReader(UIMAFramework.getXMLParser().parseCollectionReaderDescription(new XMLInputSource(typeSystem.getClass().getClassLoader()
+                            .getResource("desc/cr/NaCTeMCollectionReader.xml"))), XmiCollectionReader.PARAM_INPUTDIR, pathToNaCTeMCorpus);
+            	} else if (arguments.isPathToPatentCorpus()) {
+            		reader = CollectionReaderFactory.createCollectionReader(UIMAFramework.getXMLParser().parseCollectionReaderDescription(new XMLInputSource(typeSystem.getClass().getClassLoader()
+                            .getResource("desc/cr/PatentCorpusCollectionReader.xml"))), XmiCollectionReader.PARAM_INPUTDIR, pathToPatentCorpus);
             	} else if (arguments.isPathToXMICorpus()) {
             		reader = CollectionReaderFactory.createCollectionReader(XmiCollectionReader.class, XmiCollectionReader.PARAM_INPUTDIR, pathToXMICorpus);
             	}
@@ -190,8 +201,12 @@ public class App {
 	    	String output = convertToIOB ? ChemSpot.convertToIOB(jcas) : ChemSpot.serializeAnnotations(jcas);
 	    	try {
 		    	FileWriter outputFile = outputPath != null ? new FileWriter(new File(outputPath)) : null;
-		        if (outputFile != null) outputFile.write(output);
-		        System.out.println("\nOutput written to: " + outputPath);
+		        if (outputFile != null) {
+		        	outputFile.write(output);
+		        	System.out.println("\nOutput written to: " + outputPath);
+		        	outputFile.close();
+		        }
+		        
 	    	} catch (IOException e) {
 	    		System.err.println("Error while writing ChemSpot output");
 	    		e.printStackTrace();
@@ -208,6 +223,7 @@ public class App {
 	    		XMLSerializer xmlSerializer = new XMLSerializer(out, false);
     		
 				serializer.serialize(jcas.getCas(), xmlSerializer.getContentHandler());
+				out.close();
 				
 				System.out.println("XMI file written to: " + xmiOutputFile.getCanonicalPath());
 			} catch (SAXException e) {
@@ -243,14 +259,9 @@ public class App {
             outputPathString = !outputPathString.endsWith("/") ? outputPathString + "/" : outputPathString;
     	}
     	
-    	CAS cas = null;
     	while (reader.hasNext()) {
             JCas jcas = JCasFactory.createJCas(typeSystem);
-            if (cas == null) {
-            	cas = jcas.getCas();
-            }
-            
-            reader.getNext(cas);
+            reader.getNext(jcas.getCas());
             
             String outputFilePath = null;
             String fileType = convertToIOB ? ".iob" : ".chem";
