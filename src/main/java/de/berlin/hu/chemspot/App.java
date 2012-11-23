@@ -36,12 +36,14 @@ import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.metadata.TypeSystemDescription;
 import org.apache.uima.util.XMLInputSource;
 import org.apache.uima.util.XMLSerializer;
+import org.u_compare.shared.semantic.NamedEntity;
 import org.uimafit.factory.CollectionReaderFactory;
 import org.uimafit.factory.JCasFactory;
 import org.uimafit.util.JCasUtil;
 import org.xml.sax.SAXException;
 
 import de.berlin.hu.types.PubmedDocument;
+import de.berlin.hu.util.Constants;
 
 import uk.co.flamingpenguin.jewel.cli.ArgumentValidationException;
 import uk.co.flamingpenguin.jewel.cli.CliFactory;
@@ -191,10 +193,41 @@ public class App {
         return runChemSpot(chemspot, jcas, outputPath, evaluate);
     }
     
+    private static List<NamedEntity> removeOtherEntities(JCas jcas) {
+    	List<NamedEntity> result = new ArrayList<NamedEntity>();
+    	List<String> sources = new ArrayList<String>();
+    	
+    	Iterator<NamedEntity> entities = JCasUtil.iterator(jcas, NamedEntity.class);
+        while (entities.hasNext()) {
+        	NamedEntity entity = entities.next();
+        	if (Constants.GOLDSTANDARD.equals(entity.getSource())) continue;
+        	if (!sources.contains(entity.getSource())) sources.add(entity.getSource());
+        	result.add(entity);
+        }
+        
+        for (NamedEntity ne : result) {
+			ne.removeFromIndexes();
+		}
+        
+        if (!sources.isEmpty()) {
+        	System.out.println("found pre-exisiting entities from: " + sources);
+        }
+    	
+    	return result;
+    }
+    
+    private static ChemicalNEREvaluator otherEvaluator = new ChemicalNEREvaluator();
     private static List<Mention> runChemSpot(ChemSpot chemspot, JCas jcas, String outputPath, boolean evaluate) {
+    	boolean hasOtherEntities = JCasUtil.iterator(jcas, NamedEntity.class).hasNext();
+    	if (hasOtherEntities) {
+    		System.out.println("Pre-existing entities found in document. Evaluating and emoving them.");
+    		otherEvaluator.evaluate(jcas);
+    		removeOtherEntities(jcas);
+    	}
+    	
     	List<Mention> mentions = chemspot.tag(jcas);
     	if (evaluate) {
-    		chemspot.evaluate(jcas);
+    		chemspot.getEvaluator().evaluate(jcas);
     	}
     	
     	if (pathToOutputFile != null && outputPath != null) {
@@ -309,7 +342,41 @@ public class App {
     	}
     	
     	if (detailedEvaluation) {
-    		chemspot.writeDetailedEvaluationResults(outputPathString);
+    		chemspot.getEvaluator().writeDetailedEvaluationResults(outputPathString);
+    		
+    		if (otherEvaluator.getTP() + otherEvaluator.getFN() + otherEvaluator.getFP() > 0) {
+    			List<Mention> normalizedAll = new ArrayList<Mention>(otherEvaluator.getNormalizedAll());
+    			List<Mention> normalized = new ArrayList<Mention>(otherEvaluator.getNormalized());
+    			List<Mention> normalizedCorrect = new ArrayList<Mention>(otherEvaluator.getNormalizedCorrect());
+    			
+    			normalized.retainAll(chemspot.getEvaluator().getNormalizedCorrect());
+    			normalizedAll.retainAll(chemspot.getEvaluator().getNormalizedCorrect());
+    			normalizedCorrect.retainAll(chemspot.getEvaluator().getNormalizedCorrect());
+    			
+    			File normalizedFoundFile = new File(outputPathString + "normalizations-correct-by-ChemSpot.txt");
+    			FileOutputStream writer = new FileOutputStream(normalizedFoundFile);
+	    		
+	    	    otherEvaluator.writeNormalizations(writer, normalizedAll, normalized, normalizedCorrect);
+
+	    		writer.close();
+	    		System.out.println("Pre-existing normalized entities found by ChemSpot written to: " + normalizedFoundFile.getName());
+	    		
+    			normalizedAll = new ArrayList<Mention>(otherEvaluator.getNormalizedAll());
+    			normalized = new ArrayList<Mention>(otherEvaluator.getNormalized());
+    			normalizedCorrect = new ArrayList<Mention>(otherEvaluator.getNormalizedCorrect());
+    			
+    			normalized.removeAll(chemspot.getEvaluator().getNormalizedCorrect());
+    			normalizedAll.removeAll(chemspot.getEvaluator().getNormalizedCorrect());
+    			normalizedCorrect.removeAll(chemspot.getEvaluator().getNormalizedCorrect());
+    			
+    			File notNormalizedFoundFile = new File(outputPathString + "normalizations-not-correct-by-ChemSpot.txt");
+    			writer = new FileOutputStream(notNormalizedFoundFile);
+	    		
+	    	    otherEvaluator.writeNormalizations(writer, normalizedAll, normalized, normalizedCorrect);
+
+	    		writer.close();
+	    		System.out.println("Pre-existing normalized entities not found by ChemSpot written to: " + notNormalizedFoundFile.getName());
+    		}
     	}
     }
     
