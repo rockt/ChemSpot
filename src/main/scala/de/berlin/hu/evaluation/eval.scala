@@ -18,6 +18,7 @@ import java.util.zip.GZIPInputStream
 
 def getMentions(corpus: Iterator[String]) : HashMap[String, List[(Int,Int,String,String)]] = {
   //begin, end, label, text
+
   val mentions = new HashMap[String, List[(Int,Int,String,String)]]
   var firstLine = false
   var offset = 0
