@@ -2,3 +2,5 @@
 .svn/
 target/
 bin/
+/log/*
+/log2

@@ -7,6 +7,7 @@
   <imports>
     <import location="ae/tagger/opennlp/TypeSystem.xml"/>
     <import location="uCompareTypeSystem/U_compareTypeSystem.xml"/>
+    <import location="UCDenverCCPTypeSystem/CcpTypeSystem.xml"/>
   </imports>
   <types>
     <typeDescription>

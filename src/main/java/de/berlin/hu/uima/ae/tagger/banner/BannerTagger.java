@@ -4,6 +4,7 @@ import banner.tagging.CRFTagger;
 import banner.types.Mention;
 import de.berlin.hu.uima.util.Util;
 import de.berlin.hu.util.Constants;
+
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.uima.UimaContext;

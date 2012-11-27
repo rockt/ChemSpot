@@ -10,6 +10,7 @@ public class ComparableAnnotation implements Comparable<ComparableAnnotation> {
 	private int offset;
 	private CAS cas;
 	private String pmid;
+	private String source;
 
 	public static ComparableAnnotation createInstance(int begin, int end, String text, int offset) {
 		ComparableAnnotation output = new ComparableAnnotation();
@@ -38,6 +39,18 @@ public class ComparableAnnotation implements Comparable<ComparableAnnotation> {
 		output.setOffset(offset);
 		output.setCAS(cas);
 		output.setPMID(pmid);
+		return output;
+	}
+	
+	public static ComparableAnnotation createInstance(int begin, int end, String text, int offset, CAS cas, String pmid, String source) {
+		ComparableAnnotation output = new ComparableAnnotation();
+		output.setBegin(begin);
+		output.setEnd(end);
+		output.setText(text);
+		output.setOffset(offset);
+		output.setCAS(cas);
+		output.setPMID(pmid);
+		output.setSource(source);
 		return output;
 	}
 	
@@ -154,5 +167,13 @@ public class ComparableAnnotation implements Comparable<ComparableAnnotation> {
 
 	public void setPMID(String pmid) {
 		this.pmid = pmid;
+	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
 	}
 }
