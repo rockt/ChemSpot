@@ -72,4 +72,8 @@ public interface ChemSpotArguments {
  	  @Option(shortName="X")
       String getPathToXMIOutput();
 	  boolean isPathToXMIOutput();
+	  
+	  @Option(shortName="D")
+	  String getPathToDDICorpus();
+	  boolean isPathToDDICorpus();
 }

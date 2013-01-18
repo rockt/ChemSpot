@@ -43,6 +43,7 @@ import org.uimafit.util.JCasUtil;
 import org.xml.sax.SAXException;
 
 import de.berlin.hu.types.PubmedDocument;
+import de.berlin.hu.uima.cr.ddi.DDICorpusCR;
 import de.berlin.hu.util.Constants;
 
 import uk.co.flamingpenguin.jewel.cli.ArgumentValidationException;
@@ -69,6 +70,7 @@ public class App {
     private static String pathToGZCorpus;
     private static String pathToXMICorpus;
     private static String pathToXMIOutput;
+    private static String pathToDDICorpus;
 
     public static void main(String[] args) throws UIMAException, IOException {
 		try {
@@ -108,7 +110,9 @@ public class App {
 				pathToNaCTeMCorpus = arguments.getPathToNaCTeMCorpus();
 			} else if (arguments.isPathToPatentCorpus()) {
 				pathToPatentCorpus = arguments.getPathToPatentCorpus();
-			} else {
+			} else if (arguments.isPathToDDICorpus()) {
+				pathToDDICorpus = arguments.getPathToDDICorpus();
+			}  else {
                 usage();
                 throw new IllegalArgumentException("At least one corpus (IOB directory, a text file or a command line text) should be specified!");
 			}
@@ -139,7 +143,7 @@ public class App {
             }
         } else {
         	// tag document collection
-            if (arguments.isPathToIOBCorpora() || arguments.isPathToGZCorpus() || arguments.isPathToCRAFTCorpus() || arguments.isPathToXMICorpus() || arguments.isPathToNaCTeMCorpus() || arguments.isPathToPatentCorpus()) {
+            if (arguments.isPathToIOBCorpora() || arguments.isPathToGZCorpus() || arguments.isPathToCRAFTCorpus() || arguments.isPathToXMICorpus() || arguments.isPathToNaCTeMCorpus() || arguments.isPathToPatentCorpus() || arguments.isPathToDDICorpus()) {
             	CollectionReader reader = null;
             	if (arguments.isPathToIOBCorpora()) {
                 	reader = CollectionReaderFactory.createCollectionReader(UIMAFramework.getXMLParser().parseCollectionReaderDescription(new XMLInputSource(typeSystem.getClass().getClassLoader()
@@ -158,6 +162,9 @@ public class App {
                             .getResource("desc/cr/PatentCorpusCollectionReader.xml"))), XmiCollectionReader.PARAM_INPUTDIR, pathToPatentCorpus);
             	} else if (arguments.isPathToXMICorpus()) {
             		reader = CollectionReaderFactory.createCollectionReader(XmiCollectionReader.class, XmiCollectionReader.PARAM_INPUTDIR, pathToXMICorpus);
+            	} else if (arguments.isPathToDDICorpus()) {
+            		reader = CollectionReaderFactory.createCollectionReader(UIMAFramework.getXMLParser().parseCollectionReaderDescription(new XMLInputSource(typeSystem.getClass().getClassLoader()
+                            .getResource("desc/cr/DDICorpusCR.xml"))), DDICorpusCR.PARAM_INPUTDIR, pathToDDICorpus, DDICorpusCR.PARAM_SUBDIR, true);
             	}
 
             	tagCollection(chemspot, typeSystem, reader, threaded, threadNr);
@@ -220,7 +227,7 @@ public class App {
     private static List<Mention> runChemSpot(ChemSpot chemspot, JCas jcas, String outputPath, boolean evaluate) {
     	boolean hasOtherEntities = JCasUtil.iterator(jcas, NamedEntity.class).hasNext();
     	if (hasOtherEntities) {
-    		System.out.println("Pre-existing entities found in document. Evaluating and emoving them.");
+    		System.out.println("Pre-existing entities found in document. Evaluating and removing them.");
     		otherEvaluator.evaluate(jcas);
     		removeOtherEntities(jcas);
     	}

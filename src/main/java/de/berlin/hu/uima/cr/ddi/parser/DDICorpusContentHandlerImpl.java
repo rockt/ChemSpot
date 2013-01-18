@@ -5,11 +5,15 @@ package de.berlin.hu.uima.cr.ddi.parser;
 
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.cas.FSArray;
+import org.u_compare.shared.semantic.NamedEntity;
 import org.uimafit.util.JCasUtil;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
+
+import de.berlin.hu.types.PubmedDocument;
+import de.berlin.hu.util.Constants;
 import sprint.uima.types.*;
 
 import java.util.ArrayList;
@@ -155,6 +159,12 @@ public class DDICorpusContentHandlerImpl implements ContentHandler {
 		entity.setEntityType(atts.getValue(ENTITY_TYPE_ATTR));
 		entity.setCharOffset(charOffset);
 		entity.addToIndexes();
+		
+		NamedEntity namedEntity = new NamedEntity(jcas, begin, end);
+		namedEntity.setId(atts.getValue(ID_ATTR));
+		namedEntity.setEntityType(atts.getValue(ENTITY_TYPE_ATTR));
+		namedEntity.setSource(Constants.GOLDSTANDARD);
+		namedEntity.addToIndexes();
 	}
 
 
@@ -218,6 +228,9 @@ public class DDICorpusContentHandlerImpl implements ContentHandler {
 			CorpusDocument corpusDocument = new CorpusDocument(jcas, 0, documentTextStringBuffer.length());
 			corpusDocument.setID(documentId);
 			corpusDocument.addToIndexes();
+			PubmedDocument pubmedDocument = new PubmedDocument(jcas, 0, documentTextStringBuffer.length());
+			pubmedDocument.setPmid(documentId);
+			pubmedDocument.addToIndexes();
 		} else if (SENTENCE_TAG.equalsIgnoreCase(qName)) {
 			FSArray pairs = new FSArray(jcas, currentPairs.size());
 			for (int j = 0; j < pairs.size(); j++) {
