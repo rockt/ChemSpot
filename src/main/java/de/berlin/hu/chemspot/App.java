@@ -12,15 +12,20 @@
 
 package de.berlin.hu.chemspot;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -42,6 +47,8 @@ import org.uimafit.factory.JCasFactory;
 import org.uimafit.util.JCasUtil;
 import org.xml.sax.SAXException;
 
+import de.berlin.hu.chemspot.ChemSpotConfiguration.Corpus;
+import de.berlin.hu.chemspot.ChemSpotConfiguration.Component;
 import de.berlin.hu.types.PubmedDocument;
 import de.berlin.hu.uima.cr.ddi.DDICorpusCR;
 import de.berlin.hu.util.Constants;
@@ -50,13 +57,9 @@ import uk.co.flamingpenguin.jewel.cli.ArgumentValidationException;
 import uk.co.flamingpenguin.jewel.cli.CliFactory;
 
 public class App {
-	private static String pathToCorpora;
 	private static String pathToModelFile;
 	private static String pathToDictionaryFile;
 	private static String pathToOutputFile;
-	private static String pathToCRAFTCorpus;
-	private static String pathToNaCTeMCorpus;
-	private static String pathToPatentCorpus;
 	private static boolean convertToIOB = true;
 	private static ChemSpotArguments arguments;
 	private static boolean evaluate = false;
@@ -67,22 +70,152 @@ public class App {
     private static String tagFromCommandLine;
     private static String pathToSentenceFile;
     private static String pathToIDsFile;
-    private static String pathToGZCorpus;
-    private static String pathToXMICorpus;
+    private static Map<Corpus, String> corpora = new HashMap<Corpus, String>();
+    private static Corpus corpus;
     private static String pathToXMIOutput;
-    private static String pathToDDICorpus;
 
+    private static void initializeFromConfigurationFile(String pathToPropertiesFile) {
+    	// read configuration file
+    	System.out.println("Loading configuration file...");
+    	try {
+			ChemSpotConfiguration.initialize(pathToPropertiesFile);
+		} catch (FileNotFoundException e) {
+			System.out.println("ERROR: The configuration file \"" + pathToPropertiesFile + "\" was not found.");
+			return;
+		} catch (IOException e) {
+			System.out.println("ERROR: A problem occurred while reading the properties file \"" + pathToPropertiesFile + "\"");
+			e.printStackTrace();
+			return;
+		}
+    	
+    	// set variables
+    	pathToSentenceFile = ChemSpotConfiguration.getSentenceModel();
+    	pathToModelFile = ChemSpotConfiguration.getCRFModel();
+    	pathToDictionaryFile = ChemSpotConfiguration.getDictionary();
+    	
+    	pathToOutputFile = ChemSpotConfiguration.getOutputPath();
+    	pathToXMIOutput = ChemSpotConfiguration.getXMIOutputPath();
+    	convertToIOB = ChemSpotConfiguration.isConvertToIob();
+    	
+    	evaluate = ChemSpotConfiguration.isEvaluate();
+    	detailedEvaluation = ChemSpotConfiguration.isDetailedEvaluation();
+    	
+    	threaded = ChemSpotConfiguration.isThreading();
+    	threadNr = ChemSpotConfiguration.getNumberOfThreads();
+        
+        pathToIDsFile = ChemSpotConfiguration.getIds();
+        
+        // load corpora definitions
+        Map<Corpus, String> nonExistent = new HashMap<Corpus, String>();
+        for (Corpus corpusType : Corpus.values()) {
+        	String pathToCorpus = ChemSpotConfiguration.getPathToCorpus(corpusType);
+        	
+        	if (pathToCorpus != null) {
+        		if (new File(pathToCorpus).exists()) {
+        			corpora.put(corpusType, pathToCorpus);
+        		} else {
+        			nonExistent.put(corpusType, pathToCorpus);
+        		}
+        	}
+        }
+        
+        // check if corpora exist
+        if (!nonExistent.isEmpty()) {
+        	System.out.printf("WARNING: %d corpora were defined, but %s actually exist. Please check your configuration file at \"%s\"%n",
+        			+ corpora.size() + nonExistent.size(), corpora.isEmpty() ? "none" : "only " + corpora.size(), pathToPropertiesFile);
+        	if (!corpora.isEmpty()) {
+        		System.out.println("Non-existing corpora:");
+        		for (Corpus key : nonExistent.keySet()) {
+        			System.out.println("  " + key + " --> " + nonExistent.get(key));
+        		}
+        	}
+        }
+        
+        // print deactivated components
+        for (Component component : Component.values()) {
+        	if (!ChemSpotConfiguration.useComponent(component)) {
+        		System.out.printf("%s component is deactivated%n", component.toString().replace('_', ' ').toLowerCase());
+        	}
+        }
+    }
+    
+    private static Corpus promptForCorpus() throws IOException {
+    	Corpus result = null;
+    	
+    	if (corpora.isEmpty()) {
+    		throw new IOException("There are no corpora defined.");
+    	}
+    	
+    	BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+    	
+    	List<Corpus> definedCorpora = new ArrayList<Corpus>(corpora.keySet());
+    	Collections.sort(definedCorpora);
+    	
+    	while (result == null) {
+    		System.out.println();
+    		System.out.println("There are several corpora defined. Which one would you like to use?");
+    		
+	    	int i = 1;
+	    	for (Corpus corpus : definedCorpora) {
+	    		System.out.printf("%d: %s%n", i++, corpus);
+	    	}
+	    	System.out.println();
+	    	
+	    	String input = reader.readLine();
+	    	
+	    	try {
+	    		int k = Integer.valueOf(input);
+	    		
+	    		if (k > 0 && k <= definedCorpora.size()) {
+	    			result = definedCorpora.get(k-1);
+	    		} else {
+	    			System.out.println(k + " is not a valid index. Please try again.");
+	    		}
+	    		
+	    		continue;
+	    	} catch (NumberFormatException e) {
+	    		// do nothing
+	    	}
+	    	
+	    	try {
+	    		Corpus corpus = Corpus.valueOf(input.toUpperCase());
+	    		
+	    		if (definedCorpora.contains(corpus)) {
+	    			result = corpus;
+	    		} else {
+	    			System.out.println("The " + corpus + " corpus is not defined. Please try again.");
+	    		}
+	    		
+	    		continue;
+	    	} catch (IllegalArgumentException e) {
+	    		// do nothing
+	    	}
+	    	
+	    	System.out.println((input.isEmpty() ? "Your input" : input) + " is neither a valid index nor corpus name. Please try again.");
+    	}
+    	
+    	return result;
+    }
+    
     public static void main(String[] args) throws UIMAException, IOException {
 		try {
 			// read arguments
 			arguments = CliFactory.parseArguments(ChemSpotArguments.class, args);
-			pathToModelFile = arguments.getPathToCRFModelFile();
-            pathToSentenceFile = arguments.getPathToSentenceModelFile();
-			if (arguments.isPathToOutputFile()) {
-				pathToOutputFile = arguments.getPathToOutputFile();
+			
+			// load properties from file, if there is one
+			if (arguments.isPathToPropertiesFile()) {
+				initializeFromConfigurationFile(arguments.getPathToPropertiesFile());
+			}
+			
+			// read command line parameters
+			if (arguments.isPathToCRFModelFile()) {
+				pathToModelFile = arguments.getPathToCRFModelFile();
+			}
+			if (arguments.isPathToSentenceModelFile()) {
+				pathToSentenceFile = arguments.getPathToSentenceModelFile();
 			}
 			if (arguments.isPathToXMIOutput()) {
-				pathToXMIOutput = arguments.getPathToXMIOutput();
+				corpora.put(Corpus.XMI, arguments.getPathToXMIOutput());
 			}	
 			if (arguments.isPathToDictionary()) {
 				pathToDictionaryFile = arguments.getPathToDictionary();
@@ -96,32 +229,52 @@ public class App {
             }
 			if (arguments.isPathToTextFile()) {
 				pathToTextFile = arguments.getPathToTextFile();
-			} else if (arguments.isPathToIOBCorpora()) {
-				pathToCorpora = arguments.getPathToIOBCorpora();
-            } else if (arguments.isPathToGZCorpus()) {
-            	pathToGZCorpus = arguments.getPathToGZCorpus();
-            } else if (arguments.isPathToCRAFTCorpus()) {
-            	pathToCRAFTCorpus = arguments.getPathToCRAFTCorpus();
-            } else if (arguments.isTagCommandLine()) {
-                    tagFromCommandLine = arguments.getTagCommandLine();
-			} else if (arguments.isPathToXMICorpus()) {
-				pathToXMICorpus = arguments.getPathToXMICorpus();
-			} else if (arguments.isPathToNaCTeMCorpus()) {
-				pathToNaCTeMCorpus = arguments.getPathToNaCTeMCorpus();
-			} else if (arguments.isPathToPatentCorpus()) {
-				pathToPatentCorpus = arguments.getPathToPatentCorpus();
-			} else if (arguments.isPathToDDICorpus()) {
-				pathToDDICorpus = arguments.getPathToDDICorpus();
-			}  else {
-                usage();
-                throw new IllegalArgumentException("At least one corpus (IOB directory, a text file or a command line text) should be specified!");
+			} else if (arguments.isTagCommandLine()) {
+                tagFromCommandLine = arguments.getTagCommandLine();
+			} else {
+				if (arguments.isPathToIOBCorpora()) {
+					corpora.put(Corpus.IOB, arguments.getPathToIOBCorpora());
+		        } 
+            	if (arguments.isPathToGZCorpus()) {
+            		corpora.put(Corpus.GZ, arguments.getPathToGZCorpus());
+	            }
+            	if (arguments.isPathToCRAFTCorpus()) {
+	            	corpora.put(Corpus.CRAFT, arguments.getPathToCRAFTCorpus());
+	            }
+            	if (arguments.isPathToXMICorpus()) {
+					corpora.put(Corpus.XMI, arguments.getPathToXMICorpus());
+				}
+            	if (arguments.isPathToNaCTeMCorpus()) {
+					corpora.put(Corpus.NACTEM, arguments.getPathToNaCTeMCorpus());
+				}
+            	if (arguments.isPathToPatentCorpus()) {
+					corpora.put(Corpus.PATENT, arguments.getPathToNaCTeMCorpus());
+				}
+            	if (arguments.isPathToDDICorpus()) {
+					corpora.put(Corpus.PATENT, arguments.getPathToDDICorpus());
+            	}
+            	
+            	if (corpora.isEmpty()) {
+            		System.out.println("At least one corpus, a text file or a command line argument has to be provided!");
+            		usage();
+            	}
 			}
-			if (arguments.isPathToTextFile()) {
-				pathToTextFile = arguments.getPathToTextFile();
+
+			detailedEvaluation = arguments.isDetailedEvaluation() ? true : detailedEvaluation;
+			evaluate = detailedEvaluation || arguments.isRunEvaluation() ? true : evaluate;
+			convertToIOB = arguments.isConvertToIOB() ? true : convertToIOB;
+			
+			if (corpora.size() == 1) {
+				corpus = corpora.keySet().iterator().next();
+			} else {
+				corpus = promptForCorpus();
 			}
-			detailedEvaluation = arguments.isDetailedEvaluation();
-			evaluate = detailedEvaluation || arguments.isRunEvaluation();
-			convertToIOB = arguments.isConvertToIOB();
+			
+			if (arguments.isPathToOutputFile()) {
+				pathToOutputFile = arguments.getPathToOutputFile();
+			} else if (pathToOutputFile != null) {
+				pathToOutputFile = pathToOutputFile + corpus + "/";
+			}
 		} catch(ArgumentValidationException e) {
 			System.out.println(e);
 			usage();
@@ -143,28 +296,38 @@ public class App {
             }
         } else {
         	// tag document collection
-            if (arguments.isPathToIOBCorpora() || arguments.isPathToGZCorpus() || arguments.isPathToCRAFTCorpus() || arguments.isPathToXMICorpus() || arguments.isPathToNaCTeMCorpus() || arguments.isPathToPatentCorpus() || arguments.isPathToDDICorpus()) {
-            	CollectionReader reader = null;
-            	if (arguments.isPathToIOBCorpora()) {
+            if (corpus != null) {
+            	String pathToCorpus = corpora.get(corpus);
+            	
+            	CollectionReader reader = null;            	
+            	switch (corpus) {
+            	case IOB:
+            		reader = CollectionReaderFactory.createCollectionReader(UIMAFramework.getXMLParser().parseCollectionReaderDescription(new XMLInputSource(typeSystem.getClass().getClassLoader()
+                            .getResource("desc/cr/ScaiCorpusCR.xml"))), "InputDirectory", pathToCorpus, "UseGoldStandardAnnotations", true, "GoldstandardTypeSuffix" , "", "BrowseSubdirectories", true, "IncludeSuffixes", new String[]{"iob", "iob2"});
+            		break;
+            	case GZ:
                 	reader = CollectionReaderFactory.createCollectionReader(UIMAFramework.getXMLParser().parseCollectionReaderDescription(new XMLInputSource(typeSystem.getClass().getClassLoader()
-                            .getResource("desc/cr/ScaiCorpusCR.xml"))), "InputDirectory", pathToCorpora, "UseGoldStandardAnnotations", true, "GoldstandardTypeSuffix" , "", "BrowseSubdirectories", true, "IncludeSuffixes", new String[]{"iob", "iob2"});
-                } else if (arguments.isPathToGZCorpus()) {
-                	reader = CollectionReaderFactory.createCollectionReader(UIMAFramework.getXMLParser().parseCollectionReaderDescription(new XMLInputSource(typeSystem.getClass().getClassLoader()
-                            .getResource("desc/cr/ZipFileCR.xml"))), "InputDirectory", pathToGZCorpus);
-                } else if (arguments.isPathToCRAFTCorpus()) {
+                            .getResource("desc/cr/ZipFileCR.xml"))), "InputDirectory", pathToCorpus);
+                	break;
+            	case CRAFT:
             		reader = CollectionReaderFactory.createCollectionReader(UIMAFramework.getXMLParser().parseCollectionReaderDescription(new XMLInputSource(typeSystem.getClass().getClassLoader()
-                            .getResource("desc/cr/CraftCR.xml"))), XmiCollectionReader.PARAM_INPUTDIR, pathToCRAFTCorpus);
-            	} else if (arguments.isPathToNaCTeMCorpus()) {
+                            .getResource("desc/cr/CraftCR.xml"))), XmiCollectionReader.PARAM_INPUTDIR, pathToCorpus);
+            		break;
+            	case NACTEM: 
             		reader = CollectionReaderFactory.createCollectionReader(UIMAFramework.getXMLParser().parseCollectionReaderDescription(new XMLInputSource(typeSystem.getClass().getClassLoader()
-                            .getResource("desc/cr/NaCTeMCollectionReader.xml"))), XmiCollectionReader.PARAM_INPUTDIR, pathToNaCTeMCorpus);
-            	} else if (arguments.isPathToPatentCorpus()) {
+                        .getResource("desc/cr/NaCTeMCollectionReader.xml"))), XmiCollectionReader.PARAM_INPUTDIR, pathToCorpus);
+            		break;
+            	case PATENT:
             		reader = CollectionReaderFactory.createCollectionReader(UIMAFramework.getXMLParser().parseCollectionReaderDescription(new XMLInputSource(typeSystem.getClass().getClassLoader()
-                            .getResource("desc/cr/PatentCorpusCollectionReader.xml"))), XmiCollectionReader.PARAM_INPUTDIR, pathToPatentCorpus);
-            	} else if (arguments.isPathToXMICorpus()) {
-            		reader = CollectionReaderFactory.createCollectionReader(XmiCollectionReader.class, XmiCollectionReader.PARAM_INPUTDIR, pathToXMICorpus);
-            	} else if (arguments.isPathToDDICorpus()) {
+                            .getResource("desc/cr/PatentCorpusCollectionReader.xml"))), XmiCollectionReader.PARAM_INPUTDIR, pathToCorpus);
+            		break;
+            	case XMI:
+            		reader = CollectionReaderFactory.createCollectionReader(XmiCollectionReader.class, XmiCollectionReader.PARAM_INPUTDIR, pathToCorpus);
+            		break;
+            	case DDI:
             		reader = CollectionReaderFactory.createCollectionReader(UIMAFramework.getXMLParser().parseCollectionReaderDescription(new XMLInputSource(typeSystem.getClass().getClassLoader()
-                            .getResource("desc/cr/DDICorpusCR.xml"))), DDICorpusCR.PARAM_INPUTDIR, pathToDDICorpus, DDICorpusCR.PARAM_SUBDIR, true);
+                            .getResource("desc/cr/DDICorpusCR.xml"))), DDICorpusCR.PARAM_INPUTDIR, pathToCorpus, DDICorpusCR.PARAM_SUBDIR, true);   
+            		break;
             	}
 
             	tagCollection(chemspot, typeSystem, reader, threaded, threadNr);
@@ -225,7 +388,15 @@ public class App {
     
     private static ChemicalNEREvaluator otherEvaluator = new ChemicalNEREvaluator();
     private static List<Mention> runChemSpot(ChemSpot chemspot, JCas jcas, String outputPath, boolean evaluate) {
-    	boolean hasOtherEntities = JCasUtil.iterator(jcas, NamedEntity.class).hasNext();
+    	boolean hasOtherEntities = false;
+    	
+    	for (NamedEntity ne : JCasUtil.iterate(jcas, NamedEntity.class)) {
+    		if (!Constants.GOLDSTANDARD.equals(ne.getSource())) {
+    			hasOtherEntities = true;
+    			break;
+    		}
+    	}
+    	
     	if (hasOtherEntities) {
     		System.out.println("Pre-existing entities found in document. Evaluating and removing them.");
     		otherEvaluator.evaluate(jcas);

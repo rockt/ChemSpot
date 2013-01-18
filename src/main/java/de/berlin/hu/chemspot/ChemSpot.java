@@ -12,6 +12,7 @@
 
 package de.berlin.hu.chemspot;
 
+import de.berlin.hu.chemspot.ChemSpotConfiguration.Component;
 import de.berlin.hu.types.PubmedDocument;
 import de.berlin.hu.util.Constants;
 import org.apache.uima.UIMAException;
@@ -85,38 +86,71 @@ public class ChemSpot {
     public ChemSpot(String pathToCRFModelFile, String pathToDictionaryFile, String pathToSentenceModelFile, String pathToIDs) {
         try {
             typeSystem = UIMAFramework.getXMLParser().parseTypeSystemDescription(new XMLInputSource(this.getClass().getClassLoader().getResource("desc/TypeSystem.xml")));
-            fineTokenizer = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
-                    .getResource("desc/ae/tokenizer/FineGrainedTokenizerAE.xml"))), CAS.NAME_DEFAULT_SOFA);
-            posTagger = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
-                   .getResource("desc/ae/tagger/opennlp/PosTagger.xml"))), CAS.NAME_DEFAULT_SOFA);
-            tokenConverter = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
-                    .getResource("desc/ae/converter/OpenNLPToUCompareTokenConverterAE.xml"))));
-            sentenceDetector = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
-                    .getResource("desc/ae/tagger/opennlp/SentenceDetector.xml"))), "opennlp.uima.ModelName", pathToSentenceModelFile);
-            sentenceConverter = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
-                    .getResource("desc/ae/converter/OpenNLPToUCompareSentenceConverterAE.xml"))), CAS.NAME_DEFAULT_SOFA);
-            System.out.println("Loading CRF...");
-            crfTagger = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
-                    .getResource("desc/banner/tagger/BANNERTaggerAE.xml"))),  "BannerModelFile", pathToCRFModelFile);
-            if (pathToDictionaryFile != null) {
-                System.out.println("Loading dictionary...");
-                dictionaryTagger = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
-                        .getResource("desc/ae/tagger/BricsTaggerAE.xml"))), "DrugBankMatcherDictionaryAutomat", pathToDictionaryFile);
-            } else System.out.println("No dictionary location specified! Tagging without dictionary...");
-            chemicalFormulaTagger = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
-                    .getResource("desc/ae/tagger/ChemicalFormulaTaggerAE.xml"))), CAS.NAME_DEFAULT_SOFA);
-            abbrevTagger = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
-                    .getResource("desc/ae/tagger/AbbreviationTaggerAE.xml"))), CAS.NAME_DEFAULT_SOFA);
-            mentionExpander = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
-                    .getResource("desc/ae/expander/MentionExpanderAE.xml"))), CAS.NAME_DEFAULT_SOFA);;
-            annotationMerger = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
-                    .getResource("desc/ae/AnnotationMergerAE.xml"))), CAS.NAME_DEFAULT_SOFA);
-            if (pathToIDs != null) {
-                normalizer = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
-                                        .getResource("desc/ae/normalizer/NormalizerAE.xml"))), "PathToIDs", pathToIDs);
-            } else System.out.println("No location for ids specified! Tagging without subsequent normalization...");
-            stopwordFilter = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
-                    .getResource("desc/ae/filter/StopwordFilterAE.xml"))), CAS.NAME_DEFAULT_SOFA);
+            
+            if (ChemSpotConfiguration.useComponent(Component.TOKENIZER)) {
+	            fineTokenizer = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+	                    .getResource("desc/ae/tokenizer/FineGrainedTokenizerAE.xml"))), CAS.NAME_DEFAULT_SOFA);
+	            tokenConverter = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+	                    .getResource("desc/ae/converter/OpenNLPToUCompareTokenConverterAE.xml"))));
+            }
+            
+            if (ChemSpotConfiguration.useComponent(Component.POS_TAGGER)) {
+	            posTagger = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+	                   .getResource("desc/ae/tagger/opennlp/PosTagger.xml"))), CAS.NAME_DEFAULT_SOFA);
+            }
+            
+            if (ChemSpotConfiguration.useComponent(Component.SENTENCE_DETECTOR)) {
+	            sentenceDetector = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+	                    .getResource("desc/ae/tagger/opennlp/SentenceDetector.xml"))), "opennlp.uima.ModelName", pathToSentenceModelFile);
+	            sentenceConverter = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+	                    .getResource("desc/ae/converter/OpenNLPToUCompareSentenceConverterAE.xml"))), CAS.NAME_DEFAULT_SOFA);
+            }
+            
+            if (ChemSpotConfiguration.useComponent(Component.CRF)) {
+	            System.out.println("Loading CRF...");
+	            crfTagger = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+	                    .getResource("desc/banner/tagger/BANNERTaggerAE.xml"))),  "BannerModelFile", pathToCRFModelFile);
+            }
+            
+            if (ChemSpotConfiguration.useComponent(Component.DICTIONARY)) {
+            	if (pathToDictionaryFile != null) {
+	                System.out.println("Loading dictionary...");
+	                dictionaryTagger = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+	                        .getResource("desc/ae/tagger/BricsTaggerAE.xml"))), "DrugBankMatcherDictionaryAutomat", pathToDictionaryFile);
+            	} else System.out.println("No dictionary location specified! Tagging without dictionary...");
+            }
+            
+            if (ChemSpotConfiguration.useComponent(Component.SUM_TAGGER)) {
+	            chemicalFormulaTagger = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+	                    .getResource("desc/ae/tagger/ChemicalFormulaTaggerAE.xml"))), CAS.NAME_DEFAULT_SOFA);
+        	}
+            
+            if (ChemSpotConfiguration.useComponent(Component.ABBREV)) {
+	            abbrevTagger = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+	                    .getResource("desc/ae/tagger/AbbreviationTaggerAE.xml"))), CAS.NAME_DEFAULT_SOFA);
+            }
+            
+            if (ChemSpotConfiguration.useComponent(Component.MENTION_EXPANDER)) {
+            	mentionExpander = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+            			.getResource("desc/ae/expander/MentionExpanderAE.xml"))), CAS.NAME_DEFAULT_SOFA);
+            }
+            
+            if (ChemSpotConfiguration.useComponent(Component.ANNOTATION_MERGER)) {
+            	annotationMerger = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+                        .getResource("desc/ae/AnnotationMergerAE.xml"))), CAS.NAME_DEFAULT_SOFA);
+            }
+            
+            if (ChemSpotConfiguration.useComponent(Component.NORMALIZER)) {
+            	if (pathToIDs != null) {
+            		normalizer = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+            				.getResource("desc/ae/normalizer/NormalizerAE.xml"))), "PathToIDs", pathToIDs);
+            	} else System.out.println("No location for ids specified! Tagging without subsequent normalization...");
+            }
+            
+            if (ChemSpotConfiguration.useComponent(Component.STOPWORD_FILTER)) {
+	            stopwordFilter = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+	                    .getResource("desc/ae/filter/StopwordFilterAE.xml"))), CAS.NAME_DEFAULT_SOFA);
+            }
             
             setEvaluator(new ChemicalNEREvaluator());
             
@@ -253,20 +287,20 @@ public class ChemSpot {
     public List<Mention> tag(JCas jcas) {
     	List<NamedEntity> otherEntities = null;
         try {
-        	fineTokenizer.process(jcas);
+        	if (fineTokenizer != null) fineTokenizer.process(jcas);
             synchronized (this) {
-            	sentenceDetector.process(jcas);
-            	posTagger.process(jcas);
+            	if (fineTokenizer != null) sentenceDetector.process(jcas);
+            	if (fineTokenizer != null) posTagger.process(jcas);
             }
-            tokenConverter.process(jcas);
-            sentenceConverter.process(jcas);
-            crfTagger.process(jcas);
+            if (tokenConverter != null) tokenConverter.process(jcas);
+            if (sentenceConverter != null) sentenceConverter.process(jcas);
+            if (crfTagger != null) crfTagger.process(jcas);
             if (dictionaryTagger != null) dictionaryTagger.process(jcas);
-            chemicalFormulaTagger.process(jcas);
-            abbrevTagger.process(jcas);
-            mentionExpander.process(jcas);
-            annotationMerger.process(jcas);
-            stopwordFilter.process(jcas);
+            if (chemicalFormulaTagger != null) chemicalFormulaTagger.process(jcas);
+            if (abbrevTagger != null) abbrevTagger.process(jcas);
+            if (mentionExpander != null) mentionExpander.process(jcas);
+            if (annotationMerger != null) annotationMerger.process(jcas);
+            if (stopwordFilter != null) stopwordFilter.process(jcas);
             if (normalizer != null) normalizer.process(jcas);
         } catch (AnalysisEngineProcessException e) {
             System.err.println("Failed to extract chemicals from text.");
