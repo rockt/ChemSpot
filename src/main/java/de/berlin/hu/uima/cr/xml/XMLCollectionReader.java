@@ -60,20 +60,16 @@ public abstract class XMLCollectionReader extends CollectionReader_ImplBase {
 	    return document;
 	}
 	
-	@Override
 	public abstract void getNext(CAS aCAS) throws IOException, CollectionException;
 
-	@Override
 	public boolean hasNext() {
 		return currentDocument < numDocuments;
 	}
 
-	@Override
 	public Progress[] getProgress() {
 		return new Progress[] { new ProgressImpl(currentDocument, numDocuments, Progress.ENTITIES) };
 	}
 
-	@Override
 	public void close() throws IOException {
 		// nothing to do
 	}

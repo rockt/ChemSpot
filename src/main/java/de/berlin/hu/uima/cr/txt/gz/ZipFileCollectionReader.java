@@ -121,7 +121,7 @@ public class ZipFileCollectionReader extends CollectionReader_ImplBase {
 	private void addFilesFromDir(File dir) {
 		File[] files = dir.listFiles();
 		for (int i = 0; i < files.length; i++) {
-			if (!files[i].isDirectory()) {
+			if (!files[i].isDirectory() && files[i].getName().endsWith(".txt.gz")) {
 				mFiles.add(files[i]);
 			} else if (mRecursive) {
 				addFilesFromDir(files[i]);
