@@ -28,10 +28,16 @@ import uk.ac.cam.ch.wwmm.opsin.NameToStructureException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -72,25 +78,84 @@ public class Normalizer extends JCasAnnotator_ImplBase {
         } catch (NameToStructureException e) {
             e.printStackTrace();
         }
-        System.out.println("Finished initializing normalizer.");
     }
+    
+    private String[] getBestMatch(String chemical, Map<String, String[]> ids) {
+    	String[] result = null;
+    	
+    	List<String> substringMatches = new ArrayList<String>();
+    	
+    	String bestMatch = null;
+    	float bestScore = 0;
+    	
+    	int i = 0;
+    	for (String key : ids.keySet()) {
+    		if (Math.abs(chemical.length() - key.length()) < 3){
+    			
+    		}
+    		
+    		float score = StringComparator.diceCoefficient(StringComparator.getNGrams(chemical, 2), StringComparator.getNGrams(key, 2));
+			
+			if (score > bestScore) {
+				bestMatch = key;
+				bestScore = score;
+			}
+    		
+    		if (chemical.contains(key)) {
+    			substringMatches.add(key);
+    		}
+    		
+    		if (++i % 10000 == 0) {
+    			System.out.print(".");
+    		}
+    	}
+    	
+    	if (bestScore > 0.7) {
+    		result = ids.get(bestMatch);
+    	} else if (!substringMatches.isEmpty()) {
+    		Comparator<String> comparator = new Comparator<String>() {
 
+    			public int compare(String o1, String o2) {
+    				return o1.length() - o2.length();
+    			}
+        		
+        	};
+        	
+        	Collections.sort(substringMatches, Collections.reverseOrder(comparator));
+        	
+        	String bestSubstringMatch = substringMatches.get(0);
+        	
+        	if (bestSubstringMatch.length() > 3) {
+        		result = ids.get(bestMatch);
+        	}
+    	}
+    	
+    	return result;
+    }
+    
     @Override
     public void process(JCas jCas) throws AnalysisEngineProcessException {
         Iterator<NamedEntity> entities = JCasUtil.iterator(jCas, NamedEntity.class);
         int nE = 0;
         int nN = 0;
+        
+        ids.get("glucose");
+        
         while (entities.hasNext()) {
             NamedEntity entity = entities.next();
             String inchi = nameToInChi.parseToStdInchi(entity.getCoveredText());
 
             if (!Constants.GOLDSTANDARD.equals(entity.getSource())) {
                 nE++;
-                String[] normalized = null;
+                String[] normalized = ids.get(entity.getCoveredText().toLowerCase());
+                
+                /*if (normalized == null) {
+                	normalized = getBestMatch(entity.getCoveredText().toLowerCase(), ids);
+                }*/
+                
                 //if entity is contained in dictionary
-                if (ids.containsKey(entity.getCoveredText().toLowerCase())) {
+                if (normalized != null) {
                     //FIXME: use a UIMA field instead of a String here
-                    normalized = ids.get(entity.getCoveredText().toLowerCase());
                     if (normalized.length >= ChemicalID.INCH.ordinal()) {
                         if (normalized[ChemicalID.INCH.ordinal()].isEmpty() && inchi != null) normalized[ChemicalID.INCH.ordinal()] = inchi;
                     } else {
