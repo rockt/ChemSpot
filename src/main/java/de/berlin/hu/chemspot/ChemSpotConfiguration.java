@@ -8,7 +8,7 @@ import java.util.Properties;
 public class ChemSpotConfiguration {
 	// Constants
 	public static enum Corpus {IOB, CRAFT, GZ, NACTEM, PATENT, DDI, XMI};
-	public static enum Component {TOKENIZER, SENTENCE_DETECTOR, POS_TAGGER, CRF, DICTIONARY, SUM_TAGGER, ABBREV, MENTION_EXPANDER, ANNOTATION_MERGER, STOPWORD_FILTER, NORMALIZER};
+	public static enum Component {TOKENIZER, SENTENCE_DETECTOR, POS_TAGGER, CRF, DICTIONARY, SUM_TAGGER, ABBREV, MENTION_EXPANDER, ANNOTATION_MERGER, STOPWORD_FILTER, NORMALIZER, FEATURE_GENERATOR};
 	
 	private static final String CORPUS_PREFIX = "corpus.";
 	

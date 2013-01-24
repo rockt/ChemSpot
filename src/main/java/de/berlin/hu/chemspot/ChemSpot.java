@@ -14,6 +14,8 @@ package de.berlin.hu.chemspot;
 
 import de.berlin.hu.chemspot.ChemSpotConfiguration.Component;
 import de.berlin.hu.types.PubmedDocument;
+import de.berlin.hu.uima.ae.feature.FeatureTokenGenerator;
+import de.berlin.hu.uima.ae.feature.FeatureTokenGenerator.Feature_Phase;
 import de.berlin.hu.util.Constants;
 import org.apache.uima.UIMAException;
 import org.apache.uima.UIMAFramework;
@@ -59,6 +61,7 @@ public class ChemSpot {
     private AnalysisEngine stopwordFilter;
     private AnalysisEngine mentionExpander;
     private AnalysisEngine normalizer;
+    private FeatureTokenGenerator featureGenerator;
     
     private ChemicalNEREvaluator evaluator;
 
@@ -150,6 +153,10 @@ public class ChemSpot {
             if (ChemSpotConfiguration.useComponent(Component.STOPWORD_FILTER)) {
 	            stopwordFilter = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
 	                    .getResource("desc/ae/filter/StopwordFilterAE.xml"))), CAS.NAME_DEFAULT_SOFA);
+            }
+            
+            if (ChemSpotConfiguration.useComponent(Component.FEATURE_GENERATOR)) {
+	            featureGenerator = new FeatureTokenGenerator();
             }
             
             setEvaluator(new ChemicalNEREvaluator());
@@ -298,10 +305,14 @@ public class ChemSpot {
             if (dictionaryTagger != null) dictionaryTagger.process(jcas);
             if (chemicalFormulaTagger != null) chemicalFormulaTagger.process(jcas);
             if (abbrevTagger != null) abbrevTagger.process(jcas);
+            if (featureGenerator != null) featureGenerator.process(jcas, Feature_Phase.PHASE1);
             if (mentionExpander != null) mentionExpander.process(jcas);
+            if (featureGenerator != null) featureGenerator.process(jcas, Feature_Phase.PHASE2);
             if (annotationMerger != null) annotationMerger.process(jcas);
             if (stopwordFilter != null) stopwordFilter.process(jcas);
+            if (featureGenerator != null) featureGenerator.process(jcas, Feature_Phase.PHASE3);
             if (normalizer != null) normalizer.process(jcas);
+            if (featureGenerator != null) featureGenerator.process(jcas, Feature_Phase.PHASE4);
         } catch (AnalysisEngineProcessException e) {
             System.err.println("Failed to extract chemicals from text.");
             e.printStackTrace();
