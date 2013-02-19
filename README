@@ -34,7 +34,7 @@ Parameters
 
 Using ChemSpot in your Code
 
-        ChemSpot tagger = new ChemSpot("./crf_model.bin", "./sentence_model.bin.gz", "./dict.bin", "./ids.zip");
+        ChemSpot tagger = new ChemSpot("./crf_model.bin", "./dict.bin", "./sentence_model.bin.gz", "./ids.zip");
         String text = "The abilities of LHRH and a potent LHRH agonist "
           + "([D-Ser-(But),6, des-Gly-NH210]LHRH ethylamide) inhibit FSH "
           + "responses by rat granulosa cells and Sertoli cells in vitro have been compared.";
