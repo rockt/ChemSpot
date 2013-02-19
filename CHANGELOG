@@ -1,6 +1,16 @@
 CHANGELOG of ChemSpot
 --------------------
 
+1.4.2         2013-02-19
+-------------------------
+- Bugfixes
+
+
+1.4.1         2013-01-23
+-------------------------
+- Optimized parameter evaluation code
+
+
 1.4           2012-11-15
 -------------------------
 - Improved match expansion.

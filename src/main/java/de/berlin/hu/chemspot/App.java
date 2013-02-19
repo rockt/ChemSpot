@@ -60,7 +60,7 @@ public class App {
 	private static String pathToModelFile;
 	private static String pathToDictionaryFile;
 	private static String pathToOutputFile;
-	private static boolean convertToIOB = true;
+	private static boolean convertToIOB = false;
 	private static ChemSpotArguments arguments;
 	private static boolean evaluate = false;
 	private static boolean detailedEvaluation = false;
@@ -258,21 +258,21 @@ public class App {
             		System.out.println("At least one corpus, a text file or a command line argument has to be provided!");
             		usage();
             	}
+            	
+    			if (corpora.size() == 1) {
+    				corpus = corpora.keySet().iterator().next();
+    			} else {
+    				corpus = promptForCorpus();
+    			}
 			}
 
 			detailedEvaluation = arguments.isDetailedEvaluation() ? true : detailedEvaluation;
 			evaluate = detailedEvaluation || arguments.isRunEvaluation() ? true : evaluate;
 			convertToIOB = arguments.isConvertToIOB() ? true : convertToIOB;
 			
-			if (corpora.size() == 1) {
-				corpus = corpora.keySet().iterator().next();
-			} else {
-				corpus = promptForCorpus();
-			}
-			
 			if (arguments.isPathToOutputFile()) {
 				pathToOutputFile = arguments.getPathToOutputFile();
-			} else if (pathToOutputFile != null) {
+			} else if (pathToOutputFile != null &&  corpus != null) {
 				pathToOutputFile = pathToOutputFile + corpus + "/";
 			}
 		} catch(ArgumentValidationException e) {
@@ -285,7 +285,7 @@ public class App {
         ChemSpot chemspot = new ChemSpot(pathToModelFile, pathToDictionaryFile, pathToSentenceFile, pathToIDsFile);
 
         TypeSystemDescription typeSystem = UIMAFramework.getXMLParser().parseTypeSystemDescription(new XMLInputSource(chemspot.getClass().getClassLoader().getResource("desc/TypeSystem.xml")));
-
+        
         // tag from command line
         if (tagFromCommandLine != null) {
             List<Mention> mentions = runChemSpot(chemspot, typeSystem, tagFromCommandLine, pathToOutputFile, false);
@@ -294,6 +294,16 @@ public class App {
                      mention.getStart(), mention.getEnd(), mention.getText(),
                      mention.getCHID(), mention.getSource());
             }
+        } else if (arguments.isPathToTextFile()) {
+        	JCas jcas = JCasFactory.createJCas(typeSystem);
+        	
+            if (arguments.isZippedTextFile()) {
+                ChemSpot.readGZFile(jcas, pathToTextFile);
+            } else {
+                ChemSpot.readFile(jcas, pathToTextFile);
+            }
+        	
+        	runChemSpot(chemspot, jcas, pathToOutputFile, false);
         } else {
         	// tag document collection
             if (corpus != null) {
@@ -328,21 +338,13 @@ public class App {
             		reader = CollectionReaderFactory.createCollectionReader(UIMAFramework.getXMLParser().parseCollectionReaderDescription(new XMLInputSource(typeSystem.getClass().getClassLoader()
                             .getResource("desc/cr/DDICorpusCR.xml"))), DDICorpusCR.PARAM_INPUTDIR, pathToCorpus, DDICorpusCR.PARAM_SUBDIR, true);   
             		break;
+            	default:
+            		throw new IOException("Corpus " + corpus + " does not match any known format.");
             	}
 
             	tagCollection(chemspot, typeSystem, reader, threaded, threadNr);
             // tag single file
-            } else {
-            	JCas jcas = JCasFactory.createJCas(typeSystem);
-            	
-                if (arguments.isZippedTextFile()) {
-                    ChemSpot.readGZFile(jcas, pathToTextFile);
-                } else {
-                    ChemSpot.readFile(jcas, pathToTextFile);
-                }
-            	
-            	runChemSpot(chemspot, jcas, pathToOutputFile, false);
-            }   
+            } 
         }
 	}
     
