@@ -82,4 +82,8 @@ public interface ChemSpotArguments {
 	  @Option(shortName="D")
 	  String getPathToDDICorpus();
 	  boolean isPathToDDICorpus();
+	  
+	  @Option(shortName="f")
+	  String getPathToTextCorpus();
+	  boolean isPathToTextCorpus();
 }

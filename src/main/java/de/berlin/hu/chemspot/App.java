@@ -39,6 +39,7 @@ import org.apache.uima.examples.SourceDocumentInformation;
 import org.apache.uima.examples.xmi.XmiCollectionReader;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.metadata.TypeSystemDescription;
+import org.apache.uima.tools.components.FileSystemCollectionReader;
 import org.apache.uima.util.XMLInputSource;
 import org.apache.uima.util.XMLSerializer;
 import org.u_compare.shared.semantic.NamedEntity;
@@ -253,6 +254,9 @@ public class App {
             	if (arguments.isPathToDDICorpus()) {
 					corpora.put(Corpus.PATENT, arguments.getPathToDDICorpus());
             	}
+            	if (arguments.isPathToTextCorpus()) {
+					corpora.put(Corpus.TXT, arguments.getPathToTextCorpus());
+            	}
             	
             	if (corpora.isEmpty()) {
             		System.out.println("At least one corpus, a text file or a command line argument has to be provided!");
@@ -331,6 +335,9 @@ public class App {
             		reader = CollectionReaderFactory.createCollectionReader(UIMAFramework.getXMLParser().parseCollectionReaderDescription(new XMLInputSource(typeSystem.getClass().getClassLoader()
                             .getResource("desc/cr/PatentCorpusCollectionReader.xml"))), XmiCollectionReader.PARAM_INPUTDIR, pathToCorpus);
             		break;
+            	case TXT:
+            		reader = CollectionReaderFactory.createCollectionReader(FileSystemCollectionReader.class, FileSystemCollectionReader.PARAM_INPUTDIR, pathToCorpus);
+            		break;
             	case XMI:
             		reader = CollectionReaderFactory.createCollectionReader(XmiCollectionReader.class, XmiCollectionReader.PARAM_INPUTDIR, pathToCorpus);
             		break;
@@ -403,6 +410,14 @@ public class App {
     		System.out.println("Pre-existing entities found in document. Evaluating and removing them.");
     		otherEvaluator.evaluate(jcas);
     		removeOtherEntities(jcas);
+    	}
+    	
+    	if (!JCasUtil.iterator(jcas, PubmedDocument.class).hasNext()) {
+	    	PubmedDocument pd = new PubmedDocument(jcas);
+	        pd.setBegin(0);
+	        pd.setEnd(jcas.getDocumentText().length());
+	        pd.setPmid("");
+	        pd.addToIndexes(jcas);
     	}
     	
     	List<Mention> mentions = chemspot.tag(jcas);
@@ -599,6 +614,7 @@ public class App {
 		System.out.println("\t-C path to a directory containing CRAFT corpus files in UIMA XMI format that should be tagged");
 		System.out.println("\t-g path to a directory containing gzipped text files that should be tagged");
 		System.out.println("\t-t path to a text file that should be tagged");
+		System.out.println("\t-f path to a directory of text files that should be tagged");
 		System.out.println();
         System.out.println("  output control:");
 		System.out.println("\t-o path to output file");
