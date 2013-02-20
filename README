@@ -26,6 +26,7 @@ Parameters
     -C path to a directory containing CRAFT corpus files in UIMA XMI format that should be tagged
     -G path to a directory containing gzipped text files that should be tagged
     -t path to a text file that should be tagged
+    -f path to a directory of text files that should be tagged
 
   output control:
     -o path to output file
@@ -34,15 +35,16 @@ Parameters
 
 Using ChemSpot in your Code
 
-        ChemSpot tagger = new ChemSpot("./crf_model.bin", "./dict.bin", "./sentence_model.bin.gz", "./ids.zip");
-        String text = "The abilities of LHRH and a potent LHRH agonist "
-          + "([D-Ser-(But),6, des-Gly-NH210]LHRH ethylamide) inhibit FSH "
-          + "responses by rat granulosa cells and Sertoli cells in vitro have been compared.";
-        for (Mention mention : tagger.tag(text)) {
-            System.out.printf("%d\t%d\t%s\t%s\t%s\n", 
-                    mention.getStart(), mention.getEnd(), mention.getText(), 
-                    mention.getId(), mention.getSource());
-        }
+        ChemSpot tagger = new ChemSpot("./crf_model.bin", "./dict.zip", "./sentence_model.bin.gz", "./ids.zip");
+		String text = "The abilities of LHRH and a potent LHRH agonist ([D-Ser-(But),6, " +
+				"des-Gly-NH210]LHRH ethylamide) inhibit FSH responses by rat " +
+				"granulosa cells and Sertoli cells in vitro have been compared.";
+		  
+		for (Mention mention : tagger.tag(text)) {
+			System.out.printf("%d\t%d\t%s\t%s\t%s\n", 
+					mention.getStart(), mention.getEnd(), mention.getText(), 
+					mention.getCHID(), mention.getSource());
+		}
 
 Reproducing our Results
 - Download the SCAI corpus (chemicals-test-corpus-27-04-2009-v3.iob.gz) and put it in the same directory

@@ -1,8 +1,9 @@
 CHANGELOG of ChemSpot
 --------------------
 
-1.4.2         2013-02-19
+1.4.2         2013-02-20
 -------------------------
+- added new parameter -f for reading a collection of text files
 - Bugfixes
 
 
