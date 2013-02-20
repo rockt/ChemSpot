@@ -61,7 +61,7 @@ public class ChemSpot {
     private AnalysisEngine stopwordFilter;
     private AnalysisEngine mentionExpander;
     private AnalysisEngine normalizer;
-    private FeatureTokenGenerator featureGenerator;
+    //private FeatureTokenGenerator featureGenerator;
     
     private ChemicalNEREvaluator evaluator;
 
@@ -156,7 +156,7 @@ public class ChemSpot {
             }
             
             if (ChemSpotConfiguration.useComponent(Component.FEATURE_GENERATOR)) {
-	            featureGenerator = new FeatureTokenGenerator();
+	            //featureGenerator = new FeatureTokenGenerator();
             }
             
             setEvaluator(new ChemicalNEREvaluator());
@@ -305,14 +305,14 @@ public class ChemSpot {
             if (dictionaryTagger != null) dictionaryTagger.process(jcas);
             if (chemicalFormulaTagger != null) chemicalFormulaTagger.process(jcas);
             if (abbrevTagger != null) abbrevTagger.process(jcas);
-            if (featureGenerator != null) featureGenerator.process(jcas, Feature_Phase.PHASE1);
+            //if (featureGenerator != null) featureGenerator.process(jcas, Feature_Phase.PHASE1);
             if (mentionExpander != null) mentionExpander.process(jcas);
-            if (featureGenerator != null) featureGenerator.process(jcas, Feature_Phase.PHASE2);
+            //if (featureGenerator != null) featureGenerator.process(jcas, Feature_Phase.PHASE2);
             if (annotationMerger != null) annotationMerger.process(jcas);
             if (stopwordFilter != null) stopwordFilter.process(jcas);
-            if (featureGenerator != null) featureGenerator.process(jcas, Feature_Phase.PHASE3);
+            //if (featureGenerator != null) featureGenerator.process(jcas, Feature_Phase.PHASE3);
             if (normalizer != null) normalizer.process(jcas);
-            if (featureGenerator != null) featureGenerator.process(jcas, Feature_Phase.PHASE4);
+            //if (featureGenerator != null) featureGenerator.process(jcas, Feature_Phase.PHASE4);
         } catch (AnalysisEngineProcessException e) {
             System.err.println("Failed to extract chemicals from text.");
             e.printStackTrace();
@@ -324,7 +324,7 @@ public class ChemSpot {
         	}
         }
         
-        return null;
+        return getMentions(jcas);
     	
     	/*Oscar oscar = new Oscar();
     	ChemicalEntityRecogniser recogniser = new MEMMRecogniser(new PubMedModel(), OntologyTerms.getDefaultInstance(), new ChemNameDictRegistry(Locale.ENGLISH));
