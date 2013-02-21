@@ -12,6 +12,7 @@
 
 package de.berlin.hu.uima.ae.normalizer;
 
+import de.berlin.hu.chemspot.Mention;
 import de.berlin.hu.util.Constants;
 import de.berlin.hu.util.Constants.ChemicalID;
 
@@ -26,6 +27,8 @@ import uk.ac.cam.ch.wwmm.opsin.NameToInchi;
 import uk.ac.cam.ch.wwmm.opsin.NameToStructureException;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -37,7 +40,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -51,6 +53,73 @@ public class Normalizer extends JCasAnnotator_ImplBase {
     private NameToInchi nameToInChi;
     private static final String PATH_TO_IDS = "PathToIDs";
 
+    private void writePrefixSuffixLists() throws IOException {
+    	int prefixLength = 3;
+    	int suffixLength = 3;
+    	
+    	Map<String, Integer> prefixes = new HashMap<String, Integer>();
+    	Map<String, Integer> suffixes = new HashMap<String, Integer>();
+    	
+    	System.out.println("Writing prefix and suffix lists...");
+    	
+    	for (String chemical : ids.keySet()) {
+    		if (chemical.startsWith("(")) chemical = chemical.substring(1, chemical.length());
+    		if (chemical.endsWith(")")) chemical = chemical.substring(0, chemical.length() - 1);
+    		
+    		String prefix = chemical.length() >= prefixLength ? chemical.substring(0, prefixLength) : null;
+    		String suffix = chemical.length() >= suffixLength ? chemical.substring(chemical.length() - suffixLength, chemical.length()) : null;
+    		
+    		if (prefix != null) {
+    			if (!prefixes.containsKey(prefix)) {
+    				prefixes.put(prefix, 0);
+    			}
+    			
+    			prefixes.put(prefix, prefixes.get(prefix)+1);
+    		}
+    		
+    		if (suffix != null) {
+    			if (!suffixes.containsKey(suffix)) {
+    				suffixes.put(suffix, 0);
+    			}
+    			
+    			suffixes.put(suffix, suffixes.get(suffix)+1);
+    		}
+    	}
+    	
+    	List<String> prefixList = new ArrayList<String>(prefixes.keySet());
+    	List<String> suffixList = new ArrayList<String>(suffixes.keySet());
+    	
+    	class IntegerMapComparator implements Comparator<String> {
+    		private Map<String, Integer> map = null;
+    		
+    		public IntegerMapComparator(Map<String, Integer> map) {
+    			this.map = map;
+    		}
+    		
+			public int compare(String o1, String o2) {
+				return map.get(o1) - map.get(o2);
+			}
+    		
+    	};
+    	
+    	Collections.sort(prefixList, Collections.reverseOrder(new IntegerMapComparator(prefixes)));
+    	Collections.sort(suffixList, Collections.reverseOrder(new IntegerMapComparator(suffixes)));
+    	
+    	BufferedWriter writer = new BufferedWriter(new FileWriter("prefixes.txt"));
+    	for (String prefix : prefixList) {
+    		writer.write(String.format("%s\t%d%n", prefix, prefixes.get(prefix)));
+    	}
+    	writer.close();
+    	
+    	writer = new BufferedWriter(new FileWriter("suffixes.txt"));
+    	for (String suffix : suffixList) {
+    		writer.write(String.format("%s\t%d%n", suffix, suffixes.get(suffix)));
+    	}
+    	writer.close();
+    	
+    	System.out.println("Done.");
+    }
+        
     @Override
     public void initialize(UimaContext aContext) throws ResourceInitializationException {
         super.initialize(aContext);
@@ -78,6 +147,12 @@ public class Normalizer extends JCasAnnotator_ImplBase {
         } catch (NameToStructureException e) {
             e.printStackTrace();
         }
+        
+        /*try {
+			writePrefixSuffixLists();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}*/
     }
     
     private String[] getBestMatch(String chemical, Map<String, String[]> ids) {
@@ -138,8 +213,6 @@ public class Normalizer extends JCasAnnotator_ImplBase {
         Iterator<NamedEntity> entities = JCasUtil.iterator(jCas, NamedEntity.class);
         int nE = 0;
         int nN = 0;
-        
-        ids.get("glucose");
         
         while (entities.hasNext()) {
             NamedEntity entity = entities.next();
