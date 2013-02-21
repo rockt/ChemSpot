@@ -1,7 +1,12 @@
 package de.berlin.hu.uima.ae.feature;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.jcas.JCas;
@@ -35,14 +40,19 @@ public class FeatureTokenGenerator {
 		STOPWORD,
 		CHID,
 		CHEB,
-		CAS, PUBC,
+		CAS,
+		PUBC,
 		PUBS,
 		INCH,
 		DRUG,
 		HMBD,
 		KEGG,
 		KEGD,
-		MESH
+		MESH,
+		CHEB_MIN_DEPTH,
+		CHEB_AVG_DEPTH,
+		CHEB_MAX_DEPTH,
+		CHEB_CHILDREN;
 	};
 		
 	private static final ChemSpot_Feature[] DICTIONARY_FEATURES = {
@@ -58,10 +68,65 @@ public class FeatureTokenGenerator {
 		ChemSpot_Feature.KEGD,
 		ChemSpot_Feature.MESH
 	};
+	
 	private List<FeatureToken> tokens = null;
+	private static Map<String, Integer> chebiMinDepth = null;
+	private static Map<String, Integer> chebiAvgDepth = null;
+	private static Map<String, Integer> chebiMaxDepth = null;
+	private static Map<String, Integer> nrChildNodes = null;
+	
+	private static void loadChebiData(String file) throws IOException {
+		chebiMinDepth = new HashMap<String, Integer>();
+		chebiAvgDepth = new HashMap<String, Integer>();
+		chebiMaxDepth = new HashMap<String, Integer>();
+		nrChildNodes = new HashMap<String, Integer>();
+		
+		System.out.println("Loading chebi data from file " + file + "...");
+		
+		BufferedReader reader = new BufferedReader(new FileReader(file));
+		
+		String line = null;
+		reader.readLine();
+		while ((line = reader.readLine()) != null) {
+			String[] chebi = line.split("\t");
+			String chebiId = chebi [0];
+			int children = Integer.valueOf(chebi[1]);
+			String[] depths = chebi[2].split(",");
+			int minDepth = Integer.MAX_VALUE;
+			int avgDepth = 0;
+			int maxDepth = 0;
+			
+			for (String depthString : depths) {
+				int depth = Integer.valueOf(depthString.trim());
+				minDepth = depth < minDepth ? depth : minDepth;
+				maxDepth = depth > maxDepth ? depth : maxDepth;
+				avgDepth += depth;
+			}
+			
+			avgDepth = Math.round((float)avgDepth / (float)depths.length);
+			
+			chebiMinDepth.put(chebiId, minDepth);
+			chebiAvgDepth.put(chebiId, avgDepth);
+			chebiMaxDepth.put(chebiId, maxDepth);
+			nrChildNodes .put(chebiId, children);
+		}
+		
+		System.out.println("Done.");
+		
+		reader.close();
+	}
 	
 	public FeatureTokenGenerator() {
 		tokens = new ArrayList<FeatureToken>();
+		
+		if (chebiMinDepth == null) {
+			try {
+				loadChebiData("resources/chebi/chebi_ontology_fulldepth.txt");
+			} catch (IOException e) {
+				System.out.println("Error while loading chebi data");
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public void process(JCas aJCas, Feature_Phase phase) throws AnalysisEngineProcessException {
@@ -162,9 +227,27 @@ public class FeatureTokenGenerator {
 			String[] ids = mention.getIds();
 			
 			for (FeatureToken token : getFeatureTokens(aJCas, ne)) {
+				token.addFeature(ChemSpot_Feature.CHEMSPOT);
+				
 				for (int i = 0; i < ids.length; i++) {
 					if (ids[i] != null && !ids[i].isEmpty()) {
 						token.addFeature(DICTIONARY_FEATURES[i]);
+					}
+				}
+				
+				String chebiId = mention.getCHEB();
+				if (chebiId != null) {
+					if (chebiAvgDepth.containsKey(chebiId)) {
+						token.addFeature(ChemSpot_Feature.CHEB_AVG_DEPTH + "_" + chebiAvgDepth.get(chebiId));
+					}
+					if (chebiMinDepth.containsKey(chebiId)) {
+						token.addFeature(ChemSpot_Feature.CHEB_MIN_DEPTH + "_" + chebiMinDepth.get(chebiId));
+					}
+					if (chebiMaxDepth.containsKey(chebiId)) {
+						token.addFeature(ChemSpot_Feature.CHEB_MAX_DEPTH + "_" + chebiMaxDepth.get(chebiId));
+					}
+					if (nrChildNodes.containsKey(chebiId)) {
+						token.addFeature(ChemSpot_Feature.CHEB_CHILDREN + "_" + nrChildNodes.get(chebiId));
 					}
 				}
 			}
@@ -180,7 +263,6 @@ public class FeatureTokenGenerator {
 			if (Constants.GOLDSTANDARD.equals(ne.getSource())) nes.remove(ne);
 		}
 		
-		int lastEnd = 0;
 		for (FeatureToken token : getFeatureTokens(aJCas)) {
 			
 			while (!nes.isEmpty() && nes.get(0).getEnd() < token.getBegin()) {
@@ -189,17 +271,13 @@ public class FeatureTokenGenerator {
 			
 			if (!nes.isEmpty() && nes.get(0).getBegin() <= token.getBegin() && nes.get(0).getEnd() >= token.getEnd()) {
 				NamedEntity ne = nes.remove(0);
+				System.out.println();
 				System.out.println(ne.getCoveredText());
 			}
 			
-			if (!token.getFeatures().isEmpty()) {
-				if (lastEnd != token.getBegin()) {
-					System.out.println();
-				}
+			if (!token.getFeatures().isEmpty()) {				
 				System.out.println("  " + token.getCoveredText() + " -> " + token.getFeatures());
 			}
-			
-			lastEnd = token.getEnd();
 		}
 	}
 }

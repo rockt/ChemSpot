@@ -9,7 +9,7 @@ import org.apache.uima.jcas.tcas.Annotation;
 import de.berlin.hu.uima.ae.feature.FeatureTokenGenerator.ChemSpot_Feature;
 
 public class FeatureToken extends Annotation {
-	private Set<ChemSpot_Feature> features = null;
+	private Set<String> features = null;
 	
 	public FeatureToken(JCas aJCas) {
 		super(aJCas);
@@ -22,19 +22,31 @@ public class FeatureToken extends Annotation {
 	}
 	
 	private void intialize() {
-		features = new HashSet<ChemSpot_Feature>();
+		features = new HashSet<String>();
 	}
 
-	public Set<ChemSpot_Feature> getFeatures() {
+	public Set<String> getFeatures() {
 		return features;
+	}
+	
+	public boolean hasFeature(String feature) {
+		return features.contains(feature);
 	}
 	
 	public boolean hasFeature(ChemSpot_Feature feature) {
 		return features.contains(feature);
 	}
 	
-	public void addFeature(ChemSpot_Feature feature) {
+	public void addFeature(String feature) {
 		features.add(feature);
+	}
+	
+	public void addFeature(ChemSpot_Feature feature) {
+		features.add(feature.toString());
+	}
+	
+	public void removeFeature(String feature) {
+		features.remove(feature);
 	}
 	
 	public void removeFeature(ChemSpot_Feature feature) {
