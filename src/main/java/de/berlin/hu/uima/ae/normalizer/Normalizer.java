@@ -12,7 +12,6 @@
 
 package de.berlin.hu.uima.ae.normalizer;
 
-import de.berlin.hu.chemspot.Mention;
 import de.berlin.hu.util.Constants;
 import de.berlin.hu.util.Constants.ChemicalID;
 
@@ -114,6 +113,14 @@ public class Normalizer extends JCasAnnotator_ImplBase {
     	writer = new BufferedWriter(new FileWriter("suffixes.txt"));
     	for (String suffix : suffixList) {
     		writer.write(String.format("%s\t%d%n", suffix, suffixes.get(suffix)));
+    	}
+    	writer.close();
+    	
+    	writer = new BufferedWriter(new FileWriter("suffixes-filtered.txt"));
+    	for (String suffix : suffixList) {
+    		if (suffix.matches(String.format("[a-z]{%d}", suffixLength))) {
+    			writer.write(String.format("%s\t%d%n", suffix, suffixes.get(suffix)));
+    		}
     	}
     	writer.close();
     	
