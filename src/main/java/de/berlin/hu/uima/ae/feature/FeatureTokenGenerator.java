@@ -52,7 +52,9 @@ public class FeatureTokenGenerator {
 		CHEB_MIN_DEPTH,
 		CHEB_AVG_DEPTH,
 		CHEB_MAX_DEPTH,
-		CHEB_CHILDREN;
+		CHEB_CHILDREN,
+		CHEMICAL_PREFIX,
+		CHEMICAL_SUFFIX;
 	};
 		
 	private static final ChemSpot_Feature[] DICTIONARY_FEATURES = {
@@ -74,6 +76,9 @@ public class FeatureTokenGenerator {
 	private static Map<String, Integer> chebiAvgDepth = null;
 	private static Map<String, Integer> chebiMaxDepth = null;
 	private static Map<String, Integer> nrChildNodes = null;
+	
+	private static List<String> prefixes = null;
+	private static List<String> suffixes = null;
 	
 	private static void loadChebiData(String file) throws IOException {
 		chebiMinDepth = new HashMap<String, Integer>();
@@ -116,6 +121,30 @@ public class FeatureTokenGenerator {
 		reader.close();
 	}
 	
+	private static void loadPrefixesSuffixes(String path) throws IOException {
+		System.out.println("Loading prefixes and suffixes from directory " + path + "...");
+		
+		prefixes = new ArrayList<String>();
+		suffixes = new ArrayList<String>();
+		
+		BufferedReader reader = new BufferedReader(new FileReader(path + "prefixes.txt"));
+		
+		String line = null;
+		while ((line = reader.readLine()) != null) {
+			prefixes.add(line.split("\\s+")[0]);
+		}
+		reader.close();
+		
+		reader = new BufferedReader(new FileReader(path + "suffixes-filtered.txt"));
+		
+		while ((line = reader.readLine()) != null) {
+			suffixes.add(line.split("\\s+")[0]);
+		}
+		reader.close();
+		
+		System.out.println("Done.");
+	}
+	
 	public FeatureTokenGenerator() {
 		tokens = new ArrayList<FeatureToken>();
 		
@@ -124,6 +153,15 @@ public class FeatureTokenGenerator {
 				loadChebiData("resources/chebi/chebi_ontology_fulldepth.txt");
 			} catch (IOException e) {
 				System.out.println("Error while loading chebi data");
+				e.printStackTrace();
+			}
+		}
+		
+		if (prefixes == null) {
+			try {
+				loadPrefixesSuffixes("resources/");
+			} catch (IOException e) {
+				System.out.println("Error while loading prefixes and suffixes");
 				e.printStackTrace();
 			}
 		}
@@ -143,6 +181,7 @@ public class FeatureTokenGenerator {
 			break;
 		case PHASE4:
 			checkNormalization(aJCas);
+			printFeatureTokens(aJCas);
 			break;
 		}
 	}
@@ -250,10 +289,20 @@ public class FeatureTokenGenerator {
 						token.addFeature(ChemSpot_Feature.CHEB_CHILDREN + "_" + nrChildNodes.get(chebiId));
 					}
 				}
+				
+				for (String prefix : prefixes) {
+					if (token.getCoveredText().startsWith(prefix)) {
+						token.addFeature(ChemSpot_Feature.CHEMICAL_PREFIX);
+					}
+				}
+				
+				for (String suffix : suffixes) {
+					if (token.getCoveredText().endsWith(suffix)) {
+						token.addFeature(ChemSpot_Feature.CHEMICAL_SUFFIX);
+					}
+				}
 			}
 		}
-		
-		printFeatureTokens(aJCas);
 	}
 	
 	public void printFeatureTokens(JCas aJCas) {
