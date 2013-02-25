@@ -225,7 +225,7 @@ public class FeatureTokenGenerator {
 		case PHASE4:
 			checkNormalization(aJCas);
 			checkPhareData(aJCas);
-			printFeatureTokens(aJCas);
+			//printFeatureTokens(aJCas);
 			break;
 		}
 	}
