@@ -1,0 +1,218 @@
+Prophylaxis	prophylaxes|prevention|prophylaxis|chemoprophylaxis|protection
+GeneProductSecretion	hyposecretion|hypersecretion|secretion
+BetaBlocker	beta-blocker
+Synthesis	synthesis|formation|biosynthesis|production
+Gene	dna|acid|cyp3a5|probe|sequence|gene|class
+Cisplatin	cisplatin
+GeneOrGeneProductActivity	activity difference|regulation|activities|bioactivity|impact|influence|activity
+DrugDependence	dependency|addiction|dependence
+Sulfoxydation	sulfoxydation
+Paste	paste
+Methyl-transfer	methyl-transfer|methyl transfer
+Quinidine	quinidine
+Ubiquitination	ubiquitination
+DrugRelatedAnticoagulation	anticoagulation
+AbsenceOfGeneProductActivity	absence
+Prenylation	prenylation
+DrugAddict	addict|abuser|addicted
+Bleeding	hemorrhage|bleeding
+Population	group|population|prevalence|number
+GeneProductTransport	transport
+DiseaseSeverity	amount|intensity|morbidity|scale|magnitude|grade|acute|amplitude|crisis|level|severity|degree|size|range
+Peroral	oral|oros|orally|perorally|peroral
+Overexpression	upregulation|overexpression|increase|induction|stimulation|up-regulation|elevetion|augmentation
+DrugElimination	turn over|half-life|elimination|inactivation|half life|turnover|liberation|clearance|degradation|excretion|deactivation
+DiseaseEffect	disturbance|effect|response|implication|result
+Depression	depression
+ExonicVariant	exonic variant
+DrugTransporter	transporter
+Antidepressant	antidepressant
+Pharmacology	pharmacology
+DrugUptakeRate	t.i.d.|uptake rate|q.i.d.|daily|release rate|b.i.d.|bid|qid|mg/day|i/d|tid|rate
+DrugAccumulation	accumulation
+Immunosuppression	immuno-suppression|immunosuppression
+Intravenous	intravenous|i.v.|iv|intravenously
+PhenotypeMechanism	mechanism|process|metabolism|pathway|function|system
+DrugFormulation	form|pharmaceutical formulation|formulary|preparation|formulation
+Metabolizer	HM|metabilzer|metaboliser|PM|RM|LM|URM|EM|FM
+GeneProductModulation	modulation
+Propranolol	propranolol
+DrugInfiltration	infiltration
+GeneProductDysfunction	defect|knockout|dysfunction|ko
+PhenotypeGene	dna|gene
+GeneProductActivation	activation
+GenePathway	pathway|cycle|network|system
+Lithium	lithium
+DrugTreatment	combination|treatment|medication|adjunction|exposure|intake|management|administration|infusion|injection|maintenance|supplementation|microinjection|instillation|regimen|usage|association|therapy|uptake|bolus|co-administration|introduction|co-infusion|coadministration|guideline|reuptake|indication|orally|regime|presence|chemotherapy|adjunct|coinfusion|use|inhalation|consumption|application|irradiation|addition|monotherapy|pharmacotherapy|ingestion|perfusion|release
+Demethylation	o-demethylation|n-demethylation|demethylation
+Transmucosal	nasally|anally|vaginal|sublingually|vaginally|transmucosally|anal|buccally|sublingual|transmucosal|occularly|buccal|occular|nasal
+Spray	spray
+Protease	protease
+DiseaseSensitivity	tolerance|vulnerability|perception|resistance|sensitivity
+GeneRecombinant	recombinant
+DiseaseSideEffect	side-effect|side effect
+DrugPrescription	prescription
+DiseaseDuration	duration|day|length|hour|minute
+Protein	protein|isoform|encoded|presence
+TherapeuticHormone	hormone
+GeneInhibitor	antagonist|blocker|non-expressor|repressor|inactivator|inhibitor
+Haplotype	haplotype
+Aerosol	aerosol
+DrugEfficacy	favor|effectiveness|inefficaciousness|dysregulation|inefficacy|property|failure|defect|inefficiency|value|role|function|usefulness|ability|deficiency|characteristic|ineffectual|inefficacity|efficacy|ineffectiveness|inefficacious|auc|efficiency|capacity|benefit|efficaciousness
+Pretreatment	pre-medication|premedication|preadministration|pretreatment|pre-treatment
+Sulfation	sulfation
+DrugSolvent	solvent
+Symptom	indice|evidence|criteria|feature|characteristic|sign|symptom|component
+DrugModulator	modulator
+Disease	appearance|diseases|syndrome|disease|disorder|pathogenesis|experience|sequela|lesion|maintenance|type|onset|episode|formation|pathology|patophysiology|observation|impairment|event|presence|injury|occurence|period|incidence|form|diagnosis|model|admission
+Synthetase	synthetase
+Phosphorylation	phosphorylation
+DrugAbuse	overdosage|excess|abuse|overdose
+DrugMetabolite	compound|component|extract|product|metabolite
+DrugPharmacokinetics	disposition|pharmacokinetics|pathway|cycle|pharmacokinetic profile
+DrugSolution	solution
+PhenotypeAnalysis	investigation|study|testing|detection|evaluation|test|trial|measure
+DrugInteraction	interaction
+GeneProductInteraction	interaction
+SelfAdministration	self medication|auto medication|self-administration|self administration|auto-medication|self-medication
+GeneProductInactivation	inactivation
+DrugAnalog	magnesium|similar|acid|chloride|quinidine|5-fluorouracil|analog
+Anxiety	anxiety
+Carboxylation	carboxylation
+DrugTransformation	transformation|modification|change|biotransformation|conversion
+Enzyme	enzyme|isoform enzyme|metabolizer|allozyme|isozyme|isoenzyme
+Antihistamine	histamine antagonist|antihistamine
+Phenotype	observation|phenotype
+Hydroxylation	alpha-hydroxylation|5-hydroxylation|n-hydroxylation|hydroxylation|3-hydroxylation
+EyeDrop	eye drop|eyedrop
+Palmytoylation	palmytoylation
+Mrna	transcript|mrna|rna
+HomoSapiens	girl|child|women|human|men|man|woman|children|boy|infant
+GeneProduct	construct|sample|residue|metabolite|product
+GeneProductKinetics	kinetic
+DrugIsomer	isomer
+Expression	amount|abundance|content|concentration|expression/bioactivity|presence|measure|quantity|score|quantification|status|level|mrna expression|profile|translation|expression|value|transcription
+Chimera	chimera
+DrugSecretion	hyposecretion|secretion|hypersecretion
+Prodrug	precursor|prodrug
+Cancer	carcinoma|neoplasms|neoplasm|metastasis|tumor|neoplastic process|melanoma
+Promotor	promoter|promotor|promotor region
+Substrate	substrate
+Receptor	receptor
+GeneProductReaction	reaction
+Headache	headache
+Serum	serum
+Vitamin	vitamin
+Cream	cream
+DrugMedia	medium|media
+Gel	gel
+Interferon	interferon
+Intron	intron|intronic region
+GeneProductStructure	structure
+GeneLigand	ligand
+Ligand	ligand
+DrugToxicity	neurotoxicity|intolerance|lethality|cytotoxicity|safety|toxicity|intoxication|poisoning
+RatusNorvegicus	rat
+DrugDoseDecrease	restriction|lowering|reduction|drop|decrease
+DrugSalt	hypochloride|decanoate|salicylate|enanthate|sodium|benzoate|citrate|acetate|phosphate|topiramate|valproate|valerate|nitrate|maleate|salt|sulfate|mesylate
+DrugStimulation	overactivity|induction|stimulation
+DrugRelatedAnalgesia	analgesia
+DrugPharmacodynamics	pharmacodynamics|dynamics
+Topical	topical|topically
+DiseaseRelief	suppression|termination|alleviation|amelioration|reduction|disappearance|inhibition|remission|relief|reversal|improvement|healing
+Placebo	placebo
+Tablet	caplet|tablet|tab
+DrugInducer	stimulator|agonist|inducer
+DrugAdverseReaction	side-effect|harmful effect|adverse effect|secondary effect|adverse reaction|side effect
+DrugTreatmentByDelivery	delivery|delivered
+Drug	group|molecule|type|content|drug|prodrug|class
+Capsule	capsule
+Myristoylation	myristoylation
+PhenotypeStage	level|stage
+Target	target
+DrugActivation	activation
+DiseaseAbsence	absence
+GeneOrGeneProductFunction	involvement|mechanism|effect|contribution|response|action|impact|result|feedback|processe|use|potential|requirement|capacity|process|capability|role|influence|function
+Inhalation	inhalation|inhaled
+Intramuscular	intramuscular|intramuscularly|i.m.|im
+DrugInhibition	limitation|inhibition
+Mutant	mutant
+DrugConsumer	user|consumer
+GeneAnalysis	assay|analysis|evaluation|measurement|screening|recognition|measure|determination
+Organism	organism|living system
+OralFormulation	pill
+Plasma	plasma
+GeneProductElimination	elimination
+GeneProductForm	form
+Patient	individual|survivor|case|subject|patient|people|sufferer|carrier
+Opioid	opioid
+GenomicRegion	zone|location|region|part|position|structural component|complex subunit|domain|component|subunit|localization|site
+Methylation	methylation|o-methylation
+DrugDistribution	systemic|distribution|system
+DrugDoseIncrease	increase|augmentation
+Antipsychotic	antipsychotic
+GeneProductAvailability	availability
+Trait	pigmentation|character|phenotyping|outcome|trait|phenotype
+Hypermethylation	hypermethylation
+Vector	vector
+DrugMetabolism	metabolism|metabolic profile
+ProteinChannel	channel
+DrugTarget	recipient|binding site|target|receptor|site
+OrganismLocalisation	tissue
+Pain	pain
+Repression	downregulation|suppression|repression|depletion|deficiency|inhibition|down-regulation|diminution|decrease
+Blood	blood
+DrugPharmacogenomics	pharmacogenomics|pharmacogenetics
+Locus	locus
+PhenotypeRisk	risk|prognosis|susceptibility|possibility|rating|frequency|likelihood|rate
+DrugRelatedStress	stress
+Subcutaneous	subcutaneously|subcutaneous
+Globulin	globulin
+Dealkylation	o-dealkylation|dealkylation|n-dealkylation
+GeneProductBlockage	blockage
+GeneModulator	modulater|modulator
+DrugIsoform	isoform|enantiomer
+Suppository	suppository
+Parenteral	parenteral|parenterally
+DrugTransport	flux|transport
+Aspirin	aspirin
+DiseaseExacerbation	growth|development|complication|refractory|increase|exacerbation|stimulation|extent|progression|prolongation
+Apoptosis	apoptosis
+Infection	infection
+DiseaseSurvival	survival|disease-free|disease-free survival
+DrugAnalysis	study|assay|testing|clinical trial|analysis|test|evaluation|trial
+Derivative	derivative
+DrugSensitivity	sensitization|tolerance|tolerability|hyposensitivity|desensitization|resistance|hypersensitivity|susceptibilty|sensitivity
+DrugDoseVariation	variation|variability|change|difference
+Ointment	ointment
+DiseaseRelapse	recurrence|relapse
+ChemicalModification	modification
+DrugRelatedComplication	complication
+DrugGene	dna|gene
+GeneInducer	agonist|catalyser|enhancer|catalyzer|expresser|expressor|inducer
+Glucuronidation	glucuronidation
+DrugActivity	bioactivity|activity
+Oxidation	oxidation|oxydation
+DrugRelatedImmunosuppression	immunosuppression
+GeneProductProperty	property|feature|characteristic|sensitivity
+DrugDose	ratio|microg|1mg|dosing|gram|cl|volume|concentration|g/kg|mass|quantity|mole|mg/kg|weight|low-dose|microg/ml|mg|mg/m2|high-dose|10mg|tds|amount|abundance|mixture|dose|microgram|mg/d|2mg|titration|level|requirement|dosage|reduction|ng|prescription|pg|drop|milligram|parameter|microm
+DrugAbsorption	absorption
+GeneProductActivityChange	lowering|suppression|loss|variation|change|recovery|restoration|increase|diminution|decrease|stimulation|regulation|level|divergence|normalization|reduction|proliferation|inhibition|difference|elevation|augmentation|rise
+GenomicVariation	genotyping|hemizygous|variation|variability|genotype|change|haplotype/genotype|heterozygocity|homozygocity|test|homozygous|present form|form|modification|testing|genomic variation|heterozygous|difference|strain
+GeneProductAffinity	affinity
+DrugEffect	responsiveness|endpoint|mechanism|reaction|effect|response|course|potency|action|impact|result|feedback|conclusion|potential|profile|intervention|outcome|influence
+GeneProductMetabolism	metabolism
+IntronicVariant	intronic variant
+Antibody	antibody
+GenicTherapy	treatment|therapy
+DiseaseCause	etiology|factor|assessment|cause
+Etoposide	etoposide
+Exon	exon|exonic region
+Variant	snp|a-allele|polysubstitution|insertion/deletion|marker|ugt1a9|t-allele|frame-shift|mutation|allele|polymorphism|c-allele|rs2359612|s-9490-3|insertion|g-allele|deletion|trimorphism|dimorphism|frame shift|d-allele|indel|variant|duplication|substitution|c677t|mono-substitution|monosubstitution|tt|n1325s
+DrugInhibitor	antagonist|blocker|inhibitor
+GeneProductDegradation	degradation
+PopulationAnalysis	study
+Tachycardia	tachycardia
+DrugDisposition	bioavailability|disposition|availability
+Death	death|necrosis
+AbsenceOfDrugTreatment	suppression|cessation|discontinuation|withdrawal|removal|absence

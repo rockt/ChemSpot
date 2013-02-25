@@ -12,6 +12,7 @@ import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.Annotation;
 import org.u_compare.shared.semantic.NamedEntity;
+import org.u_compare.shared.syntactic.Sentence;
 import org.u_compare.shared.syntactic.Token;
 import org.uimafit.util.JCasUtil;
 
@@ -71,7 +72,7 @@ public class FeatureTokenGenerator {
 		ChemSpot_Feature.MESH
 	};
 	
-	private List<FeatureToken> tokens = null;
+	private static Map<JCas, List<FeatureToken>> tokens = null;
 	private static Map<String, Integer> chebiMinDepth = null;
 	private static Map<String, Integer> chebiAvgDepth = null;
 	private static Map<String, Integer> chebiMaxDepth = null;
@@ -79,6 +80,8 @@ public class FeatureTokenGenerator {
 	
 	private static List<String> prefixes = null;
 	private static List<String> suffixes = null;
+	
+	private static Map<List<String>, String> phareData = null;
 	
 	private static void loadChebiData(String file) throws IOException {
 		chebiMinDepth = new HashMap<String, Integer>();
@@ -145,8 +148,35 @@ public class FeatureTokenGenerator {
 		System.out.println("Done.");
 	}
 	
+	private static void loadPhareData(String file) throws IOException {
+		System.out.println("Loading pharmagenomics relationship ontology data from file " + file + "...");
+		
+		phareData = new HashMap<List<String>, String>();
+		
+		BufferedReader reader = new BufferedReader(new FileReader(file));
+		
+		String line = null;
+		while ((line = reader.readLine()) != null) {
+			String[] phare = line.split("\t");
+			String label = phare[0];
+			
+			List<String> terms = new ArrayList<String>();
+			for (String term : phare[1].split("\\|")) {
+				terms.add(term);
+			}
+			
+			phareData.put(terms, label);
+		}
+		reader.close();
+		
+		System.out.println("Done.");
+	}
+	
 	public FeatureTokenGenerator() {
-		tokens = new ArrayList<FeatureToken>();
+		System.out.println();
+		System.out.println("Initializing feature generator.");
+		
+		tokens = new HashMap<JCas, List<FeatureToken>>();
 		
 		if (chebiMinDepth == null) {
 			try {
@@ -165,12 +195,25 @@ public class FeatureTokenGenerator {
 				e.printStackTrace();
 			}
 		}
+		
+		if (phareData == null) {
+			try {
+				loadPhareData("resources/phare.txt");
+			} catch (IOException e) {
+				System.out.println("Error while loading pharmagenomics relationship ontology data");
+				e.printStackTrace();
+			}
+		}
+		
+		System.out.println("Feature generator initialized.");
+		System.out.println();
 	}
 	
 	public void process(JCas aJCas, Feature_Phase phase) throws AnalysisEngineProcessException {
 		switch (phase) {
 		case PHASE1:
 			tokens.clear();
+			tokens.put(aJCas, new ArrayList<FeatureToken>());
 			generateFeatureTokens(aJCas);
 			break;
 		case PHASE2:
@@ -181,12 +224,15 @@ public class FeatureTokenGenerator {
 			break;
 		case PHASE4:
 			checkNormalization(aJCas);
+			checkPhareData(aJCas);
 			printFeatureTokens(aJCas);
 			break;
 		}
 	}
 	
 	private void generateFeatureTokens(JCas aJCas) {
+		List<FeatureToken> tokens = getFeatureTokens(aJCas);
+		
 		for (Token token : JCasUtil.iterate(aJCas, Token.class)) {
 			FeatureToken ft = new FeatureToken(aJCas, token.getBegin(), token.getEnd());
 			tokens.add(ft);
@@ -205,8 +251,8 @@ public class FeatureTokenGenerator {
 		}
 	}
 	
-	public List<FeatureToken> getFeatureTokens(JCas aJCas) {
-		return new ArrayList<FeatureToken>(tokens);
+	public static List<FeatureToken> getFeatureTokens(JCas aJCas) {
+		return tokens.get(aJCas);
 	}
 	
 	public List<FeatureToken> getFeatureTokens(JCas aJCas, Annotation container) {
@@ -242,7 +288,7 @@ public class FeatureTokenGenerator {
 	}
 	
 	private void checkStopwords(JCas aJCas) {
-		List<FeatureToken> tokens = getFeatureTokens(aJCas);
+		List<FeatureToken> tokens = new ArrayList<FeatureToken>(getFeatureTokens(aJCas));
 		
 		for (NamedEntity ne : JCasUtil.iterate(aJCas, NamedEntity.class)) {
 			if (Constants.GOLDSTANDARD.equals(ne.getSource())) continue;
@@ -291,14 +337,38 @@ public class FeatureTokenGenerator {
 				}
 				
 				for (String prefix : prefixes) {
-					if (token.getCoveredText().startsWith(prefix)) {
+					if (token.getCoveredText().toLowerCase().startsWith(prefix)) {
 						token.addFeature(ChemSpot_Feature.CHEMICAL_PREFIX);
 					}
 				}
 				
 				for (String suffix : suffixes) {
-					if (token.getCoveredText().endsWith(suffix)) {
+					if (token.getCoveredText().toLowerCase().endsWith(suffix)) {
 						token.addFeature(ChemSpot_Feature.CHEMICAL_SUFFIX);
+					}
+				}
+				
+				
+			}
+		}
+	}
+	
+	private void checkPhareData(JCas aJCas) {
+		for (Sentence sentence : JCasUtil.iterate(aJCas, Sentence.class)) {
+			String sentenceString = sentence.getCoveredText().toLowerCase();
+			for (List<String> terms : phareData.keySet()) {
+				for (String term : terms) {
+					int index = sentenceString.indexOf(term.toLowerCase());
+					if (index != -1
+							&& (index - 1 < 0 || !Character.isLetter(sentenceString.charAt(index-1)))
+							&& (index + 1 >= sentenceString.length() || !Character.isLetter(sentenceString.charAt(index+term.length())))
+							) 
+					{
+						for (FeatureToken token : getFeatureTokens(aJCas, sentence)) {
+							if (token.getBegin() >= sentence.getBegin() + index && token.getEnd() <= sentence.getBegin() + index + term.length()) {
+								token.addFeature(phareData.get(terms));
+							}
+						}
 					}
 				}
 			}
