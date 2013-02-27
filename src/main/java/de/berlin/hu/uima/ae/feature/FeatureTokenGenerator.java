@@ -73,6 +73,7 @@ public class FeatureTokenGenerator {
 	};
 	
 	private static Map<JCas, List<FeatureToken>> tokens = null;
+	
 	private static Map<String, Integer> chebiMinDepth = null;
 	private static Map<String, Integer> chebiAvgDepth = null;
 	private static Map<String, Integer> chebiMaxDepth = null;
@@ -134,14 +135,14 @@ public class FeatureTokenGenerator {
 		
 		String line = null;
 		while ((line = reader.readLine()) != null) {
-			prefixes.add(line.split("\\s+")[0]);
+			prefixes.add(line.split("\t")[0]);
 		}
 		reader.close();
 		
 		reader = new BufferedReader(new FileReader(path + "suffixes-filtered.txt"));
 		
 		while ((line = reader.readLine()) != null) {
-			suffixes.add(line.split("\\s+")[0]);
+			suffixes.add(line.split("\t")[0]);
 		}
 		reader.close();
 		
@@ -224,6 +225,7 @@ public class FeatureTokenGenerator {
 			break;
 		case PHASE4:
 			checkNormalization(aJCas);
+			checkPrefixesSuffixes(aJCas);
 			checkPhareData(aJCas);
 			//printFeatureTokens(aJCas);
 			break;
@@ -335,20 +337,22 @@ public class FeatureTokenGenerator {
 						token.addFeature(ChemSpot_Feature.CHEB_CHILDREN + "_" + nrChildNodes.get(chebiId));
 					}
 				}
-				
-				for (String prefix : prefixes) {
-					if (token.getCoveredText().toLowerCase().startsWith(prefix)) {
-						token.addFeature(ChemSpot_Feature.CHEMICAL_PREFIX);
-					}
+			}
+		}
+	}
+	
+	private void checkPrefixesSuffixes(JCas aJCas) {
+		for (FeatureToken token : getFeatureTokens(aJCas)) {
+			for (String prefix : prefixes) {
+				if (token.getCoveredText().toLowerCase().startsWith(prefix)) {
+					token.addFeature(ChemSpot_Feature.CHEMICAL_PREFIX);
 				}
-				
-				for (String suffix : suffixes) {
-					if (token.getCoveredText().toLowerCase().endsWith(suffix)) {
-						token.addFeature(ChemSpot_Feature.CHEMICAL_SUFFIX);
-					}
+			}
+			
+			for (String suffix : suffixes) {
+				if (token.getCoveredText().toLowerCase().endsWith(suffix)) {
+					token.addFeature(ChemSpot_Feature.CHEMICAL_SUFFIX);
 				}
-				
-				
 			}
 		}
 	}
