@@ -503,4 +503,8 @@ public class ChemSpot {
 	public void setEvaluator(ChemicalNEREvaluator evaluator) {
 		this.evaluator = evaluator;
 	}
+	
+	public FeatureTokenGenerator getFeatureTokenGenerator() {
+		return featureGenerator;
+	}
 }

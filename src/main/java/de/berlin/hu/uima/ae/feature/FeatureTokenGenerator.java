@@ -20,14 +20,14 @@ import de.berlin.hu.chemspot.Mention;
 import de.berlin.hu.util.Constants;
 
 public class FeatureTokenGenerator {
-	public static enum Feature_Phase {
+	public enum Feature_Phase {
 		PHASE1, // after all tagger components ran
 		PHASE2, // after match expansion
 		PHASE3, // after stopword filtering
 		PHASE4  // after normalization
 	};
 	
-	public static enum ChemSpot_Feature {
+	public enum ChemSpot_Feature {
 		CRF,
 		DICTIONARY,
 		SUM_TAGGER,
@@ -58,7 +58,7 @@ public class FeatureTokenGenerator {
 		CHEMICAL_SUFFIX;
 	};
 		
-	private static final ChemSpot_Feature[] DICTIONARY_FEATURES = {
+	private final ChemSpot_Feature[] DICTIONARY_FEATURES = {
 		ChemSpot_Feature.CHID,
 		ChemSpot_Feature.CHEB,
 		ChemSpot_Feature.CAS,
@@ -72,19 +72,19 @@ public class FeatureTokenGenerator {
 		ChemSpot_Feature.MESH
 	};
 	
-	private static Map<JCas, List<FeatureToken>> tokens = null;
+	private Map<JCas, List<FeatureToken>> tokens = null;
 	
-	private static Map<String, Integer> chebiMinDepth = null;
-	private static Map<String, Integer> chebiAvgDepth = null;
-	private static Map<String, Integer> chebiMaxDepth = null;
-	private static Map<String, Integer> nrChildNodes = null;
+	private Map<String, Integer> chebiMinDepth = null;
+	private Map<String, Integer> chebiAvgDepth = null;
+	private Map<String, Integer> chebiMaxDepth = null;
+	private Map<String, Integer> nrChildNodes = null;
 	
-	private static List<String> prefixes = null;
-	private static List<String> suffixes = null;
+	private List<String> prefixes = null;
+	private List<String> suffixes = null;
 	
-	private static Map<List<String>, String> phareData = null;
+	private Map<List<String>, String> phareData = null;
 	
-	private static void loadChebiData(String file) throws IOException {
+	private void loadChebiData(String file) throws IOException {
 		chebiMinDepth = new HashMap<String, Integer>();
 		chebiAvgDepth = new HashMap<String, Integer>();
 		chebiMaxDepth = new HashMap<String, Integer>();
@@ -125,7 +125,7 @@ public class FeatureTokenGenerator {
 		reader.close();
 	}
 	
-	private static void loadPrefixesSuffixes(String path) throws IOException {
+	private void loadPrefixesSuffixes(String path) throws IOException {
 		System.out.println("Loading prefixes and suffixes from directory " + path + "...");
 		
 		prefixes = new ArrayList<String>();
@@ -149,7 +149,7 @@ public class FeatureTokenGenerator {
 		System.out.println("Done.");
 	}
 	
-	private static void loadPhareData(String file) throws IOException {
+	private void loadPhareData(String file) throws IOException {
 		System.out.println("Loading pharmagenomics relationship ontology data from file " + file + "...");
 		
 		phareData = new HashMap<List<String>, String>();
@@ -253,7 +253,7 @@ public class FeatureTokenGenerator {
 		}
 	}
 	
-	public static List<FeatureToken> getFeatureTokens(JCas aJCas) {
+	public List<FeatureToken> getFeatureTokens(JCas aJCas) {
 		return tokens.get(aJCas);
 	}
 	
