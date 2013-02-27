@@ -34,7 +34,7 @@ public class FeatureToken extends Annotation {
 	}
 	
 	public boolean hasFeature(ChemSpot_Feature feature) {
-		return features.contains(feature);
+		return hasFeature(feature.toString());
 	}
 	
 	public void addFeature(String feature) {
