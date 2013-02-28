@@ -216,6 +216,7 @@ public class FeatureTokenGenerator {
 			tokens.clear();
 			tokens.put(aJCas, new ArrayList<FeatureToken>());
 			generateFeatureTokens(aJCas);
+			checkNormalization(aJCas);
 			break;
 		case PHASE2:
 			checkExpandedMentions(aJCas);
@@ -273,17 +274,34 @@ public class FeatureTokenGenerator {
 	
 	private void checkExpandedMentions(JCas aJCas) {
 		for (NamedEntity ne : JCasUtil.iterate(aJCas, NamedEntity.class)) {
-			for (FeatureToken token : getFeatureTokens(aJCas, ne)) {
-				if (Constants.GOLDSTANDARD.equals(ne.getSource())) continue;
-				
+			if (Constants.GOLDSTANDARD.equals(ne.getSource())) continue;
+			
+			boolean was_expanded = false;
+			List<FeatureToken> tokens = getFeatureTokens(aJCas, ne);
+			for (FeatureToken token : tokens) {
 				try {
 					ChemSpot_Feature feature = ChemSpot_Feature.valueOf(ne.getSource().toUpperCase());
 					if (!token.hasFeature(feature)) {
 						token.addFeature(ChemSpot_Feature.valueOf(feature + "_ME"));
 						token.addFeature(ChemSpot_Feature.MATCH_EXPANSION);
+						was_expanded = true;
 					}
 				} catch (IllegalArgumentException e) {
 					// do nothing
+				}
+			}
+			
+			if (was_expanded) {
+				for (FeatureToken token : tokens) {
+					try {
+						ChemSpot_Feature feature = ChemSpot_Feature.valueOf(ne.getSource().toUpperCase());
+						if (!token.hasFeature(feature + "_ME")) {
+							token.addFeature(ChemSpot_Feature.valueOf(feature + "_ME"));
+							token.addFeature(ChemSpot_Feature.MATCH_EXPANSION);
+						}
+					} catch (IllegalArgumentException e) {
+						// do nothing
+					}
 				}
 			}
 		}

@@ -18,10 +18,6 @@ public class FeatureGeneratorApp {
 	private static ChemSpot chemspot = null;
 	private static TypeSystemDescription typeSystem = null;
 	
-	static {
-		
-	}
-	
 	public static List<FeatureToken> generateFeatureTokens(String text) {
 		JCas jcas = null;
 		try {
@@ -45,13 +41,15 @@ public class FeatureGeneratorApp {
 		String pathToModelFile = "resources/banner/model.bin";
 		String pathToSentenceFile = "resources/genia/SentDetectGenia.bin.gz";
 		
-		String pathToDictionaryFile = null;//"../../ChemSpot/data/dict.zip";
-	    String pathToIDsFile = null;//"../../ChemSpot/data/ids.zip";
+		String pathToDictionaryFile = "../../ChemSpot/data/dict.zip";
+	    String pathToIDsFile = "../../ChemSpot/data/ids.zip";
 		
-		chemspot = new ChemSpot(pathToModelFile, pathToDictionaryFile, pathToSentenceFile, pathToIDsFile);
+		chemspot = new ChemSpot(null, pathToDictionaryFile, null, pathToIDsFile);
 		typeSystem = UIMAFramework.getXMLParser().parseTypeSystemDescription(new XMLInputSource(chemspot.getClass().getClassLoader().getResource("desc/TypeSystem.xml")));
         
-		String text = "We examined the effect of exogenous estradiol on the changes in serum steroid hormone levels induced by a nonlethal dose of Escherichia coli endotoxin in male rats and the deaths due to nonlethal and lethal doses of endotoxin.";
+		// String text = "We examined the effect of exogenous estradiol on the changes in serum steroid hormone levels. Induced by a nonlethal dose of Escherichia coli endotoxin in male rats and the deaths due to nonlethal and lethal doses of endotoxin.";
+		//String text = "A serum of 18-bromo-12-butyl-11-chloro-4,8-diethyl-5-hydroxy-15-methoxy is great.";
+		String text = "A serum of 18-bromo-12-butyl-11-bromo-4,8-diethyl-5-hydroxy is great for combination with aspirin and water.";
 		
 		List<FeatureToken> featureTokens = generateFeatureTokens(text);
         
