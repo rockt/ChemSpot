@@ -1,8 +1,8 @@
 package de.berlin.hu.uima.ae.feature;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -90,9 +90,9 @@ public class FeatureTokenGenerator {
 		chebiMaxDepth = new HashMap<String, Integer>();
 		nrChildNodes = new HashMap<String, Integer>();
 		
-		System.out.println("Loading chebi data from file " + file + "...");
+		System.out.println("Loading chebi data from resource " + file + "...");
 		
-		BufferedReader reader = new BufferedReader(new FileReader(file));
+		BufferedReader reader = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(file)));
 		
 		String line = null;
 		reader.readLine();
@@ -126,12 +126,12 @@ public class FeatureTokenGenerator {
 	}
 	
 	private void loadPrefixesSuffixes(String path) throws IOException {
-		System.out.println("Loading prefixes and suffixes from directory " + path + "...");
+		System.out.println("Loading prefixes and suffixes from resource directory " + path + "...");
 		
 		prefixes = new ArrayList<String>();
 		suffixes = new ArrayList<String>();
 		
-		BufferedReader reader = new BufferedReader(new FileReader(path + "prefixes.txt"));
+		BufferedReader reader = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(path + "prefixes.txt")));
 		
 		String line = null;
 		while ((line = reader.readLine()) != null) {
@@ -139,7 +139,7 @@ public class FeatureTokenGenerator {
 		}
 		reader.close();
 		
-		reader = new BufferedReader(new FileReader(path + "suffixes-filtered.txt"));
+		reader = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(path + "suffixes-filtered.txt")));
 		
 		while ((line = reader.readLine()) != null) {
 			suffixes.add(line.split("\t")[0]);
@@ -150,11 +150,11 @@ public class FeatureTokenGenerator {
 	}
 	
 	private void loadPhareData(String file) throws IOException {
-		System.out.println("Loading pharmagenomics relationship ontology data from file " + file + "...");
+		System.out.println("Loading pharmagenomics relationship ontology data from resource " + file + "...");
 		
 		phareData = new HashMap<List<String>, String>();
 		
-		BufferedReader reader = new BufferedReader(new FileReader(file));
+		BufferedReader reader = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(file)));
 		
 		String line = null;
 		while ((line = reader.readLine()) != null) {
@@ -181,7 +181,7 @@ public class FeatureTokenGenerator {
 		
 		if (chebiMinDepth == null) {
 			try {
-				loadChebiData("resources/chebi/chebi_ontology_fulldepth.txt");
+				loadChebiData("/resources/chebi/chebi_ontology_fulldepth.txt");
 			} catch (IOException e) {
 				System.out.println("Error while loading chebi data");
 				e.printStackTrace();
@@ -190,7 +190,7 @@ public class FeatureTokenGenerator {
 		
 		if (prefixes == null) {
 			try {
-				loadPrefixesSuffixes("resources/");
+				loadPrefixesSuffixes("/resources/");
 			} catch (IOException e) {
 				System.out.println("Error while loading prefixes and suffixes");
 				e.printStackTrace();
@@ -199,7 +199,7 @@ public class FeatureTokenGenerator {
 		
 		if (phareData == null) {
 			try {
-				loadPhareData("resources/phare.txt");
+				loadPhareData("/resources/phare.txt");
 			} catch (IOException e) {
 				System.out.println("Error while loading pharmagenomics relationship ontology data");
 				e.printStackTrace();
