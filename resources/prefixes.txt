@@ -285,7 +285,6 @@ cor	869
 iod	864
 val	863
 ro 	857
-the	856
 vin	851
 ala	844
 iro	843
