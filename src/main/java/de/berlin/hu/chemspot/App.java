@@ -599,13 +599,12 @@ public class App {
 
 	private static void usage() {
 		System.out.println("usage:");
-		System.out.println("  mandatory arguments:");
+		System.out.println("  arguments:");
         System.out.println("\t-m path to a CRF model file");
         System.out.println("\t-s path to a OpenNLP sentence model file");
-        System.out.println();
-        System.out.println("  optional arguments:");
         System.out.println("\t-d path to a zipped set of brics dictionary automata");
         System.out.println("\t-i path to a zipped tab-separated text file representing a map of terms to ids");
+        System.out.println();
         System.out.println("\t-e if this parameter is set, the performance of ChemSpot on a IOB gold-standard corpus (cf. -c) or CRAFT corpus is evaluated");
         System.out.println("\t-T number of threads to create when processing a document collection");
         System.out.println();

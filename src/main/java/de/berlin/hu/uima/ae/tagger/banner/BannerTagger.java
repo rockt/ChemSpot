@@ -19,6 +19,7 @@ import org.u_compare.shared.syntactic.Sentence;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -44,7 +45,7 @@ public class BannerTagger extends JCasAnnotator_ImplBase {
 	private CRFTagger tagger;
 //	private CRFTaggerStochasticGradient tagger;
 
-	private File bannerModelFile;
+	private URL bannerModelFile;
 	private File bannerConfigFile;
 
 	// Confidence-Threshold for N-Best-Tagger
@@ -64,7 +65,7 @@ public class BannerTagger extends JCasAnnotator_ImplBase {
 		try {
             String pathToModelFile = aContext.getConfigParameterValue(BANNER_MODEL_FILE_PARAM).toString();
             String pathToConfigFile = aContext.getConfigParameterValue(BANNER_CONFIG_FILE_PARAM).toString();
-            bannerModelFile = new File(pathToModelFile);
+            bannerModelFile = new URL(pathToModelFile);
             bannerConfigFile = new File(pathToConfigFile);
 			try {
 				config = new XMLConfiguration(bannerConfigFile);
@@ -73,7 +74,7 @@ public class BannerTagger extends JCasAnnotator_ImplBase {
 				throw new ResourceInitializationException(e);
 			}			
 			threshold = Double.parseDouble(aContext.getConfigParameterValue(THRESHOLD_PARAM).toString());
-			tagger = CRFTagger.load(bannerModelFile, null, null, null);
+			tagger = CRFWrapper.load(bannerModelFile, null, null, null);
 //			tagger = NBestCRFTagger.load(bannerModelFile, lemmatiser, posTagger, null, N, true);
 //			tagger = NBestCRFTagger.load(bannerModelFile, LEMMATISER, POS_TAGGER, null, N, false); //then the sum is used for the same sequences
 		} catch (IOException e) {

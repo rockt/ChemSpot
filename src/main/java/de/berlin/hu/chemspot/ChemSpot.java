@@ -47,6 +47,9 @@ import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 public class ChemSpot {
+	private static final String CRF_MODEL_RESOURCE_PATH = "resources/banner/model.bin";
+	private static final String SENTENCE_MODEL_RESOURCE_PATH = "resources/genia/SentDetectGenia.bin.gz";
+	
     private TypeSystemDescription typeSystem;
     private AnalysisEngine posTagger;
     private AnalysisEngine sentenceDetector;
@@ -65,6 +68,10 @@ public class ChemSpot {
     
     private ChemicalNEREvaluator evaluator;
 
+    public ChemSpot() {
+    	this(null, null, null, null);
+    }
+    
     /**
      * Initializes ChemSpot without a dictionary automaton and a normalizer.
      * @param pathToCRFModelFile the Path to a CRF model
@@ -84,10 +91,14 @@ public class ChemSpot {
     /**
      * Initializes ChemSpot with a CRF model, an OpenNLP sentence model and a dictionary automaton.
      * @param pathToCRFModelFile the path to a CRF model
-     * @param pathToDictionaryFile the ath to a dictionary automaton
+     * @param pathToDictionaryFile the path to a dictionary automaton
      */
-    public ChemSpot(String pathToCRFModelFile, String pathToDictionaryFile, String pathToSentenceModelFile, String pathToIDs) {
-        try {
+    public ChemSpot(String pathToCRFModelFile, String pathToDictionaryFile, String pathToSentenceModelFile, String pathToIDs) { 
+    	try {
+    		// converting CRF and sentence model paths to URLs to allow loading of models from jar file
+    		pathToCRFModelFile = pathToCRFModelFile == null ? this.getClass().getClassLoader().getResource(CRF_MODEL_RESOURCE_PATH).toString() : new File(pathToCRFModelFile).toURI().toURL().toString(); 
+        	pathToSentenceModelFile = pathToSentenceModelFile == null ? this.getClass().getClassLoader().getResource(SENTENCE_MODEL_RESOURCE_PATH).toString() : new File(pathToSentenceModelFile).toURI().toURL().toString();
+    		
             typeSystem = UIMAFramework.getXMLParser().parseTypeSystemDescription(new XMLInputSource(this.getClass().getClassLoader().getResource("desc/TypeSystem.xml")));
             
             if (ChemSpotConfiguration.useComponent(Component.TOKENIZER)) {
