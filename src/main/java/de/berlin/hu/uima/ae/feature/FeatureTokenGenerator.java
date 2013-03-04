@@ -383,7 +383,7 @@ public class FeatureTokenGenerator {
 					int index = sentenceString.indexOf(term.toLowerCase());
 					if (index != -1
 							&& (index - 1 < 0 || !Character.isLetter(sentenceString.charAt(index-1)))
-							&& (index + 1 >= sentenceString.length() || !Character.isLetter(sentenceString.charAt(index+term.length())))
+							&& (index + term.length() >= sentenceString.length() || !Character.isLetter(sentenceString.charAt(index+term.length())))
 							) 
 					{
 						for (FeatureToken token : getFeatureTokens(aJCas, sentence)) {
