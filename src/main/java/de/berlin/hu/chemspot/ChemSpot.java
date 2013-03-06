@@ -45,11 +45,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 public class ChemSpot {
 	private static final String CRF_MODEL_RESOURCE_PATH = "resources/banner/model.bin";
 	private static final String SENTENCE_MODEL_RESOURCE_PATH = "resources/genia/SentDetectGenia.bin.gz";
+	
+	// map for holding jCas objects for threads that are using the tag(String) method
+    private static Map<Long, JCas> jCases = new HashMap<Long, JCas>();
 	
     private TypeSystemDescription typeSystem;
     private AnalysisEngine posTagger;
@@ -386,7 +390,24 @@ public class ChemSpot {
      * @throws UIMAException 
      */
     public List<Mention> tag(String text) throws UIMAException {
-        JCas jcas = JCasFactory.createJCas(typeSystem);
+    	// get JCas object for currently executed thread
+    	long threadId = Thread.currentThread().getId();
+    	
+    	// create new jcas if necessary (i.e. a thread calls this method for the first time)
+    	if (!jCases.containsKey(threadId)) {
+    		synchronized (jCases) {
+    			jCases.put(threadId, JCasFactory.createJCas(typeSystem));
+    		}
+    	}
+    	// get jcas
+    	JCas jcas = jCases.get(threadId);
+    	jcas.reset();    	
+    	
+    	// TODO: for applications that create an excessive amount of threads it would be best
+    	// to release the jcas object once a calling thread dies in order to reduce memory consumption.
+    	// This would probably require a new thread for each one that calls this method (to call its 
+    	// thread.join() method), which seems like a bit of an overkill for applications with few threads.
+        
         jcas.setDocumentText(text);
         PubmedDocument pd = new PubmedDocument(jcas);
         pd.setBegin(0);
