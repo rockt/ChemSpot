@@ -12,6 +12,8 @@
 
 package de.berlin.hu.uima.ae.normalizer;
 
+import de.berlin.hu.chemspot.ChemSpotConfiguration;
+import de.berlin.hu.chemspot.ChemSpotConfiguration.Component;
 import de.berlin.hu.util.Constants;
 import de.berlin.hu.util.Constants.ChemicalID;
 
@@ -148,11 +150,13 @@ public class Normalizer extends JCasAnnotator_ImplBase {
         } catch (IOException e) {
             throw new ResourceInitializationException(e);
         }
-        try {
-            //initializing OPSIN
-            nameToInChi = new NameToInchi();
-        } catch (NameToStructureException e) {
-            e.printStackTrace();
+        if (ChemSpotConfiguration.useComponent(Component.OPSIN)) {
+	        try {
+	            //initializing OPSIN
+	            nameToInChi = new NameToInchi();
+	        } catch (NameToStructureException e) {
+	            e.printStackTrace();
+	        }
         }
         
         /*try {
@@ -223,7 +227,7 @@ public class Normalizer extends JCasAnnotator_ImplBase {
         
         while (entities.hasNext()) {
             NamedEntity entity = entities.next();
-            String inchi = nameToInChi.parseToStdInchi(entity.getCoveredText());
+            String inchi = nameToInChi != null ? nameToInChi.parseToStdInchi(entity.getCoveredText()) : null;
 
             if (!Constants.GOLDSTANDARD.equals(entity.getSource())) {
                 nE++;
