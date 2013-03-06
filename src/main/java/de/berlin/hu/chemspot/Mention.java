@@ -45,7 +45,7 @@ public class Mention implements Comparable<Object> {
             if (tempIds.startsWith("[")) tempIds = tempIds.substring(1);
             if (tempIds.endsWith("]")) tempIds = tempIds.substring(0, tempIds.length() - 1);
             int i = 0;
-            for (String id : tempIds.split(",")) {
+            for (String id : tempIds.split(", |,$")) {
             	if (i >= this.ids.length) break;
             	setId(ChemicalID.values()[i++], id.trim());
             }
