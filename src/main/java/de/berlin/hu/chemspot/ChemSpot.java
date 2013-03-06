@@ -17,6 +17,7 @@ import de.berlin.hu.types.PubmedDocument;
 import de.berlin.hu.uima.ae.feature.FeatureTokenGenerator;
 import de.berlin.hu.uima.ae.feature.FeatureTokenGenerator.Feature_Phase;
 import de.berlin.hu.util.Constants;
+
 import org.apache.uima.UIMAException;
 import org.apache.uima.UIMAFramework;
 import org.apache.uima.analysis_engine.AnalysisEngine;
@@ -307,8 +308,8 @@ public class ChemSpot {
         try {
         	if (fineTokenizer != null) fineTokenizer.process(jcas);
             synchronized (this) {
-            	if (fineTokenizer != null) sentenceDetector.process(jcas);
-            	if (fineTokenizer != null) posTagger.process(jcas);
+            	if (sentenceDetector != null) sentenceDetector.process(jcas);
+            	if (posTagger != null) posTagger.process(jcas);
             }
             if (tokenConverter != null) tokenConverter.process(jcas);
             if (sentenceConverter != null) sentenceConverter.process(jcas);
