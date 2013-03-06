@@ -17,6 +17,7 @@ import de.berlin.hu.types.PubmedDocument;
 import de.berlin.hu.uima.ae.feature.FeatureTokenGenerator;
 import de.berlin.hu.uima.ae.feature.FeatureTokenGenerator.Feature_Phase;
 import de.berlin.hu.util.Constants;
+import de.berlin.hu.util.Constants.ChemicalID;
 
 import org.apache.uima.UIMAException;
 import org.apache.uima.UIMAFramework;
@@ -172,7 +173,7 @@ public class ChemSpot {
             }
             
             if (ChemSpotConfiguration.useComponent(Component.FEATURE_GENERATOR)) {
-	            featureGenerator = new FeatureTokenGenerator();
+	            //featureGenerator = new FeatureTokenGenerator();
             }
             
             setEvaluator(new ChemicalNEREvaluator());
@@ -250,6 +251,14 @@ public class ChemSpot {
         pd.setEnd(text.length());
         pd.setPmid("");
         pd.addToIndexes(jcas);
+        
+        SourceDocumentInformation srcDocInfo = new SourceDocumentInformation(jcas);
+        srcDocInfo.setUri(new File(pathToFile).getAbsoluteFile().toURI().toString());
+        srcDocInfo.setOffsetInSource(0);
+        srcDocInfo.setDocumentSize((int) new File(pathToFile).length());
+        srcDocInfo.setBegin(0);
+        srcDocInfo.setEnd(text.length());
+        srcDocInfo.addToIndexes();
     }
     
     /**
@@ -514,13 +523,16 @@ public class ChemSpot {
                     int begin = entity.getBegin() - offset - 1;
                     //int end = entity.getEnd() - offset - 1;
                     int end = entity.getEnd() - offset - 2;
-                    String id = (new Mention(entity)).getCHID();
                     String text = entity.getCoveredText();
-                    if (id == null || id.isEmpty()) {
-                    	sb.append(pmid + "\t" + begin + "\t" + end + "\t" + text + "\t" + "\\N\n");
-                    } else {
-                    	sb.append(pmid + "\t" + begin + "\t" + end + "\t" + text + "\t" + id + "\n");
+                    
+                    String id = "";
+                    Mention m = new Mention(entity);
+                    for (ChemicalID type : ChemicalID.values()) {
+                    	String tempId = m.getId(type);
+                    	id += "\t" + (tempId != null && !tempId.isEmpty() ? tempId : "");
                     }
+                    
+                    sb.append(pmid + "\t" + begin + "\t" + end + "\t" + text + id + "\n");
                 }
                 numberOfEntities++;
             }
