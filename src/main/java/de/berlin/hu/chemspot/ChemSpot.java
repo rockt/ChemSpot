@@ -398,14 +398,18 @@ public class ChemSpot {
      * @return a list of mentions
      * @throws UIMAException 
      */
-    public List<Mention> tag(String text) throws UIMAException {
+    public List<Mention> tag(String text) {
     	// get JCas object for currently executed thread
     	long threadId = Thread.currentThread().getId();
     	
     	// create new jcas if necessary (i.e. a thread calls this method for the first time)
     	if (!jCases.containsKey(threadId)) {
     		synchronized (jCases) {
-    			jCases.put(threadId, JCasFactory.createJCas(typeSystem));
+    			try {
+					jCases.put(threadId, JCasFactory.createJCas(typeSystem));
+				} catch (UIMAException e) {
+					throw new RuntimeException(e);
+				}
     		}
     	}
     	// get jcas
