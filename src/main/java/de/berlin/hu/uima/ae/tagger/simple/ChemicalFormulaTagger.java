@@ -37,7 +37,7 @@ public class ChemicalFormulaTagger extends JCasAnnotator_ImplBase {
 			}
 			
 			if (formula.replaceAll("\\(|\\)", "").length() > 2 && (MUST_CONTAIN.matcher(formula).find()) && !DOES_NOT_MATCH.matcher(formula).matches()) {
-				createFormulaAnnotation(aJCas, begin, end, formula);
+				createFormulaAnnotation(aJCas, begin, end, null);
 			}
 		}
 	}
