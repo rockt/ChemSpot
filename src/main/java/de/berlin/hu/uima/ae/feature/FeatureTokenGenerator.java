@@ -72,7 +72,7 @@ public class FeatureTokenGenerator {
 		ChemSpot_Feature.MESH
 	};
 	
-	private Map<JCas, List<FeatureToken>> tokens = null;
+	private Map<Integer, List<FeatureToken>> tokens = null;
 	
 	private Map<String, Integer> chebiMinDepth = null;
 	private Map<String, Integer> chebiAvgDepth = null;
@@ -177,7 +177,7 @@ public class FeatureTokenGenerator {
 		System.out.println();
 		System.out.println("Initializing feature generator.");
 		
-		tokens = new HashMap<JCas, List<FeatureToken>>();
+		tokens = new HashMap<Integer, List<FeatureToken>>();
 		
 		if (chebiMinDepth == null) {
 			try {
@@ -213,8 +213,7 @@ public class FeatureTokenGenerator {
 	public void process(JCas aJCas, Feature_Phase phase) throws AnalysisEngineProcessException {
 		switch (phase) {
 		case PHASE1:
-			tokens.clear();
-			tokens.put(aJCas, new ArrayList<FeatureToken>());
+			tokens.put(aJCas.getDocumentText().hashCode(), new ArrayList<FeatureToken>());
 			generateFeatureTokens(aJCas);
 			checkNormalization(aJCas);
 			break;
@@ -231,6 +230,10 @@ public class FeatureTokenGenerator {
 			//printFeatureTokens(aJCas);
 			break;
 		}
+	}
+	
+	public void clearFeatureTokens() {
+		tokens.clear();
 	}
 	
 	private void generateFeatureTokens(JCas aJCas) {
@@ -255,7 +258,11 @@ public class FeatureTokenGenerator {
 	}
 	
 	public List<FeatureToken> getFeatureTokens(JCas aJCas) {
-		return tokens.get(aJCas);
+		return tokens.get(aJCas.getDocumentText().hashCode());
+	}
+	
+	public List<FeatureToken> removeFeatureTokens(JCas aJCas) {
+		return tokens.remove(aJCas.getDocumentText().hashCode());
 	}
 	
 	public List<FeatureToken> getFeatureTokens(JCas aJCas, Annotation container) {
