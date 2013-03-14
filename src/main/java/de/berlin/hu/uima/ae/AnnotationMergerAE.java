@@ -1,5 +1,6 @@
 package de.berlin.hu.uima.ae;
 
+import de.berlin.hu.types.PubmedDocument;
 import de.berlin.hu.util.Constants;
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
@@ -22,12 +23,19 @@ public class AnnotationMergerAE extends JCasAnnotator_ImplBase {
 	 */
 	@Override
 	public void process(JCas aJCas) throws AnalysisEngineProcessException {
-		Iterator<Sentence> sentenceIterator = JCasUtil.iterator(aJCas, Sentence.class);
+		List<PubmedDocument> documents = new ArrayList<PubmedDocument>();
+		for (PubmedDocument doc : JCasUtil.iterate(aJCas, PubmedDocument.class)) {
+			documents.add(doc);
+		}
 		
-		while (sentenceIterator.hasNext()) {
-			Sentence sentence = (Sentence) sentenceIterator.next();
-			
-			Iterator<NamedEntity> entityIterator = JCasUtil.iterator(sentence, NamedEntity.class, true, true);
+		if (documents.isEmpty()) {
+			documents.add(null);
+		}
+		
+		for (PubmedDocument document : documents) {
+			//System.out.println("\nMerging annotations of document " + (document != null ? document.getPmid() : ""));
+				
+			Iterator<NamedEntity> entityIterator = document != null ? JCasUtil.iterator(document, NamedEntity.class, true, true) :  JCasUtil.iterator(aJCas, NamedEntity.class);
 			
 			List<NamedEntity> entities = new ArrayList<NamedEntity>();
 			List<String> abbreviations = new ArrayList<String>();
@@ -38,7 +46,7 @@ public class AnnotationMergerAE extends JCasAnnotator_ImplBase {
 				if (!Constants.GOLDSTANDARD.equals(namedEntity.getSource())) {
 					entities.add(namedEntity);
 					
-					String chemName = namedEntity.getCoveredText();
+					String chemName = namedEntity.getCoveredText().trim().toLowerCase();
 					if (!chemicalsMap.containsKey(chemName)) {
 						chemicalsMap.put(chemName, new ArrayList<NamedEntity>());
 					}
@@ -59,10 +67,26 @@ public class AnnotationMergerAE extends JCasAnnotator_ImplBase {
 			
 			//FIXME: use drug if it is identical to CRF match to obtain CAS Registry ID
 			NamedEntity lastEntity = null;
+			List<String> nonChemicalAbbreviations = new ArrayList<String>();
+			Iterator<Sentence> sentenceIterator = document != null ? JCasUtil.iterator(document, Sentence.class, true, true) :  JCasUtil.iterator(aJCas, Sentence.class);
+			Sentence sentence = sentenceIterator.hasNext() ? sentenceIterator.next() : null;
 			for (NamedEntity entity : entities) {
-				boolean isChemAbbreviation = abbreviations.contains(entity.getCoveredText());
-				if (Constants.ABBREV.equals(entity.getSource()) && !isChemAbbreviation) {
-					String name = entity.getId();
+				if (sentence != null) {
+					while (sentence.getEnd() < entity.getBegin() && sentenceIterator.hasNext()) {
+						sentence = sentenceIterator.next();
+						lastEntity = null;
+					}
+				}
+				
+				if (nonChemicalAbbreviations.contains(entity.getCoveredText().trim().toLowerCase())) {
+					entity.removeFromIndexes(aJCas);
+					filtered = true;
+					//System.out.println("Filtered subsequent mention of non-Chemical abbreviation: " + entity.getCoveredText() + " -> " + entity.getId());
+				}
+				
+				boolean isChemAbbreviation = abbreviations.contains(entity.getCoveredText().trim().toLowerCase());
+				if (!isChemAbbreviation && !filtered && Constants.ABBREV.equals(entity.getSource())) {
+					String name = entity.getId().trim().toLowerCase();
 					entity.setId(null);
 					
 					if (chemicalsMap.containsKey(name)) {
@@ -77,10 +101,22 @@ public class AnnotationMergerAE extends JCasAnnotator_ImplBase {
 					}
 					
 					if (isChemAbbreviation) {
-						abbreviations.add(entity.getCoveredText());
+						abbreviations.add(entity.getCoveredText().trim().toLowerCase());
 					} else {
 						entity.removeFromIndexes(aJCas);
 						filtered = true;
+						nonChemicalAbbreviations.add(entity.getCoveredText().trim().toLowerCase());
+						
+						List<NamedEntity> filteredEntities = new ArrayList<NamedEntity>();
+						for (NamedEntity e : chemicals) {
+							if (entity.getCoveredText().trim().equalsIgnoreCase(e.getCoveredText().trim())) {
+								filteredEntities.add(e);
+								e.removeFromIndexes();
+								//System.out.println("Removing previous occurence of " + entity.getCoveredText());
+							}
+						}
+						
+						chemicals.removeAll(filteredEntities);
 					}
 				}
 				
@@ -100,12 +136,12 @@ public class AnnotationMergerAE extends JCasAnnotator_ImplBase {
 						} else if (!isChemAbbreviation) {
 							//System.out.printf("removing %s annotation %s at [%d-%d], because it does not appear to be a chemical abbreviation (%s = %s)%n", lastEntity.getSource(), lastEntity.getCoveredText(), lastEntity.getBegin(), lastEntity.getEnd(), entity.getCoveredText(), entity.getId());
 							isRemove = true;
+							filtered = true;
 						}
 						
 						if (isRemove) {
 							lastEntity.removeFromIndexes(aJCas);
 							chemicals.remove(lastEntity);
-							filtered = true;
 						}
 					} else if (Constants.DICTIONARY.equals(lastEntity.getSource()) 
 							&& !Constants.DICTIONARY.equals(entity.getSource())) {
