@@ -25,7 +25,7 @@ public class Mention implements Comparable<Object> {
 	private String text;
 	private String[] ids;
 	private String source;
-	private CAS cas;
+	private String documentText;
 
     /**
      * Represents a chemical entity found in a text.
@@ -35,7 +35,7 @@ public class Mention implements Comparable<Object> {
      * @param ids a string representation of an array of identifiers of the form: [0] CHID, [1] CHEB, [2] CAS, [3] PUBC, [4] PUBS, [5] INCH, [6] DRUG, [7] HMBD, [8] KEGG, [9] KEGD, [10] MESH
      * @param source indicates whether found by the CRF, the dictionary or taken from goldstandard
      */
-	public Mention(int start, int end, String text, String ids, String source, CAS cas) {
+	public Mention(int start, int end, String text, String ids, String source, String documentText) {
 		this.start = start;
 		this.end = end;
 		this.text = text;
@@ -45,13 +45,13 @@ public class Mention implements Comparable<Object> {
             if (tempIds.startsWith("[")) tempIds = tempIds.substring(1);
             if (tempIds.endsWith("]")) tempIds = tempIds.substring(0, tempIds.length() - 1);
             int i = 0;
-            for (String id : tempIds.split(", |,$")) {
+            for (String id : tempIds.split(", |,$|^,")) {
             	if (i >= this.ids.length) break;
             	setId(ChemicalID.values()[i++], id.trim());
             }
         }
         this.source = source;
-        this.cas = cas;
+        this.documentText = documentText;
 	}
 
     public Mention(int start, int end, String text) {
@@ -67,7 +67,7 @@ public class Mention implements Comparable<Object> {
     }
 
     public Mention(NamedEntity entity) {
-        this(entity.getBegin(), entity.getEnd(), entity.getCoveredText(), entity.getId(), entity.getSource(), entity.getCAS());
+        this(entity.getBegin(), entity.getEnd(), entity.getCoveredText(), entity.getId(), entity.getSource(), entity.getCAS().getDocumentText());
     }
 
     public int getStart() {
@@ -277,11 +277,11 @@ public class Mention implements Comparable<Object> {
 				|| (mention.getEnd() >= getStart() && mention.getEnd() < getEnd()));
 	}
 
-	public CAS getCas() {
-		return cas;
+	public String getDocumentText() {
+		return documentText;
 	}
 
-	public void setCas(CAS cas) {
-		this.cas = cas;
+	public void setCas(String documentText) {
+		this.documentText = documentText;
 	}
 }

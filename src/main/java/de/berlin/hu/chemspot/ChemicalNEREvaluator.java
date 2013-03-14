@@ -168,9 +168,9 @@ public class ChemicalNEREvaluator {
     		while (j < list2.size() && list2.get(j).overlaps(m1)) {
     			Mention m2 = list2.get(j++);
     			
-    			if (!m1.getCas().getDocumentText().equals(m2.getCas().getDocumentText())) continue;
+    			if (!m1.getDocumentText().equals(m2.getDocumentText())) continue;
     			
-    	    	String text = m1.getCas().getDocumentText();
+    	    	String text = m1.getDocumentText();
     	    	int begin = Math.min(m1.getStart(), m2.getStart());
     			int end = Math.max(m1.getEnd(), m2.getEnd());
     	    	
@@ -258,7 +258,7 @@ public class ChemicalNEREvaluator {
     			}
     			
     			String text = null;
-				text = mention.getCas().getDocumentText();
+				text = mention.getDocumentText();
     			int begin = mention.getStart();
     			int end = mention.getEnd();
     			
