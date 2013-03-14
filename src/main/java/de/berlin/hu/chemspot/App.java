@@ -487,8 +487,9 @@ public class App {
             outputPathString = !outputPathString.endsWith("/") ? outputPathString + "/" : outputPathString;
     	}
     	
+    	JCas jcas = JCasFactory.createJCas(typeSystem);
     	while (reader.hasNext()) {
-            JCas jcas = JCasFactory.createJCas(typeSystem);
+            jcas.reset();
             reader.getNext(jcas.getCas());
             
             String outputFilePath = null;
