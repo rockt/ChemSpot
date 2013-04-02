@@ -99,7 +99,7 @@ public class ChemSpot {
      * @param pathToCRFModelFile the path to a CRF model
      * @param pathToDictionaryFile the path to a dictionary automaton
      */
-    public ChemSpot(String pathToCRFModelFile, String pathToDictionaryFile, String pathToSentenceModelFile, String pathToIDs) { 
+    public ChemSpot(String pathToCRFModelFile, String pathToDictionaryFile, String pathToSentenceModelFile, String pathToIDs) {
     	try {
     		// converting CRF and sentence model paths to URLs to allow loading of models from jar file
     		pathToCRFModelFile = pathToCRFModelFile == null ? this.getClass().getClassLoader().getResource(CRF_MODEL_RESOURCE_PATH).toString() : new File(pathToCRFModelFile).toURI().toURL().toString(); 
@@ -134,10 +134,16 @@ public class ChemSpot {
             
             if (ChemSpotConfiguration.useComponent(Component.DICTIONARY)) {
             	if (pathToDictionaryFile != null) {
-	                System.out.println("Loading dictionary...");
-	                dictionaryTagger = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
-	                        .getResource("desc/ae/tagger/BricsTaggerAE.xml"))), "DrugBankMatcherDictionaryAutomat", pathToDictionaryFile);
-            	} else System.out.println("No dictionary location specified! Tagging without dictionary...");
+            		if (new File(pathToDictionaryFile).exists()) {
+            			System.out.println("Loading dictionary...");
+		                dictionaryTagger = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+		                        .getResource("desc/ae/tagger/BricsTaggerAE.xml"))), "DrugBankMatcherDictionaryAutomat", pathToDictionaryFile);
+            		}  else {
+             			System.out.println("Dictionary file '" + pathToDictionaryFile +  "' does not exist. Tagging without dictionary...");
+             		}
+            	} else {
+            		System.out.println("No dictionary location specified! Tagging without dictionary...");
+            	}
             }
             
             if (ChemSpotConfiguration.useComponent(Component.SUM_TAGGER)) {
@@ -162,8 +168,12 @@ public class ChemSpot {
             
             if (ChemSpotConfiguration.useComponent(Component.NORMALIZER)) {
             	if (pathToIDs != null) {
-            		normalizer = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
-            				.getResource("desc/ae/normalizer/NormalizerAE.xml"))), "PathToIDs", pathToIDs);
+            		if (new File(pathToIDs).exists()) {
+	            		normalizer = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+	            				.getResource("desc/ae/normalizer/NormalizerAE.xml"))), "PathToIDs", pathToIDs);
+            		} else {
+            			System.out.println("Normalization ids file '" + pathToIDs +  "' does not exist. Tagging without subsequent normalization...");
+            		}
             	} else System.out.println("No location for ids specified! Tagging without subsequent normalization...");
             }
             
@@ -311,6 +321,21 @@ public class ChemSpot {
         srcDocInfo.addToIndexes();
     }
     
+    private static long start = 0;
+    public static void printTime(String action) {
+    	if (ChemSpotConfiguration.useComponent(Component.PROFILER)) {
+    		System.out.printf("%s: %.1f s%n", action, (System.currentTimeMillis() - start) / 1000.0);
+    		start = System.currentTimeMillis();
+    	}
+    }
+    
+    private static void startTimer() {
+    	start = ChemSpotConfiguration.useComponent(Component.PROFILER) ? System.currentTimeMillis() : 0;
+    	if (start != 0) {
+    		System.out.println("start profiling...");
+    	}
+    }
+    
     /**
      * Finds chemical entities in the document of a {@code JCas} object and returns a list of mentions.
      * @param jcas contains the document text
@@ -318,29 +343,82 @@ public class ChemSpot {
      */
     public List<Mention> tag(JCas jcas) {
     	List<NamedEntity> otherEntities = null;
+    	startTimer();
         try {
-        	if (fineTokenizer != null) fineTokenizer.process(jcas);
+        	if (fineTokenizer != null) {
+        		fineTokenizer.process(jcas);
+        		printTime("tokenization");
+        	}
+        	
             synchronized (this) {
-            	if (sentenceDetector != null) sentenceDetector.process(jcas);
-            	if (posTagger != null) posTagger.process(jcas);
+            	if (sentenceDetector != null) {
+            		sentenceDetector.process(jcas);
+            		printTime("sentence detector");
+            	}
+            	if (posTagger != null) {
+            		posTagger.process(jcas);
+            		printTime("POS tagger");
+            	}
             }
-            if (tokenConverter != null) tokenConverter.process(jcas);
-            if (sentenceConverter != null) sentenceConverter.process(jcas);
-            if (crfTagger != null) crfTagger.process(jcas);
-            if (dictionaryTagger != null) dictionaryTagger.process(jcas);
-            if (chemicalFormulaTagger != null) chemicalFormulaTagger.process(jcas);
-            if (abbrevTagger != null) abbrevTagger.process(jcas);
+            if (tokenConverter != null) {
+            	tokenConverter.process(jcas);
+            	printTime("token converter");
+            }
+            if (sentenceConverter != null) {
+            	sentenceConverter.process(jcas);
+            	printTime("sentence converter");
+            }
+            if (crfTagger != null) {
+            	crfTagger.process(jcas);
+            	printTime("crf tagger");
+            }
+            if (dictionaryTagger != null) {
+            	dictionaryTagger.process(jcas);
+            	printTime("dictionary tagger");
+            }
+            if (chemicalFormulaTagger != null) {
+            	chemicalFormulaTagger.process(jcas);
+            	printTime("chemical formula tagger");
+            }
+            if (abbrevTagger != null) {
+            	abbrevTagger.process(jcas);
+            	printTime("abbreviation tagger");
+            }
             if (featureGenerator != null) {
-            	if (normalizer != null) normalizer.process(jcas);
+            	if (normalizer != null) {
+            		normalizer.process(jcas);
+            	}
             	featureGenerator.process(jcas, Feature_Phase.PHASE1);
+            	printTime("feature generation phase 1 (+ preliminary normalization run)");
             }
-            if (mentionExpander != null) mentionExpander.process(jcas);
-            if (featureGenerator != null) featureGenerator.process(jcas, Feature_Phase.PHASE2);
-            if (annotationMerger != null) annotationMerger.process(jcas);
-            if (stopwordFilter != null) stopwordFilter.process(jcas);
-            if (featureGenerator != null) featureGenerator.process(jcas, Feature_Phase.PHASE3);
-            if (normalizer != null) normalizer.process(jcas);
-            if (featureGenerator != null) featureGenerator.process(jcas, Feature_Phase.PHASE4);
+            if (mentionExpander != null) {
+            	mentionExpander.process(jcas);
+            	printTime("mention expander");
+            }
+            if (featureGenerator != null) {
+            	featureGenerator.process(jcas, Feature_Phase.PHASE2);
+            	printTime("feature generator phase 2");
+            }
+            if (annotationMerger != null) {
+            	annotationMerger.process(jcas);
+            	printTime("annotation merger");
+            }
+            if (stopwordFilter != null) {
+            	stopwordFilter.process(jcas);
+            	printTime("stopword filter");
+            }
+            if (featureGenerator != null) {
+            	featureGenerator.process(jcas, Feature_Phase.PHASE3);
+            	printTime("feature generator phase 3");
+            }
+            if (normalizer != null) {
+            	normalizer.process(jcas);
+            	printTime("normalizer");
+            }
+            if (featureGenerator != null) {
+            	featureGenerator.process(jcas, Feature_Phase.PHASE4);
+            	printTime("feature generator phase 4");
+            }
         } catch (AnalysisEngineProcessException e) {
             System.err.println("Failed to extract chemicals from text.");
             e.printStackTrace();
