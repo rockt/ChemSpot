@@ -3,12 +3,14 @@ package de.berlin.hu.chemspot;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Properties;
 
 public class ChemSpotConfiguration {
 	// Constants
 	public static enum Corpus {IOB, CRAFT, GZ, NACTEM, PATENT, DDI, XMI, TXT};
-	public static enum Component {TOKENIZER, SENTENCE_DETECTOR, POS_TAGGER, CRF, DICTIONARY, SUM_TAGGER, ABBREV, MENTION_EXPANDER, ANNOTATION_MERGER, STOPWORD_FILTER, NORMALIZER, OPSIN, FEATURE_GENERATOR};
+	public static enum Component {TOKENIZER, SENTENCE_DETECTOR, POS_TAGGER, CRF, DICTIONARY, SUM_TAGGER, ABBREV, MENTION_EXPANDER, ANNOTATION_MERGER, STOPWORD_FILTER, NORMALIZER, OPSIN, FEATURE_GENERATOR, CHEMHITS, PROFILER};
+	private static final Component[] DEFAULT_DEACTIVATED = {Component.FEATURE_GENERATOR, Component.CHEMHITS, Component.PROFILER};
 	
 	private static final String CORPUS_PREFIX = "corpus.";
 	
@@ -91,7 +93,8 @@ public class ChemSpotConfiguration {
 	}
 
 	public static boolean useComponent(Component component) {
-		return "true".equals(getProperty(COMPONENT_PREFIX + component.toString().toLowerCase(), "true").toLowerCase().trim());
+		String defaultValue = Arrays.asList(DEFAULT_DEACTIVATED).contains(component) ? "false" : "true";
+		return "true".equals(getProperty(COMPONENT_PREFIX + component.toString().toLowerCase(), defaultValue).toLowerCase().trim());
 	}
 
 	public static boolean isThreading() {
