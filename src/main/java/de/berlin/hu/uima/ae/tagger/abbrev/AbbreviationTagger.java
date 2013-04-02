@@ -2,8 +2,6 @@ package de.berlin.hu.uima.ae.tagger.abbrev;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
@@ -11,6 +9,7 @@ import org.apache.uima.jcas.JCas;
 import org.u_compare.shared.semantic.chemical.Chemical;
 import org.uimafit.util.JCasUtil;
 
+import de.berlin.hu.chemspot.ChemSpot;
 import de.berlin.hu.chemspot.Mention;
 import de.berlin.hu.types.PubmedDocument;
 import de.berlin.hu.util.Constants;
@@ -29,6 +28,7 @@ public class AbbreviationTagger extends JCasAnnotator_ImplBase {
 		
 		// get abbreviations
 		List<Mention> abbreviations = abbrevTagger.getMentions(text);
+		ChemSpot.printTime("ABBREV");
 		
 		// get PubMed documents
 		Iterator<PubmedDocument> pmIterator =  JCasUtil.iterator(aJCas, PubmedDocument.class);
@@ -55,13 +55,15 @@ public class AbbreviationTagger extends JCasAnnotator_ImplBase {
 			}
 			
 			// tag all abbreviations in document
-			Pattern pattern = Pattern.compile("(?<!\\p{Alpha})" + Pattern.quote(abbr.getText()) + "(?!\\p{Alpha})");
-			Matcher matcher = pattern.matcher(text);
-			while (matcher.find()) {
-				int begin = matcher.start() + offset;
-				int end = matcher.end() + offset;
+			int index = -1;
+			while ((index = text.indexOf(abbr.getText(), index+1)) != -1) {
+				if ((index-1 < 0 || !Character.isLetter(text.charAt(index-1)))
+						&& (index + abbr.getText().length() >= text.length() || !Character.isLetter(text.charAt(index+abbr.getText().length())))) {
+					int begin = offset + index;
+					int end = offset + index + abbr.getText().length();
 				
-				createAbbreviationAnnotation(aJCas, begin, end, abbr.getCHID());
+					createAbbreviationAnnotation(aJCas, begin, end, abbr.getCHID());
+				}
 			}
 		}
 	}
