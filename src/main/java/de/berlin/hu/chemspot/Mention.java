@@ -15,7 +15,6 @@ package de.berlin.hu.chemspot;
 import de.berlin.hu.util.Constants;
 import de.berlin.hu.util.Constants.ChemicalID;
 
-import org.apache.uima.cas.CAS;
 import org.apache.uima.jcas.tcas.Annotation;
 import org.u_compare.shared.semantic.NamedEntity;
 

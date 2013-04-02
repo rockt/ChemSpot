@@ -59,7 +59,9 @@ import uk.co.flamingpenguin.jewel.cli.CliFactory;
 
 public class App {
 	private static String pathToModelFile;
-	private static String pathToDictionaryFile;
+	private static String pathToSentenceFile;
+	private static String pathToDictionaryFile = "dict.zip";
+	private static String pathToIDsFile = "ids.zip";
 	private static String pathToOutputFile;
 	private static boolean convertToIOB = false;
 	private static ChemSpotArguments arguments;
@@ -69,8 +71,6 @@ public class App {
 	private static int threadNr = 1;
 	private static String pathToTextFile;
     private static String tagFromCommandLine;
-    private static String pathToSentenceFile;
-    private static String pathToIDsFile;
     private static Map<Corpus, String> corpora = new HashMap<Corpus, String>();
     private static Corpus corpus;
     private static String pathToXMIOutput;
@@ -601,12 +601,12 @@ public class App {
 	private static void usage() {
 		System.out.println("usage:");
 		System.out.println("  arguments:");
-        System.out.println("\t-m path to a CRF model file");
-        System.out.println("\t-s path to a OpenNLP sentence model file");
-        System.out.println("\t-d path to a zipped set of brics dictionary automata");
-        System.out.println("\t-i path to a zipped tab-separated text file representing a map of terms to ids");
+        System.out.println("\t-m path to a CRF model file (internal default model file will be used if not provided)");
+        System.out.println("\t-s path to a OpenNLP sentence model file (internal default model file will be used if not provided)o a OpenNLP sentence model file (internal default model file will be used if not provided)");
+        System.out.println("\t-d path to a zipped set of brics dictionary automata (parameter defaults to 'dict.zip' if not provided)");
+        System.out.println("\t-i path to a zipped tab-separated text file representing a map of terms to ids (parameter defaults to 'ids.zip' if not provided)");
         System.out.println();
-        System.out.println("\t-e if this parameter is set, the performance of ChemSpot on a IOB gold-standard corpus (cf. -c) or CRAFT corpus is evaluated");
+        System.out.println("\t-e if this parameter is set, the performance of ChemSpot on a IOB gold-standard corpus (cf. -c) or CRAFT corpus (cf. -C) is evaluated");
         System.out.println("\t-T number of threads to create when processing a document collection");
         System.out.println();
         System.out.println("  input control:");
