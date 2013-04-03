@@ -73,48 +73,44 @@ public class ChemicalNEREvaluator {
 	            double recall = (double) TP / ((double) TP + FN);
 	            double fscore = precision + recall > 0 ? 2 * (precision * recall) / (precision + recall) : 0;
 	            System.out.format("Precision:\t\t%f\nRecall:\t\t\t%f\nF1 Score:\t\t%f\n", precision, recall, fscore);
-	            synchronized(normalizationLock) {
-	            	if (!normalized.isEmpty()) {
-	            		double correctAllRatio = !normalizedAll.isEmpty() ? (double)normalizedCorrect.size() / (double)normalizedAll.size() : 0;
-	            		double correctNormalizedRatio = !normalized.isEmpty() ? (double)normalizedCorrect.size() / (double)normalized.size() : 0;
-	            		System.out.format("%d of %d entities were normalized, %d correctly (%.2f %% of all and %.2f %% of normalized)%n", normalized.size(), normalizedAll.size(), normalizedCorrect.size(), correctAllRatio * 100.0, correctNormalizedRatio * 100);
-	            	}
-	            }
+            	if (!normalized.isEmpty()) {
+            		double correctAllRatio = !normalizedAll.isEmpty() ? (double)normalizedCorrect.size() / (double)normalizedAll.size() : 0;
+            		double correctNormalizedRatio = !normalized.isEmpty() ? (double)normalizedCorrect.size() / (double)normalized.size() : 0;
+            		System.out.format("%d of %d entities were normalized, %d correctly (%.2f %% of all and %.2f %% of normalized)%n", normalized.size(), normalizedAll.size(), normalizedCorrect.size(), correctAllRatio * 100.0, correctNormalizedRatio * 100);
+            	}
 	            System.out.println();
 	        }
         }
     }
     
     private double evaluateNormalization(List<Mention> tps, List<Mention> goldStandard) {
-    	synchronized (normalizationLock) {
-    		Collections.sort(tps);
-    		Collections.sort(goldStandard);
+		Collections.sort(tps);
+		Collections.sort(goldStandard);
+	
+    	int i = 0;
     	
-	    	int i = 0;
-	    	
-	    	for (Mention m : tps) {
-	    		while (i < goldStandard.size() && goldStandard.get(i).getStart() < m.getStart()) i++;
-	    		
-	    		if (goldStandard.get(i).getStart() == m.getStart()) {
-	    			Mention s = goldStandard.get(i);
-	    			
-	    			if (s.getCHEB() != null) {
-	    				normalizedAll.add(s);
-	    				if (m.getCHEB() != null && !m.getCHEB().isEmpty()) {
-	    					normalized.add(m);
-	    					
-	    					if (m.getCHEB().equals(s.getCHEB())) {
-	    						normalizedCorrect.add(m);
-	    					} else {
-	    						m.setCHEB(String.format("%s (correct: %s)", m.getCHEB(), s.getCHEB()));
-	    					}
-	    				}
-	    			}
-	    		}
-	    	}
-	    	
-	    	return !normalizedAll.isEmpty() ? (double)normalizedCorrect.size() / (double)normalizedAll.size() : 0;
+    	for (Mention m : tps) {
+    		while (i < goldStandard.size() && goldStandard.get(i).getStart() < m.getStart()) i++;
+    		
+    		if (goldStandard.get(i).getStart() == m.getStart()) {
+    			Mention s = goldStandard.get(i);
+    			
+    			if (s.getCHEB() != null) {
+    				normalizedAll.add(s);
+    				if (m.getCHEB() != null && !m.getCHEB().isEmpty()) {
+    					normalized.add(m);
+    					
+    					if (m.getCHEB().equals(s.getCHEB())) {
+    						normalizedCorrect.add(m);
+    					} else {
+    						m.setCHEB(String.format("%s (correct: %s)", m.getCHEB(), s.getCHEB()));
+    					}
+    				}
+    			}
+    		}
     	}
+    	
+    	return !normalizedAll.isEmpty() ? (double)normalizedCorrect.size() / (double)normalizedAll.size() : 0;
     }
     
     private static List<List<Mention>> sortMentionListsBySize(List<Mention> list, boolean bySource) {
