@@ -1,19 +1,29 @@
 CHANGELOG of ChemSpot
---------------------
+----------------------
 
-1.4.2         2013-02-20
--------------------------
-- added new parameter -f for reading a collection of text files
+1.5 - 2013-04-02
+-----------------------------------------------------------------------
+- Improved annotation merging component
+- Improved performance of tagging document collections
+- Slightly reduced memory consumption and fixed a memory leak
+- Adapted output format to print all identifiers instead of just one
+- Made all formerly mandatory parameters optional
+- Several bugfixes and minor improvements
+
+
+1.4.2 - 2013-02-20
+-----------------------------------------------------------------------
+- Added new parameter -f for reading a collection of text files
 - Bugfixes
 
 
-1.4.1         2013-01-23
--------------------------
+1.4.1 - 2013-01-23
+-----------------------------------------------------------------------
 - Optimized parameter evaluation code
 
 
-1.4           2012-11-15
--------------------------
+1.4 - 2012-11-15
+-----------------------------------------------------------------------
 - Improved match expansion.
 - Improved recognition of multi-token entities.
 - Improved recognition of plural forms.
@@ -22,10 +32,11 @@ CHANGELOG of ChemSpot
 
 
 
-1.3           2012-10-08
--------------------------
+1.3 - 2012-10-08
+-----------------------------------------------------------------------
 - New tagger component for chemical formulae.
-- Integrated ABBREV tagger for recognition of biochemical abbreviations by Schwartz et al.
+- Integrated ABBREV tagger for recognition of biochemical abbreviations 
+  by Schwartz et al.
 - Added multi-threading functionality.
 - Improved normalization.
 - Made ChemSpot code compliant with Java version 1.6.
