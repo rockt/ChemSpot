@@ -86,10 +86,14 @@ public class AnnotationMergerAE extends JCasAnnotator_ImplBase {
 				
 				boolean isChemAbbreviation = abbreviations.contains(entity.getCoveredText().trim().toLowerCase());
 				if (!isChemAbbreviation && !filtered && Constants.ABBREV.equals(entity.getSource())) {
-					String name = entity.getId().trim().toLowerCase();
-					entity.setId(null);
+					String name = null;
 					
-					if (chemicalsMap.containsKey(name)) {
+					if (entity.getId() != null) {
+						name = entity.getId().trim().toLowerCase();
+						entity.setId(null);
+					}
+					
+					if (name != null && chemicalsMap.containsKey(name)) {
 						List<NamedEntity> chems = chemicalsMap.get(name);
 						
 						for (NamedEntity c : chems) {
