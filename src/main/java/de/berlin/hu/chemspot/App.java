@@ -40,6 +40,7 @@ import org.apache.uima.examples.xmi.XmiCollectionReader;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.metadata.TypeSystemDescription;
 import org.apache.uima.tools.components.FileSystemCollectionReader;
+import org.apache.uima.util.CasCopier;
 import org.apache.uima.util.XMLInputSource;
 import org.apache.uima.util.XMLSerializer;
 import org.u_compare.shared.semantic.NamedEntity;
@@ -74,6 +75,7 @@ public class App {
     private static Map<Corpus, String> corpora = new HashMap<Corpus, String>();
     private static Corpus corpus;
     private static String pathToXMIOutput;
+    private static List<JCas> jcases = null;
 
     private static void initializeFromConfigurationFile(String pathToPropertiesFile) {
     	// read configuration file
@@ -488,6 +490,14 @@ public class App {
     	}
     	
     	JCas jcas = JCasFactory.createJCas(typeSystem);
+    	
+    	if (threaded) {
+    		jcases = new ArrayList<JCas>();
+    		
+    		for (int i = 0; i < threadNr; i++) {
+    			jcases.add(JCasFactory.createJCas(typeSystem));
+    		}
+    	}
     	while (reader.hasNext()) {
             jcas.reset();
             reader.getNext(jcas.getCas());
@@ -517,7 +527,22 @@ public class App {
 
             // run ChemSpot threaded or...
             if (threaded) {
-	            ChemSpotRun run = new ChemSpotRun(runNr, chemspot, jcas, outputFilePath, evaluate);
+            	while (jcases.isEmpty()) {
+            		try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						// do nothing
+					}
+            	}
+            	
+            	JCas threadJCas = null;
+            	synchronized(jcases) {
+	            	threadJCas = jcases.remove(0);
+	            	threadJCas.reset();
+	            	CasCopier.copyCas(jcas.getCas(), threadJCas.getCas(), true);
+            	}
+            	
+	            ChemSpotRun run = new ChemSpotRun(runNr, chemspot, threadJCas, outputFilePath, evaluate);
 	            threadPool.submit(run);
 	        // non-threaded
             } else {
@@ -595,6 +620,10 @@ public class App {
 			System.out.println("Starting run " + runNr);
 			runChemSpot(chemspot, jCas, outputFile, evaluate);
 			System.out.println("Run " + runNr + " finished");
+			
+			synchronized(jcases) {
+				jcases.add(jCas);
+			}
 		}
     }
 
