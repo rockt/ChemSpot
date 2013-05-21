@@ -276,13 +276,22 @@ public class ChemicalNEREvaluator {
     
     public void writeNormalizations(OutputStream s, List<Mention> normalizedAll, List<Mention> normalized, List<Mention> normalizedCorrect) throws IOException {
     	BufferedWriter w = new BufferedWriter(new OutputStreamWriter(s));
-		double correctAllRatio = !normalizedAll.isEmpty() ? (double)normalizedCorrect.size() / (double)normalizedAll.size() : 0;
-		double correctNormalizedRatio = !normalized.isEmpty() ? (double)normalizedCorrect.size() / (double)normalized.size() : 0;
-		w.write(String.format("entities total              : %d%n", normalizedAll.size()));
-		w.write(String.format("entities normalized         : %d%n", normalized.size()));
-		w.write(String.format("normalized correct          : %d%n", normalizedCorrect.size()));
-		w.write(String.format("percent correct (all)       : %.2f %%%n" , correctAllRatio * 100.0));
-		w.write(String.format("percent correct (normalized): %.2f %%%n" , correctNormalizedRatio * 100.0));
+		
+		int normalizedAllCount = normalizedAll.size();
+		int normalizedCount = normalized.size();
+		int normalizedCorrectCount = normalizedCorrect.size();
+		double correctAllRatio = normalizedAllCount != 0 ? (double)normalizedCorrect.size() / (double)normalizedAll.size() : 0;
+		double precision = normalizedCount != 0 ? (double)normalizedCorrectCount / normalizedCount : 0;
+		double recall = normalizedCount != 0 ? (double)normalizedCount / normalizedAllCount : 0;
+		double fScore = (precision != 0 || recall != 0) ? 2 * precision * recall / (precision + recall) : 0 ;
+		w.write(String.format("entities total              : %d%n", normalizedAllCount));
+		w.write(String.format("entities normalized         : %d%n", normalizedCount));
+		w.write(String.format("normalized correct          : %d%n", normalizedCorrectCount));
+		w.write(String.format("percent correct (all)       : %.2f %%%n%n" , correctAllRatio * 100.0));
+		
+		w.write(String.format("precision: %.2f %%%n" , precision * 100.0));
+		w.write(String.format("recall: %.2f %%%n" , recall * 100.0));
+		w.write(String.format("f1 score: %.2f %%%n" , fScore * 100.0));
 		w.flush();
 		
 		writeList(s, "correct", normalizedCorrect);
