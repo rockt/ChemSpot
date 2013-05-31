@@ -123,7 +123,7 @@ public class ZipFileCollectionReader extends CollectionReader_ImplBase {
 		for (int i = 0; i < files.length; i++) {
 			if (!files[i].isDirectory() && files[i].getName().endsWith(".txt.gz")) {
 				mFiles.add(files[i]);
-			} else if (mRecursive) {
+			} else if (files[i].isDirectory() && mRecursive) {
 				addFilesFromDir(files[i]);
 			}
 		}
@@ -149,6 +149,8 @@ public class ZipFileCollectionReader extends CollectionReader_ImplBase {
 
 		// open input stream to file
 		File file = (File) mFiles.get(mCurrentIndex++);
+		
+		System.out.println("Reading file: " + file.getAbsolutePath());
 
 		//read zipped file
 		String text;   
