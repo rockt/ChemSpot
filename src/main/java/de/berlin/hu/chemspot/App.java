@@ -75,6 +75,7 @@ public class App {
     private static Map<Corpus, String> corpora = new HashMap<Corpus, String>();
     private static Corpus corpus;
     private static String pathToXMIOutput;
+    
     private static List<JCas> jcases = null;
 
     private static void initializeFromConfigurationFile(String pathToPropertiesFile) {
@@ -352,7 +353,6 @@ public class App {
             	}
 
             	tagCollection(chemspot, typeSystem, reader, threaded, threadNr);
-            // tag single file
             } 
         }
 	}
@@ -550,6 +550,7 @@ public class App {
             }
             
             runNr++;
+            System.out.println();
         }
     	
     	if (threaded) {

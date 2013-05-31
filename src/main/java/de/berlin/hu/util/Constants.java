@@ -6,7 +6,7 @@ package de.berlin.hu.util;
  * Time: 1:44 PM
  */
 public class Constants {
-	public static enum ChemicalID {CHID, CHEB, CAS, PUBC, PUBS, INCH, DRUG, HMBD, KEGG, KEGD, MESH};
+	public static enum ChemicalID {CHID, CHEB, CAS, PUBC, PUBS, INCH, DRUG, HMBD, KEGG, KEGD, MESH, FDA, FDA_DATE};
 	
 	public static final String ABBREV = "ABBREV";
     public static final String CRF = "crf";

@@ -137,6 +137,14 @@ public class Mention implements Comparable<Object> {
     public String getMESH() {
         return getId(ChemicalID.MESH);
     }
+    
+    public String getFDA() {
+        return getId(ChemicalID.FDA);
+    }
+
+    public String getFDADate() {
+        return getId(ChemicalID.FDA_DATE);
+    }
 
     public String getId(ChemicalID type) {
         String id = null;
@@ -190,6 +198,14 @@ public class Mention implements Comparable<Object> {
 
     public void setMESH(String id) {
         setId(ChemicalID.MESH, id);
+    }
+    
+    public void setFDA(String id) {
+        setId(ChemicalID.FDA, id);
+    }
+    
+    public void setFDADate(String id) {
+        setId(ChemicalID.FDA_DATE, id);
     }
     
     public void setId(ChemicalID type, String id) {
