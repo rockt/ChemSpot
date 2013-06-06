@@ -18,6 +18,7 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 
 import de.berlin.hu.chemspot.Mention;
+import de.berlin.hu.util.Constants;
 
 
 /**
@@ -204,7 +205,7 @@ public class ExtractAbbrev {
 								System.out.println(bestLongForm);
 								System.out.println(inText);
 								System.out.println();*/
-								Mention mention = new Mention(begin, end, abbreviation, bestLongForm, "ABBREV", null);
+								Mention mention = new Mention(begin, end, abbreviation, bestLongForm, Constants.ABBREV, null);
 								
 								result.add(mention);
 							}
