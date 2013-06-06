@@ -32,6 +32,8 @@ public class AnnotationMergerAE extends JCasAnnotator_ImplBase {
 			documents.add(null);
 		}
 		
+		int drug_overlaps = 0;
+		int total = 0;
 		for (PubmedDocument document : documents) {
 			//System.out.println("\nMerging annotations of document " + (document != null ? document.getPmid() : ""));
 				
@@ -104,6 +106,21 @@ public class AnnotationMergerAE extends JCasAnnotator_ImplBase {
 						}
 					}
 					
+					/*if (!isChemAbbreviation && chemicalsMap.containsKey(entity.getCoveredText().toLowerCase())) {
+						List<NamedEntity> chems = chemicalsMap.get(entity.getCoveredText().toLowerCase());
+						
+						for (NamedEntity c : chems) {
+							if (!Constants.ABBREV.equals(c.getSource())) {
+								isChemAbbreviation = true;
+								break;
+							}
+						}
+					}
+					
+					if (!isChemAbbreviation && Normalizer.getIds() != null) {
+						isChemAbbreviation = Normalizer.getIds().containsKey(entity.getCoveredText().trim().toLowerCase());
+					}*/
+					
 					if (isChemAbbreviation) {
 						abbreviations.add(entity.getCoveredText().trim().toLowerCase());
 					} else {
@@ -124,7 +141,7 @@ public class AnnotationMergerAE extends JCasAnnotator_ImplBase {
 					}
 				}
 				
-				if (!filtered && lastEntity != null && crosses(lastEntity, entity)) {					
+				if (!filtered && lastEntity != null && crosses(lastEntity, entity)) {
 					if (Constants.ABBREV.equals(lastEntity.getSource())) {
 						if (isReplaceByAbbreviation(lastEntity, entity) && (!Constants.ABBREV.equals(entity.getSource()) || isChemAbbreviation)) {
 							//System.out.printf("replacing %s annotation %s at [%d-%d], because it was identified as an abbreviation for %s%n", entity.getSource(), entity.getCoveredText(), entity.getBegin(), entity.getEnd(), lastEntity.getId());
@@ -166,18 +183,39 @@ public class AnnotationMergerAE extends JCasAnnotator_ImplBase {
 					} else if (Constants.CRF.equals(entity.getSource())) {
 						lastEntity.removeFromIndexes(aJCas);
 						chemicals.remove(lastEntity);
-					}
+					} /*else if (Constants.DRUG.equals(lastEntity.getSource())) {
+						lastEntity.removeFromIndexes(aJCas);
+						chemicals.remove(lastEntity);
+					} else {
+						if (lastEntity.getCoveredText().length() > entity.getCoveredText().length()) {
+							entity.removeFromIndexes(aJCas);
+							filtered = true;
+						} else {
+							lastEntity.removeFromIndexes(aJCas);
+							chemicals.remove(lastEntity);
+						}
+					}*/
 				}
 				
 				if (lastEntity != null && !filtered && !crosses(lastEntity, entity) && entity.getBegin() - lastEntity.getEnd() < 10) {
-					if (entity.getCAS().getDocumentText().substring(lastEntity.getEnd(), entity.getBegin()).matches("\\s+")) {
+					if (entity.getCAS().getDocumentText().substring(lastEntity.getEnd(), entity.getBegin()).matches(" ")) {
 						entity.setBegin(lastEntity.getBegin());
 						lastEntity.removeFromIndexes();
 						chemicals.remove(lastEntity);
 					}
 				}
 				
+				if (!filtered && (Constants.DICTIONARY.equals(entity.getSource()) || Constants.DRUG.equals(entity.getSource())) && entity.getEnd() - entity.getBegin() <= 2) {
+					entity.removeFromIndexes(aJCas);
+					filtered = true;
+				}
+				
 				if (!filtered) {
+					if (lastEntity != null && crosses(lastEntity, entity) && Constants.DRUG.equals(entity.getSource()) && !Constants.DRUG.equals(lastEntity.getSource())) {
+						drug_overlaps++;
+					}
+					
+					total++;
 					chemicals.add(entity);
 					lastEntity = entity;
 				}
@@ -185,6 +223,8 @@ public class AnnotationMergerAE extends JCasAnnotator_ImplBase {
 			}
 			convertNamedEntitiesToChemicals(aJCas, chemicals);
 		}
+		
+		//System.out.println("drug overlaps: " + drug_overlaps + " / " + total);
 	}
 
 	private void convertNamedEntitiesToChemicals(JCas aJCas,
