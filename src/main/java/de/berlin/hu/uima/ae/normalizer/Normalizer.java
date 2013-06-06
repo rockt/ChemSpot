@@ -31,6 +31,8 @@ import uk.ac.cam.ch.wwmm.opsin.NameToStructureException;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -51,7 +53,8 @@ import java.util.zip.ZipFile;
  * Time: 3:28 PM
  */
 public class Normalizer extends JCasAnnotator_ImplBase {
-    private HashMap<String,String[]> ids = new HashMap<String,String[]>();
+    private static Map<String,String[]> ids = new HashMap<String,String[]>();
+    private static Map<String,String[]> normalizedIds = new HashMap<String,String[]>();
     private NameToInchi nameToInChi;
     private static final String PATH_TO_IDS = "PathToIDs";
     private NameNormalizer nameNormalizer = null;
@@ -152,7 +155,91 @@ public class Normalizer extends JCasAnnotator_ImplBase {
     	
     	System.out.println("Done.");
     }
+    
+    public static Map<String, String[]> readIdsFile(InputStream in) throws IOException {
+    	Map<String, String[]> result = new HashMap<String, String[]>();
+    	
+    	Map<String, List<String>> normalizedChems = new HashMap<String, List<String>>();
+    	
+    	BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+        String line = reader.readLine();
+        while (line != null) {
+            int splitAt = line.indexOf('\t');
+            String chem = line.substring(0, splitAt).toLowerCase();
+            String identifiers = line.substring(splitAt+1);
+            
+            result.put(chem, identifiers.split("\t"));
+            
+            /*nameNormalizer.setName(chem);
+            String normalizedChem = nameNormalizer.getNormName();
+            if (!normalizedChems.containsKey(normalizedChem)) {
+            	normalizedChems.put(normalizedChem, new ArrayList<String>());
+            } else {
+            	String equal = Arrays.equals(identifiers.split("\t"), ids.get(normalizedChem)) ? "equal" : "not equal";
+            	System.out.println("conflict for '" + chem + "' and " + normalizedChems.get(normalizedChem) + ". Ids are " + equal + ".");
+            	if ("not equal".equals(equal)) {
+            		System.out.println("  " + identifiers.replaceAll("\t", ", ") + " vs." + Arrays.toString(ids.get(normalizedChem)).replace('[', ' ').replace(']', ' '));
+            	}
+            }
+            normalizedChems.get(normalizedChem).add(chem);
+            
+            result.put(normalizedChem, identifiers.split("\t"));*/
+            
+            line = reader.readLine();
+        }
         
+        return result;
+    }
+    
+    public static Map<String, String[]> loadIdsFromFile(String file) throws IOException {
+    	Map<String, String[]> ids = new HashMap<String, String[]>();
+    	
+        if (file.endsWith(".zip")) {
+	        ZipFile zipFile = new ZipFile(file);
+            Enumeration<? extends ZipEntry> entries = zipFile.entries();
+            
+            while (entries.hasMoreElements()) {
+                ZipEntry entry = entries.nextElement();
+                
+                InputStream in = zipFile.getInputStream(entry);
+                ids.putAll(readIdsFile(in));
+                in.close();
+            }
+        } else {
+        	InputStream in = new FileInputStream(file);
+        	ids.putAll(readIdsFile(in));
+        	in.close();
+        }
+        
+        return ids;
+    }
+    
+    public static void writeIDs(String pathToFile, Map<String, String[]> ids) throws IOException {
+    	BufferedWriter writer = new BufferedWriter(new FileWriter(pathToFile));
+        for (String chem : ids.keySet()) {
+        	String[] chemIds = ids.get(chem);
+        	String idString = "";
+        	
+            for (ChemicalID type : ChemicalID.values()) {
+            	String id = "";
+            	if (type.ordinal() < chemIds.length) {
+            		id = chemIds[type.ordinal()];
+            		if (id == null) id = "";
+            	}
+            	idString += "\t" + id; 
+            }
+            
+        	writer.write(chem + idString);
+            writer.newLine();
+        }
+        
+        writer.close();
+    }
+    
+    public static Map<String, String[]> getIds() {
+    	return ids;
+    }
+    
     @Override
     public void initialize(UimaContext aContext) throws ResourceInitializationException {
         super.initialize(aContext);
@@ -169,78 +256,38 @@ public class Normalizer extends JCasAnnotator_ImplBase {
         	nameNormalizer = new NameNormalizer();
         }
         
-        ZipFile zipFile = null;
+        String idsFile = aContext.getConfigParameterValue(PATH_TO_IDS).toString();
         try {
-            zipFile = new ZipFile(aContext.getConfigParameterValue(PATH_TO_IDS).toString());
-            Enumeration<? extends ZipEntry> entries = zipFile.entries();
-            
-            Map<String, List<String>> normalizedChems = new HashMap<String, List<String>>();
-            while (entries.hasMoreElements()) {
-            	boolean printOverwrittenCount = !ids.isEmpty();
-                ZipEntry entry = entries.nextElement();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(zipFile.getInputStream(entry)));
-                String line = reader.readLine();
-                int overwritten = 0;
-                int all = 0;
-                while (line != null) {
-                    int splitAt = line.indexOf('\t');
-                    String chem = line.substring(0, splitAt).toLowerCase();
-                    String identifiers = line.substring(splitAt+1);
+        	if (idsFile.endsWith(".zip")) {
+    	        ZipFile zipFile = new ZipFile(idsFile);
+                Enumeration<? extends ZipEntry> entries = zipFile.entries();
+                
+                while (entries.hasMoreElements()) {
+                    ZipEntry entry = entries.nextElement();
                     
-                    if (printOverwrittenCount) {
-                    	if (ids.containsKey(chem)) {
-                    		overwritten++;
+                    InputStream in = zipFile.getInputStream(entry);
+                    if (entry.getName().contains("normalized")) {
+                    	if (ChemSpotConfiguration.useComponent(Component.CHEMHITS)) {
+	                    	System.out.print("  Loading ChemHits normalized ids... ");
+	                    	normalizedIds.putAll(readIdsFile(in));
+	                    	System.out.println("Done.");
                     	}
-                    	all++;
+                    } else if (ChemSpotConfiguration.useComponent(Component.NORMALIZER)) {
+                    	System.out.print("  Loading ids... ");
+                    	ids.putAll(readIdsFile(in));
+                    	System.out.println("Done.");
                     }
                     
-                    ids.put(chem, identifiers.split("\t"));
-                    
-                    /*nameNormalizer.setName(chem);
-                    String normalizedChem = nameNormalizer.getNormName();
-                    if (!normalizedChems.containsKey(normalizedChem)) {
-                    	normalizedChems.put(normalizedChem, new ArrayList<String>());
-                    } else {
-                    	String equal = Arrays.equals(identifiers.split("\t"), ids.get(normalizedChem)) ? "equal" : "not equal";
-                    	System.out.println("conflict for '" + chem + "' and " + normalizedChems.get(normalizedChem) + ". Ids are " + equal + ".");
-                    	if ("not equal".equals(equal)) {
-                    		System.out.println("  " + identifiers.replaceAll("\t", ", ") + " vs." + Arrays.toString(ids.get(normalizedChem)).replace('[', ' ').replace(']', ' '));
-                    	}
-                    }
-                    normalizedChems.get(normalizedChem).add(chem);
-                    
-                    ids.put(normalizedChem, identifiers.split("\t"));*/
-                    
-                    line = reader.readLine();
+                    in.close();
                 }
-                
-                if (printOverwrittenCount) {
-                	System.out.printf("%d of %d ids were overwritten (%.2f %%)%n", overwritten, all, (double)overwritten / (double)all * 100.0);
-                }
-                
-                /*BufferedWriter writer = new BufferedWriter(new FileWriter("output/ids-normalized.map"));
-                for (String chem : ids.keySet()) {
-                	String[] chemIds = ids.get(chem);
-                	String idString = "";
-                	
-                    for (ChemicalID type : ChemicalID.values()) {
-                    	String id = "";
-                    	if (type.ordinal() < chemIds.length) {
-                    		id = chemIds[type.ordinal()];
-                    		if (id == null) id = "";
-                    	}
-                    	idString += "\t" + id; 
-                    }
-                    
-                	writer.write(chem + idString);
-                    writer.newLine();
-                }
-                
-                writer.close();*/
+            } else {
+            	ids = loadIdsFromFile(idsFile);
             }
-        } catch (IOException e) {
-            throw new ResourceInitializationException(e);
-        }
+		} catch (IOException e) {
+			throw new ResourceInitializationException(e);
+		}
+        
+        
         if (ChemSpotConfiguration.useComponent(Component.OPSIN)) {
 	        try {
 	            //initializing OPSIN
@@ -327,11 +374,12 @@ public class Normalizer extends JCasAnnotator_ImplBase {
         int nN = 0;
         int fda = 0;
         
+        List<NamedEntity> entiti = new ArrayList<NamedEntity>();
         while (entities.hasNext()) {
             NamedEntity entity = entities.next();
             String inchi = nameToInChi != null ? nameToInChi.parseToStdInchi(entity.getCoveredText()) : null;
-
-            if (!Constants.GOLDSTANDARD.equals(entity.getSource())) {
+            
+            if (Constants.GOLDSTANDARD.equals(entity.getSource())) {
                 nE++;
                 String[] normalized = ids.get(entity.getCoveredText().toLowerCase());
                 
@@ -343,46 +391,50 @@ public class Normalizer extends JCasAnnotator_ImplBase {
                 		chemHitsEqual++;
                 	} else {
                 		chemHitsDifferent++;
-                		
-                		//System.out.println(entity.getCoveredText() + " - > " + chemHitsnormalizedString);
-                		
-                		String[] chemhitsNormalized = ids.get(chemHitsnormalizedString);
-                		
-                		if (normalized == null && chemhitsNormalized == null) {
-                			chemHitsIdNotFound++;
-                		} else if (normalized == null && chemhitsNormalized != null) {
-                			chemHitsIdFoundExclusively++;
-                		} else if (normalized != null && chemhitsNormalized == null) {
-                			chemHitsIdNotFoundExclusively++;
-                		} else if (normalized != null && chemhitsNormalized != null)  {
-                			chemHitsIdFoundBoth++;
-                		}
-                		
-                		if (normalized != null && chemhitsNormalized != null) {
-                			if (chemhitsNormalized.length != normalized.length) {
-                				chemHitsdifferentIdFound++;
-                			} else {
-                				
-                				for (int i = 0; i < chemhitsNormalized.length; i++) {
-                					if (
-                							(normalized[i] != null && !normalized[i].equals(chemhitsNormalized[i])) 
-                							|| (chemhitsNormalized[i] != null && !chemhitsNormalized[i].equals(normalized[i])) 
-                							) {
-                						chemHitsdifferentIdFound++;
-                						break;
-                					}
-                				}
-                			}
-                		}
                 	}
-                	
-                	if (normalized == null) {
-                    	normalized = ids.get(chemHitsnormalizedString);
-                    	if (normalized != null) {
-                    		System.out.println("replacing id with the one found by ChemHits: " + entity.getCoveredText() + " -> " + chemHitsnormalizedString);
-                    	}
+                		
+            		//System.out.println(entity.getCoveredText() + " - > " + chemHitsnormalizedString);
+            		
+            		String[] chemhitsNormalized = normalizedIds.get(chemHitsnormalizedString);
+            		
+            		if (normalized != null && (normalized[Constants.ChemicalID.CHEB.ordinal()] == null || normalized[Constants.ChemicalID.CHEB.ordinal()].isEmpty())) {
+            			normalized = null;
+            		}
+            		if (chemhitsNormalized != null && (chemhitsNormalized[Constants.ChemicalID.CHEB.ordinal()] == null || chemhitsNormalized[Constants.ChemicalID.CHEB.ordinal()].isEmpty())) {
+            			chemhitsNormalized = null;
+            		}
+            		
+            		if (normalized == null && chemhitsNormalized == null) {
+            			chemHitsIdNotFound++;
+            		} else if (normalized == null && chemhitsNormalized != null) {
+            			chemHitsIdFoundExclusively++;
+            		} else if (normalized != null && chemhitsNormalized == null) {
+            			chemHitsIdNotFoundExclusively++;
+            		} else if (normalized != null && chemhitsNormalized != null)  {
+            			chemHitsIdFoundBoth++;
+            		}
+            		
+            		if (normalized != null && chemhitsNormalized != null) {
+            			if (chemhitsNormalized.length != normalized.length) {
+            				chemHitsdifferentIdFound++;
+            			} else {
+            				for (int i = 0; i < chemhitsNormalized.length; i++) {
+            					if (
+            							(normalized[i] != null && !normalized[i].equals(chemhitsNormalized[i])) 
+            							|| (chemhitsNormalized[i] != null && !chemhitsNormalized[i].equals(normalized[i])) 
+            							) {
+            						chemHitsdifferentIdFound++;
+            						break;
+            					}
+            				}
+            			}
+            		}
+            		
+            		if (normalized == null && chemhitsNormalized != null) {
+                    	normalized = chemhitsNormalized;
+                    	System.out.println("replacing id with the one found by ChemHits: " + entity.getCoveredText() + " -> " + chemHitsnormalizedString);
                     }
-                }
+            	}
                 
                 /*if (normalized == null) {
                 	normalized = getBestMatch(entity.getCoveredText().toLowerCase(), ids);
@@ -413,7 +465,8 @@ public class Normalizer extends JCasAnnotator_ImplBase {
                 
                 if (fdaIds != null && fdaIds.containsKey(entity.getCoveredText().toLowerCase())) {
                 	fda++;
-                	System.out.println(entity.getCoveredText().toLowerCase());
+                	//System.out.println(entity.getCoveredText().toLowerCase());
+                	if (normalized == null) normalized = new String[Constants.ChemicalID.values().length];
                 	
                 	normalized = Arrays.copyOf(normalized, Constants.ChemicalID.values().length);
                 	normalized[ChemicalID.FDA.ordinal()] = fdaIds.get(entity.getCoveredText().toLowerCase());
@@ -423,19 +476,24 @@ public class Normalizer extends JCasAnnotator_ImplBase {
                 	}
                 }
                 
-                entity.setId(Arrays.toString(normalized));
+                NamedEntity e = (NamedEntity)entity.clone();
+                e.setId(Arrays.toString(normalized));
+                e.setSource("Test");
+                entiti.add(e);
             }
         }
         
+        for (NamedEntity e : entiti) {
+        	e.addToIndexes();
+        }
         
-        if (nameNormalizer != null )printChemHitsStatistic();
-        System.out.println(fda);
+        if (nameNormalizer != null) printChemHitsStatistic();
+        //System.out.println(fda);
         //System.out.println(nN + "/" + nE);
     }
     
     private void printChemHitsStatistic() {
     	System.out.printf("%nChemHits statistics:%n  identifed %d new terms after normalization (of %d / %.2f %%)%n", chemHitsDifferent, chemHitsDifferent + chemHitsEqual, chemHitsDifferent + chemHitsEqual > 0 ? (float)chemHitsDifferent / (float)(chemHitsDifferent + chemHitsEqual) * 100 : 0);
     	System.out.printf("  found only by ChemHits: %d, only by ChemSpot: %d, by neither: %d, by both: %d (%d of those differently / %.2f %%)%n%n", chemHitsIdFoundExclusively, chemHitsIdNotFoundExclusively, chemHitsIdNotFound, chemHitsIdFoundBoth , chemHitsdifferentIdFound, chemHitsIdFoundBoth  > 0 ? (float)chemHitsdifferentIdFound / (float)chemHitsIdFoundBoth * 100 : 0);
-
     }
 }
