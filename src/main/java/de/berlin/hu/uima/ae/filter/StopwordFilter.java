@@ -49,7 +49,7 @@ public class StopwordFilter extends JCasAnnotator_ImplBase {
 		while (chemicalIterator.hasNext()) {
 			NamedEntity chemical = (NamedEntity) chemicalIterator.next();
 			if (!Constants.GOLDSTANDARD.equals(chemical.getSource())) {
-				if (stopwords.contains(chemical.getCoveredText())) {
+				if (stopwords.contains(chemical.getCoveredText().toLowerCase())) {
 					invalidChemicals.add(chemical);
 				}
 			}
