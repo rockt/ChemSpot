@@ -19,8 +19,8 @@ public class Evaluator<ResultType, StandardType> implements Serializable {
 	private ArrayList<ResultType> falsePositives;
 	private ArrayList<StandardType> falseNegatives;
 	
-	private transient Set<? extends ResultType> result;
-	private transient Set<? extends StandardType> standard;
+	private transient List<? extends ResultType> result;
+	private transient List<? extends StandardType> standard;
 	
 	private double precision;
 	private double recall;
@@ -55,7 +55,7 @@ public class Evaluator<ResultType, StandardType> implements Serializable {
 		assert this.result == null : "Do not overwrite the result collection!";
 		assert result != null : "Your result collection is null!";
 		assert result.size() > 0 : "Your result collection is empty!";
-		this.result = new HashSet<ResultType>(result);
+		this.result = new ArrayList<ResultType>(result);
 		return this;
 	}
 	
@@ -63,7 +63,7 @@ public class Evaluator<ResultType, StandardType> implements Serializable {
 		assert this.standard == null : "Do not overwrite the standard collection!";
 		assert standard != null : "Your standard collection is null!";
 		assert standard.size() > 0 : "Your standard collection is empty!";
-		this.standard = new HashSet<StandardType>(standard);
+		this.standard = new ArrayList<StandardType>(standard);
 		return this;
 	}
 	
