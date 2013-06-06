@@ -13,14 +13,23 @@
 package de.berlin.hu.uima.ae.tagger.brics;
 
 import de.berlin.hu.chemspot.Mention;
+import de.berlin.hu.uima.ae.normalizer.Normalizer;
+import dk.brics.automaton.Automaton;
 import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.RunAutomaton;
+import dk.brics.automaton.State;
+import dk.brics.automaton.StringUnionOperations;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -30,8 +39,27 @@ import java.util.zip.ZipFile;
  * Time: 2:20 PM
  */
 public class BricsMatcher {
+	private static final int TERMS_PER_AUTOMATON = 100000;
+	
     private Collection<RunAutomaton> matchers = new ArrayList<RunAutomaton>();
 
+    public BricsMatcher() throws IOException, ClassNotFoundException {
+    	this(Normalizer.getIds().keySet(), TERMS_PER_AUTOMATON);
+    }
+    
+    public BricsMatcher(Collection<String> chemicals) throws IOException, ClassNotFoundException {
+    	System.out.print("Creating brics automaton...");
+    	matchers.add(BricsMatcher.createAutomaton(chemicals));
+    	System.out.println("Done.");
+    }
+    
+    public BricsMatcher(Collection<String> chemicals, int termsPerAutomaton) throws IOException, ClassNotFoundException {
+    	System.out.print("Creating brics automata");
+    	matchers.addAll(BricsMatcher.createAutomata(chemicals, termsPerAutomaton));
+    	
+    	System.out.println("Created " + matchers.size() + " brics automata.");
+    }
+    
     /**
      * BricsMatcher loads a set of brics dictionary matchers packed in a zip file.
      * @param pathToZippedBinaries Path to the zip file containing a set of brics dictionary matchers.
@@ -39,13 +67,60 @@ public class BricsMatcher {
      * @throws ClassNotFoundException
      */
     public BricsMatcher(String pathToZippedBinaries) throws IOException, ClassNotFoundException {
-        ZipFile zipFile = new ZipFile(pathToZippedBinaries);
-        Enumeration<? extends ZipEntry> entries = zipFile.entries();
-        while (entries.hasMoreElements()) {
-            ZipEntry entry = entries.nextElement();
-            matchers.add(RunAutomaton.load(zipFile.getInputStream(entry)));
-        }
+    	if (pathToZippedBinaries.endsWith(".zip")) {
+	        ZipFile zipFile = new ZipFile(pathToZippedBinaries);
+	        Enumeration<? extends ZipEntry> entries = zipFile.entries();
+	        while (entries.hasMoreElements()) {
+	            ZipEntry entry = entries.nextElement();
+	            matchers.add(RunAutomaton.load(zipFile.getInputStream(entry)));
+	        }
+    	} else {
+    		 matchers.add(RunAutomaton.load(new FileInputStream(pathToZippedBinaries)));
+    	}
         System.out.println("Loaded " + matchers.size() + " brics automata.");
+    }
+    
+    public static List<RunAutomaton> createAutomata(Collection<String> chemicals, int termsPerAutomaton) {
+    	List<RunAutomaton> result = new ArrayList<RunAutomaton>();
+    	
+    	int count = 0;
+    	int total = 0;
+    	List<String> terms = new ArrayList<String>();
+    	for (String chemical : chemicals) {
+    		terms.add(chemical);
+    		
+    		count++;
+    		total++;
+    		if (count >= termsPerAutomaton) {
+    			result.add(createAutomaton(terms));
+    			System.out.print(".");
+    			terms.clear();
+    			count = 0;
+    		}
+    	}
+    	
+    	if (!terms.isEmpty()) {
+    		result.add(createAutomaton(terms));
+    		System.out.println(" Done.");
+			terms.clear();
+			count = 0;
+    	}
+    	
+    	return result;
+    }
+    
+    public static RunAutomaton createAutomaton(Collection<String> chemicals) {
+    	List<String> sortedList = new ArrayList<String>(chemicals);
+		Collections.sort(sortedList, StringUnionOperations.LEXICOGRAPHIC_ORDER);
+		String[] sortedArray = sortedList.toArray(new String[sortedList.size()]);
+		sortedList = null;
+		State state = StringUnionOperations.build(sortedArray);
+		Automaton automaton = new Automaton();
+		automaton.setInitialState(state);
+		
+		RunAutomaton runAutomaton = new RunAutomaton(automaton);
+		
+		return runAutomaton;
     }
 
     /**
