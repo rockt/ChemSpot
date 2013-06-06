@@ -13,6 +13,7 @@
 package de.berlin.hu.uima.ae.tagger.brics;
 
 import de.berlin.hu.chemspot.Mention;
+import de.berlin.hu.uima.ae.normalizer.Normalizer;
 import de.berlin.hu.util.Constants;
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
@@ -34,32 +35,42 @@ import java.util.*;
  * Time: 2:11 PM
  */
 public class BricsTagger extends JCasAnnotator_ImplBase {
-	private static final String PATH_TO_DICTIONARY = "DrugBankMatcherDictionaryAutomat";
+	public static final String PATH_TO_DICTIONARY = "DrugBankMatcherDictionaryAutomat";
+	public static final String IDS = "Ids";
     //list of invalid suffixes taken from Hettne et al. (2009)
 	private Set<String> suffixes; //FIXME: implement another AE for that
 	private BricsMatcher matcher;
 
 	@Override
-	public void initialize(UimaContext aContext)
-			throws ResourceInitializationException {
+	public void initialize(UimaContext aContext) throws ResourceInitializationException {
 		super.initialize(aContext);
 		suffixes = new HashSet<String>();
 
-		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("resources/suffixes.txt")));
-			String line = reader.readLine();
-			while (line != null) {
-				suffixes.add(line);
-				line = reader.readLine();
+		if (aContext.getConfigParameterValue(PATH_TO_DICTIONARY) != null && !aContext.getConfigParameterValue(PATH_TO_DICTIONARY).toString().isEmpty()) {
+			try {
+				BufferedReader reader = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("resources/suffixes.txt")));
+				String line = reader.readLine();
+				while (line != null) {
+					suffixes.add(line);
+					line = reader.readLine();
+				}
+				matcher = new BricsMatcher(aContext.getConfigParameterValue(PATH_TO_DICTIONARY).toString());
+			} catch (FileNotFoundException e) {
+				throw new ResourceInitializationException(e);
+			} catch (IOException e) {
+				throw new ResourceInitializationException(e);
+			} catch (ClassNotFoundException e) {
+	            throw new ResourceInitializationException(e);
+	        }
+		} else if (Normalizer.getIds() != null) {
+			try {
+				matcher = new BricsMatcher();
+			} catch (IOException e) {
+				throw new ResourceInitializationException(e);
+			} catch (ClassNotFoundException e) {
+				throw new ResourceInitializationException(e);
 			}
-			matcher = new BricsMatcher(aContext.getConfigParameterValue(PATH_TO_DICTIONARY).toString());
-		} catch (FileNotFoundException e) {
-			throw new ResourceInitializationException(e);
-		} catch (IOException e) {
-			throw new ResourceInitializationException(e);
-		} catch (ClassNotFoundException e) {
-            throw new ResourceInitializationException(e);
-        }
+		}
     }
 
 /*    @Override
