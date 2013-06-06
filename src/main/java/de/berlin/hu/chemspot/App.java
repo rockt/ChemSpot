@@ -63,6 +63,7 @@ public class App {
 	private static String pathToSentenceFile;
 	private static String pathToDictionaryFile = "dict.zip";
 	private static String pathToIDsFile = "ids.zip";
+	private static String pathToDrugModel = "drug-model.bin";
 	private static String pathToOutputFile;
 	private static boolean convertToIOB = false;
 	private static ChemSpotArguments arguments;
@@ -93,9 +94,10 @@ public class App {
 		}
     	
     	// set variables
-    	pathToSentenceFile = ChemSpotConfiguration.getSentenceModel();
-    	pathToModelFile = ChemSpotConfiguration.getCRFModel();
-    	pathToDictionaryFile = ChemSpotConfiguration.getDictionary();
+    	pathToSentenceFile = ChemSpotConfiguration.getSentenceModelPath();
+    	pathToModelFile = ChemSpotConfiguration.getCRFModelPath();
+    	pathToDictionaryFile = ChemSpotConfiguration.getDictionaryPath();
+    	pathToDrugModel = ChemSpotConfiguration.getDrugModelPath();
     	
     	pathToOutputFile = ChemSpotConfiguration.getOutputPath();
     	pathToXMIOutput = ChemSpotConfiguration.getXMIOutputPath();
@@ -107,7 +109,7 @@ public class App {
     	threaded = ChemSpotConfiguration.isThreading();
     	threadNr = ChemSpotConfiguration.getNumberOfThreads();
         
-        pathToIDsFile = ChemSpotConfiguration.getIds();
+        pathToIDsFile = ChemSpotConfiguration.getIdsFilePath();
         
         // load corpora definitions
         Map<Corpus, String> nonExistent = new HashMap<Corpus, String>();
@@ -227,6 +229,9 @@ public class App {
 			if (arguments.isPathToIDs()) {
          		pathToIDsFile = arguments.getPathToIDs();
             }
+			if (arguments.isPathToDrugModelFile()) {
+         		pathToDrugModel = arguments.getPathToDrugModelFile();
+            }
 			if (arguments.isThreadNr()) {
 				threaded = true;
          		threadNr = arguments.getThreadNr();
@@ -289,7 +294,7 @@ public class App {
 		}
 
         //initializing ChemSpot with a CRF model file and an LINNAEUS automaton (the latter is optional)
-        ChemSpot chemspot = new ChemSpot(pathToModelFile, pathToDictionaryFile, pathToSentenceFile, pathToIDsFile);
+        ChemSpot chemspot = new ChemSpot(pathToModelFile, pathToDictionaryFile, pathToSentenceFile, pathToIDsFile, pathToDrugModel);
 
         TypeSystemDescription typeSystem = UIMAFramework.getXMLParser().parseTypeSystemDescription(new XMLInputSource(chemspot.getClass().getClassLoader().getResource("desc/TypeSystem.xml")));
         

@@ -14,6 +14,14 @@ public interface ChemSpotArguments {
 	  @Option(shortName="d")
 	  String getPathToDictionary();
 	  boolean isPathToDictionary();
+	  
+      @Option(shortName="i")
+ 	  String getPathToIDs();
+      boolean isPathToIDs();
+	  
+	  @Option(shortName="M")
+	  String getPathToDrugModelFile();
+	  boolean isPathToDrugModelFile();
 
 	  @Option(shortName="c")
 	  String getPathToIOBCorpora();
@@ -22,10 +30,6 @@ public interface ChemSpotArguments {
 	  @Option(shortName="C")
 	  String getPathToCRAFTCorpus();
 	  boolean isPathToCRAFTCorpus();
-
-      @Option(shortName="i")
- 	  String getPathToIDs();
-      boolean isPathToIDs();
       
       @Option(shortName="I")
       boolean isConvertToIOB();

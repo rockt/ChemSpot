@@ -16,6 +16,8 @@ import de.berlin.hu.chemspot.ChemSpotConfiguration.Component;
 import de.berlin.hu.types.PubmedDocument;
 import de.berlin.hu.uima.ae.feature.FeatureTokenGenerator;
 import de.berlin.hu.uima.ae.feature.FeatureTokenGenerator.Feature_Phase;
+import de.berlin.hu.uima.ae.tagger.brics.BricsTagger;
+import de.berlin.hu.uima.ae.tagger.drug.DrugNERTagger;
 import de.berlin.hu.util.Constants;
 import de.berlin.hu.util.Constants.ChemicalID;
 
@@ -65,6 +67,7 @@ public class ChemSpot {
     private AnalysisEngine dictionaryTagger;
     private AnalysisEngine chemicalFormulaTagger;
     private AnalysisEngine abbrevTagger;
+    private AnalysisEngine drugTagger;
     private AnalysisEngine annotationMerger;
     private AnalysisEngine fineTokenizer;
     private AnalysisEngine stopwordFilter;
@@ -93,13 +96,21 @@ public class ChemSpot {
     public ChemSpot(String pathToCRFModelFile, String pathToDictionaryFile, String pathToSentenceModelFile) {
     	this(pathToCRFModelFile, pathToDictionaryFile, pathToSentenceModelFile, null);
     }
+    
+    /**
+     * Initializes ChemSpot without a normalizer.
+     * @param pathToCRFModelFile the Path to a CRF model
+     */
+    public ChemSpot(String pathToCRFModelFile, String pathToDictionaryFile, String pathToSentenceModelFile, String pathToIDs) {
+    	this(pathToCRFModelFile, pathToDictionaryFile, pathToSentenceModelFile, pathToIDs, null);
+    }
 
     /**
      * Initializes ChemSpot with a CRF model, an OpenNLP sentence model and a dictionary automaton.
      * @param pathToCRFModelFile the path to a CRF model
      * @param pathToDictionaryFile the path to a dictionary automaton
      */
-    public ChemSpot(String pathToCRFModelFile, String pathToDictionaryFile, String pathToSentenceModelFile, String pathToIDs) {
+    public ChemSpot(String pathToCRFModelFile, String pathToDictionaryFile, String pathToSentenceModelFile, String pathToIDs, String pathToDrugModel) {
     	try {
     		// converting CRF and sentence model paths to URLs to allow loading of models from jar file
     		pathToCRFModelFile = pathToCRFModelFile == null ? this.getClass().getClassLoader().getResource(CRF_MODEL_RESOURCE_PATH).toString() : new File(pathToCRFModelFile).toURI().toURL().toString(); 
@@ -156,6 +167,20 @@ public class ChemSpot {
 	                    .getResource("desc/ae/tagger/AbbreviationTaggerAE.xml"))), CAS.NAME_DEFAULT_SOFA);
             }
             
+            if (ChemSpotConfiguration.useComponent(Component.DRUG_TAGGER)) {
+            	if (pathToDrugModel != null) {
+            		if (new File(pathToDrugModel).exists()) {
+            			System.out.println("Initializing drug tagger...");
+            			drugTagger = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+        	                    .getResource("desc/ae/tagger/DrugTaggerAE.xml"))), DrugNERTagger.PATH_TO_DRUG_MODEL, pathToDrugModel);
+            		}  else {
+             			System.out.println("Drug Model file '" + pathToDrugModel +  "' does not exist. Tagging without drug tagger...");
+             		}
+            	} else {
+            		System.out.println("No drug model location specified! Tagging without drug tagger...");
+            	}
+            }
+            
             if (ChemSpotConfiguration.useComponent(Component.MENTION_EXPANDER)) {
             	mentionExpander = AnalysisEngineFactory.createAnalysisEngine(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
             			.getResource("desc/ae/expander/MentionExpanderAE.xml"))), CAS.NAME_DEFAULT_SOFA);
@@ -166,11 +191,15 @@ public class ChemSpot {
                         .getResource("desc/ae/AnnotationMergerAE.xml"))), CAS.NAME_DEFAULT_SOFA);
             }
             
-            if (ChemSpotConfiguration.useComponent(Component.NORMALIZER)) {
+            if (ChemSpotConfiguration.useComponent(Component.NORMALIZER) || ChemSpotConfiguration.useComponent(Component.CHEMHITS)) {
             	if (pathToIDs != null) {
             		if (new File(pathToIDs).exists()) {
 	            		normalizer = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
 	            				.getResource("desc/ae/normalizer/NormalizerAE.xml"))), "PathToIDs", pathToIDs);
+	            		if (ChemSpotConfiguration.useComponent(Component.DICTIONARY) && ChemSpotConfiguration.initializeDictionaryFromNormalizer()) {
+	            			dictionaryTagger = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
+			                        .getResource("desc/ae/tagger/BricsTaggerAE.xml"))), BricsTagger.PATH_TO_DICTIONARY, "");
+	            		}
             		} else {
             			System.out.println("Normalization ids file '" + pathToIDs +  "' does not exist. Tagging without subsequent normalization...");
             		}
@@ -384,12 +413,20 @@ public class ChemSpot {
             	abbrevTagger.process(jcas);
             	printTime("abbreviation tagger");
             }
+            if (drugTagger != null) {
+            	drugTagger.process(jcas);
+            	printTime("drug tagger");
+            }
             if (featureGenerator != null) {
             	if (normalizer != null) {
             		normalizer.process(jcas);
             	}
             	featureGenerator.process(jcas, Feature_Phase.PHASE1);
             	printTime("feature generation phase 1 (+ preliminary normalization run)");
+            }
+            if (stopwordFilter != null) {
+            	//stopwordFilter.process(jcas);
+            	printTime("stopword filter");
             }
             if (mentionExpander != null) {
             	mentionExpander.process(jcas);
@@ -402,10 +439,6 @@ public class ChemSpot {
             if (annotationMerger != null) {
             	annotationMerger.process(jcas);
             	printTime("annotation merger");
-            }
-            if (stopwordFilter != null) {
-            	stopwordFilter.process(jcas);
-            	printTime("stopword filter");
             }
             if (featureGenerator != null) {
             	featureGenerator.process(jcas, Feature_Phase.PHASE3);

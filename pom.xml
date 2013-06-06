@@ -14,7 +14,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.package.data>../../ChemSpot/data</project.package.data>
+		<project.package.data>../../data</project.package.data>
 	</properties>
 
 	<dependencies>
@@ -138,6 +138,13 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
             <systemPath>${basedir}/lib/banner.jar</systemPath>
         </dependency>
         <dependency>
+            <groupId>eumed</groupId>
+            <artifactId>eumed</artifactId>
+            <version>2013-6-4</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/eumed.jar</systemPath>
+        </dependency>
+        <dependency>
             <groupId>dragontool</groupId>
             <artifactId>dragontool</artifactId>
             <version>2011-10-12</version>
@@ -210,44 +217,21 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>de.berlin.hu.chemspot.App</mainClass>
-                        </manifest>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                        </manifest>
-                    </archive>
-                </configuration>
-			</plugin>
-            <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
                     <archive>
                         <manifest>
                             <mainClass>de.berlin.hu.chemspot.App</mainClass>
-                            <addClasspath>true</addClasspath>
                         </manifest>
                     </archive>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
-                    <dependencySets>
-        				<dependencySet>
-            				<includes>
-                				<include>*:jar</include>
-            				</includes>
-           		 			<outputDirectory>lib</outputDirectory>
-        				</dependencySet>
-    				</dependencySets>
                 </configuration>
                 <executions>
                     <execution>
                         <id>make-jar-with-dependencies</id>
-                        <phase>package</phase>
+                        <phase>prepare-package</phase>
                         <goals>
                             <goal>single</goal>
                         </goals>
