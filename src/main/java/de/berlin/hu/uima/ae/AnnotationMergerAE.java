@@ -1,5 +1,6 @@
 package de.berlin.hu.uima.ae;
 
+import de.berlin.hu.chemspot.ChemSpotConfiguration;
 import de.berlin.hu.types.PubmedDocument;
 import de.berlin.hu.util.Constants;
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
@@ -17,6 +18,8 @@ import java.util.regex.Pattern;
  * Merges annotations from the CRF and the dictionary, favoring entities extracted by the CRF over the dictionary.
  */
 public class AnnotationMergerAE extends JCasAnnotator_ImplBase {
+    private static final int DEFAULT_DICTIONARY_FILTER_LENGTH = ChemSpotConfiguration.getDictionaryFilterLength() != -1 ? ChemSpotConfiguration.getDictionaryFilterLength() : 2;
+
 
 	/* (non-Javadoc)
 	 * @see org.apache.uima.analysis_component.JCasAnnotator_ImplBase#process(org.apache.uima.jcas.JCas)
@@ -183,9 +186,6 @@ public class AnnotationMergerAE extends JCasAnnotator_ImplBase {
 					} else if (Constants.CRF.equals(entity.getSource())) {
 						lastEntity.removeFromIndexes(aJCas);
 						chemicals.remove(lastEntity);
-					} /*else if (Constants.DRUG.equals(lastEntity.getSource())) {
-						lastEntity.removeFromIndexes(aJCas);
-						chemicals.remove(lastEntity);
 					} else {
 						if (lastEntity.getCoveredText().length() > entity.getCoveredText().length()) {
 							entity.removeFromIndexes(aJCas);
@@ -194,7 +194,7 @@ public class AnnotationMergerAE extends JCasAnnotator_ImplBase {
 							lastEntity.removeFromIndexes(aJCas);
 							chemicals.remove(lastEntity);
 						}
-					}*/
+					}
 				}
 				
 				if (lastEntity != null && !filtered && !crosses(lastEntity, entity) && entity.getBegin() - lastEntity.getEnd() < 10) {
@@ -205,7 +205,7 @@ public class AnnotationMergerAE extends JCasAnnotator_ImplBase {
 					}
 				}
 				
-				if (!filtered && (Constants.DICTIONARY.equals(entity.getSource()) || Constants.DRUG.equals(entity.getSource())) && entity.getEnd() - entity.getBegin() <= 2) {
+				if (!filtered && (Constants.DICTIONARY.equals(entity.getSource()) || Constants.DRUG.equals(entity.getSource())) && entity.getEnd() - entity.getBegin() <= DEFAULT_DICTIONARY_FILTER_LENGTH) {
 					entity.removeFromIndexes(aJCas);
 					filtered = true;
 				}

@@ -35,6 +35,7 @@ public class ChemSpotConfiguration {
 	
 	private static final String COMPONENT_PREFIX = "component.";
 	private static final String DICTIONARY_INITIALIZE_FROM_NORMALIZER = COMPONENT_PREFIX + Component.DICTIONARY.toString().toLowerCase() + ".initializeFromNormalizer";
+	private static final String DICTIONARY_FILTER_LENGTH = COMPONENT_PREFIX + Component.DICTIONARY.toString().toLowerCase() + ".filterLength";
 	
 	private static final String UPDATE_PREFIX = "update.";
 	private static final String UPDATE_CHEBI_SDF_URL = UPDATE_PREFIX + "chebi.sdf.url";
@@ -128,6 +129,10 @@ public class ChemSpotConfiguration {
 	
 	public static boolean initializeDictionaryFromNormalizer() {
 		return "true".equals(getProperty(DICTIONARY_INITIALIZE_FROM_NORMALIZER, "false").toLowerCase());
+	}
+	
+	public static int getDictionaryFilterLength() {
+		return Integer.parseInt(getProperty(DICTIONARY_FILTER_LENGTH, "-1").toLowerCase());
 	}
 
 	public static boolean isThreading() {
