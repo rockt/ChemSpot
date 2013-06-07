@@ -1,5 +1,6 @@
 package de.berlin.hu.chemspot;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -46,6 +47,14 @@ public class ChemSpotConfiguration {
 	
 	static {
 		properties = new Properties();
+	}
+	
+	public static void initialize() throws FileNotFoundException, IOException {
+		if (new File("conf/chemspot.cfg").exists()) {
+			properties.load(new FileReader("conf/chemspot.cfg"));
+		} else if (new File("chemspot.cfg").exists()) {
+			properties.load(new FileReader("chemspot.cfg"));
+		}
 	}
 	
 	public static void initialize(String configFilePath) throws FileNotFoundException, IOException {
