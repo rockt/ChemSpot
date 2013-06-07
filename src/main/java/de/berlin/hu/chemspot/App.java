@@ -52,6 +52,7 @@ import org.xml.sax.SAXException;
 import de.berlin.hu.chemspot.ChemSpotConfiguration.Corpus;
 import de.berlin.hu.chemspot.ChemSpotConfiguration.Component;
 import de.berlin.hu.types.PubmedDocument;
+import de.berlin.hu.uima.ae.tagger.brics.DictionaryUpdater;
 import de.berlin.hu.uima.cr.ddi.DDICorpusCR;
 import de.berlin.hu.util.Constants;
 
@@ -265,10 +266,27 @@ public class App {
             	if (arguments.isPathToTextCorpus()) {
 					corpora.put(Corpus.TXT, arguments.getPathToTextCorpus());
             	}
+            	if (arguments.isUpdate()) {
+            		if (pathToDictionaryFile != null && pathToIDsFile != null) {
+            			try {
+            				DictionaryUpdater.updateFiles(new File(pathToDictionaryFile), new File(pathToIDsFile), true );
+            				System.out.println("Update successful.");
+            			} catch (IOException e) {
+            				System.out.println("Update failed.");
+            				e.printStackTrace();
+            			}
+            		} else {
+            			System.out.println("You need to specify a dictionary and id file for update");
+            		}
+            	}
             	
             	if (corpora.isEmpty()) {
-            		System.out.println("At least one corpus, a text file or a command line argument has to be provided!");
-            		usage();
+            		if (arguments.isUpdate()) {
+            			System.exit(0);
+            		} else {
+	            		System.out.println("At least one corpus, a text file or a command line argument has to be provided!");
+	            		usage();
+            		}
             	}
             	
     			if (corpora.size() == 1) {

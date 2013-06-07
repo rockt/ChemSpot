@@ -95,19 +95,21 @@ public class DictionaryUpdater {
 	private static BufferedWriter deletedLog = null;
 
 	static {
-		File confFile = new File("conf/chemspot.cfg");
-		if (confFile.exists()) {
-			try {
-				ChemSpotConfiguration.initialize(confFile.getAbsolutePath());
-				outputLocation = ChemSpotConfiguration.getUpdateOutputPath();
-				chebiSDFURL = ChemSpotConfiguration.getChEBISDFUpdateURL();
-				dictFilePath = ChemSpotConfiguration.getDictionaryUpdatePath();
-				idsFilePath = ChemSpotConfiguration.getIdsFileUpdatePath();
-				chebiMustContainFormula = ChemSpotConfiguration.isChEBIUpdateMustContainFormula();
-			} catch (IOException e) {
-				e.printStackTrace();
+		try {
+			InputStream in = DictionaryUpdater.class.getResourceAsStream("resources/conf/update.cfg");
+			if (in != null) {
+				ChemSpotConfiguration.initialize(in);
 			}
+			ChemSpotConfiguration.initialize();
+		} catch (IOException e) {
+				e.printStackTrace();
 		}
+		
+		outputLocation = ChemSpotConfiguration.getUpdateOutputPath();
+		chebiSDFURL = ChemSpotConfiguration.getChEBISDFUpdateURL();
+		dictFilePath = ChemSpotConfiguration.getDictionaryUpdatePath();
+		idsFilePath = ChemSpotConfiguration.getIdsFileUpdatePath();
+		chebiMustContainFormula = ChemSpotConfiguration.isChEBIUpdateMustContainFormula();
 		
 		extractAbbrev = new ExtractAbbrev();
 		filteredList = new HashSet<String>();
@@ -672,34 +674,48 @@ public class DictionaryUpdater {
 		return ids;
 	}
 	
-	public static void updateDictionaryFile(File dictionaryFile, File newAutomatonFile) throws IOException {
+	public static void updateDictionaryFile(File dictionaryFile, List<String> newAutomatonFiles) throws IOException {
 		ZipFile zipFile = new ZipFile(dictionaryFile);
 		ZipOutputStream out = new ZipOutputStream(new FileOutputStream(outputLocation + "dict.zip"));
+		
         Enumeration<? extends ZipEntry> entries = zipFile.entries();
         while (entries.hasMoreElements()) {
             ZipEntry entry = entries.nextElement();
-            InputStream in = zipFile.getInputStream(entry);
-            out.putNextEntry(new ZipEntry(entry.getName()));
-            IOUtils.copy(in, out);
-            in.close();
+            if (!newAutomatonFiles.contains(entry.getName())) {
+	            InputStream in = zipFile.getInputStream(entry);
+	            out.putNextEntry(new ZipEntry(entry.getName()));
+	            IOUtils.copy(in, out);
+	            in.close();
+            }
         }
         
-        InputStream in = new FileInputStream(newAutomatonFile);
-        out.putNextEntry(new ZipEntry(newAutomatonFile.getName()));
-        IOUtils.copy(in, out);
+        zipFile.close();
         
-        in.close();
+        for (String fileName : newAutomatonFiles) {
+        	File newAutomatonFile = new File(outputLocation + fileName);
+		    InputStream in = new FileInputStream(newAutomatonFile);
+		    out.putNextEntry(new ZipEntry(newAutomatonFile.getName()));
+		    IOUtils.copy(in, out);
+		    
+		    in.close();
+        }
+        
         out.close();
 	}
 	
-	public static void update() throws FileNotFoundException, IOException {
+	public static void update(File dictionaryFile, File idsFile) throws FileNotFoundException, IOException {
 		Map<String, String[]> chemicals = getChebi(chebiSDFURL);
+		
+		if (!new File(outputLocation).exists()) {
+			new File(outputLocation).mkdir();
+		}
 		
 		if (mergeLogFile.exists()) mergeLogFile.delete();
 		if (conflictLogFile.exists()) conflictLogFile.delete();
 		if (rewriteLogFile.exists()) rewriteLogFile.delete();
 		if (deletedLogFile.exists()) deletedLogFile.delete();
 		
+		List<String> automatonFiles = new ArrayList<String>();
 		if (chemicals != null) {
 			chemicals = processChemicals(chemicals);
 			
@@ -710,14 +726,13 @@ public class DictionaryUpdater {
 			
 			writeDictionary(chemicals, new File(outputLocation + "chebi.map"));
 			writeAutomaton(chemicals.keySet(), new File(outputLocation + "chebi_updated.atm"));
+			automatonFiles.add("chebi_updated.atm");
 		}
 		
 		Map<String, String[]> ids = null;	
-		if (idsFilePath != null) {
-			File idsFile = new File(idsFilePath);
-			
+		if (idsFile != null) {
 			if (!idsFile.exists()) {
-				System.out.println("IDs file at '" + idsFilePath + "' does not exist");
+				System.out.println("IDs file at '" + idsFile.getPath() + "' does not exist");
 			} else {
 				System.out.println();
 				System.out.println("--- Loading IDs ---");
@@ -756,22 +771,65 @@ public class DictionaryUpdater {
 			System.out.println("Done.");
 		}
 		
-		
 		ids = null;	
-		if (dictFilePath != null) {
+		if (dictionaryFile != null) {
 			System.out.println();
 			System.out.println("--- Updating Dictionary ---");
 			System.out.print("Writing dictionary to 'output/dict.zip'... ");
-			File dictFile = new File(dictFilePath);
-			File automatonFile = new File(outputLocation + "chebi_updated.atm");
 			
-			updateDictionaryFile(dictFile, automatonFile);
+			updateDictionaryFile(dictionaryFile, automatonFiles);
 			
 			System.out.println("Done.");
 		}
 	}
 	
+	public static void updateFiles(File dictionaryFile, File idsFile, boolean removeTemporaryFiles) throws FileNotFoundException, IOException {
+		File newDictFile = new File(outputLocation + "dict.zip");
+		File newIdsFile = new File(outputLocation + "ids.zip");
+		String extensionPattern = "(\\.[^\\./\\\\]+)+$";
+		
+		update(dictionaryFile, idsFile);
+		
+		System.out.println();
+		
+		if (newDictFile.exists() && dictionaryFile.exists()) {
+			String oldFilePath = dictionaryFile.getPath().replaceAll(extensionPattern, "-old$1");
+			
+			int i = 2;
+			while (new File(oldFilePath).exists()) {
+				oldFilePath = dictionaryFile.getPath().replaceAll(extensionPattern, "-old" + i++ + "$1");
+			}
+			
+			System.out.printf("Renaming '%s' to '%s'%n", dictionaryFile, oldFilePath);
+			dictionaryFile.renameTo(new File(oldFilePath));
+			System.out.printf("Moving '%s' to '%s'%n", newDictFile, dictionaryFile);
+			newDictFile.renameTo(dictionaryFile);
+		}
+		
+		if (newIdsFile.exists() && idsFile.exists()) {
+			String oldFilePath = idsFile.getPath().replaceAll(extensionPattern, "-old$1");
+			
+			int i = 2;
+			while (new File(oldFilePath).exists()) {
+				oldFilePath = idsFile.getPath().replaceAll(extensionPattern, "-old" + i + "$1");
+			}
+			
+			System.out.printf("Renaming '%s' to '%s'%n", idsFile, oldFilePath);
+			idsFile.renameTo(new File(oldFilePath));
+			System.out.printf("Moving '%s' to '%s'%n", newIdsFile, idsFile);
+			newIdsFile.renameTo(idsFile);
+		}
+		
+		if (removeTemporaryFiles) {
+			File outputDir = new File(outputLocation);
+			for (File file : outputDir.listFiles()) {
+				file.delete();
+			}
+			outputDir.delete();
+		}
+	}
+	
 	public static void main(String[] args) throws FileNotFoundException, IOException {
-		update();
+		update(new File(dictFilePath), new File(idsFilePath));
 	}
 }

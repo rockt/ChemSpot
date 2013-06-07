@@ -90,4 +90,7 @@ public interface ChemSpotArguments {
 	  @Option(shortName="f")
 	  String getPathToTextCorpus();
 	  boolean isPathToTextCorpus();
+	  
+	  @Option(shortName="u")
+	  boolean isUpdate();
 }
