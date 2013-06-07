@@ -379,7 +379,7 @@ public class Normalizer extends JCasAnnotator_ImplBase {
             NamedEntity entity = entities.next();
             String inchi = nameToInChi != null ? nameToInChi.parseToStdInchi(entity.getCoveredText()) : null;
             
-            if (Constants.GOLDSTANDARD.equals(entity.getSource())) {
+            if (!Constants.GOLDSTANDARD.equals(entity.getSource())) {
                 nE++;
                 String[] normalized = ids.get(entity.getCoveredText().toLowerCase());
                 
@@ -476,15 +476,22 @@ public class Normalizer extends JCasAnnotator_ImplBase {
                 	}
                 }
                 
-                NamedEntity e = (NamedEntity)entity.clone();
-                e.setId(Arrays.toString(normalized));
-                e.setSource("Test");
-                entiti.add(e);
+                String normalizedString = normalized != null ? Arrays.toString(normalized) : null;
+                if (Constants.GOLDSTANDARD.equals(entity.getSource())) {
+	                NamedEntity e = (NamedEntity)entity.clone();
+	                e.setId(normalizedString);
+	                e.setSource("Test");
+	                entiti.add(e);
+                } else {
+                	entity.setId(normalizedString);
+                }
             }
         }
         
-        for (NamedEntity e : entiti) {
-        	e.addToIndexes();
+        if (!entiti.isEmpty()) {
+	        for (NamedEntity e : entiti) {
+	        	e.addToIndexes();
+	        }
         }
         
         if (nameNormalizer != null) printChemHitsStatistic();

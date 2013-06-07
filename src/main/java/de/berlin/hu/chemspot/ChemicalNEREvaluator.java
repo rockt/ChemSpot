@@ -287,7 +287,7 @@ public class ChemicalNEREvaluator {
 		w.write(String.format("entities total              : %d%n", normalizedAllCount));
 		w.write(String.format("entities normalized         : %d%n", normalizedCount));
 		w.write(String.format("normalized correct          : %d%n", normalizedCorrectCount));
-		w.write(String.format("percent correct (all)       : %.2f %%%n%n" , correctAllRatio * 100.0));
+		w.write(String.format("percent correct (all)       : %.2f %%%n%n", correctAllRatio * 100.0));
 		
 		w.write(String.format("precision: %.2f %%%n" , precision * 100.0));
 		w.write(String.format("recall: %.2f %%%n" , recall * 100.0));
