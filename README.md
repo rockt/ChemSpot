@@ -39,15 +39,15 @@ java -jar -Xmx9G chemspot.jar -t sample.txt -Io predict.iob
 
 ## Using ChemSpot in your Code
 ```java
-        ChemSpot tagger = new ChemSpot("./crf_model.bin", "./dict.bin", "./sentence_model.bin.gz", "./ids.zip");
-        String text = "The abilities of LHRH and a potent LHRH agonist "
-          + "([D-Ser-(But),6, des-Gly-NH210]LHRH ethylamide) inhibit FSH "
-          + "responses by rat granulosa cells and Sertoli cells in vitro have been compared.";
-        for (Mention mention : tagger.tag(text)) {
-            System.out.printf("%d\t%d\t%s\t%s\t%s\n", 
-                    mention.getStart(), mention.getEnd(), mention.getText(), 
-                    mention.getCHID(), mention.getSource());
-        }
+ChemSpot tagger = new ChemSpot("./crf_model.bin", "./dict.bin", "./sentence_model.bin.gz", "./ids.zip");
+String text = "The abilities of LHRH and a potent LHRH agonist "
+  + "([D-Ser-(But),6, des-Gly-NH210]LHRH ethylamide) inhibit FSH "
+  + "responses by rat granulosa cells and Sertoli cells in vitro have been compared.";
+for (Mention mention : tagger.tag(text)) {
+  System.out.printf("%d\t%d\t%s\t%s\t%s\n", 
+    mention.getStart(), mention.getEnd(), mention.getText(), 
+    mention.getCHID(), mention.getSource());
+}
 ```
 
 ## Reproducing our Results
