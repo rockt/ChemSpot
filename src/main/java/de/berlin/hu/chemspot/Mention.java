@@ -25,6 +25,7 @@ public class Mention implements Comparable<Object> {
 	private String[] ids;
 	private String source;
 	private String documentText;
+	private String type;
 
     /**
      * Represents a chemical entity found in a text.
@@ -34,7 +35,7 @@ public class Mention implements Comparable<Object> {
      * @param ids a string representation of an array of identifiers of the form: [0] CHID, [1] CHEB, [2] CAS, [3] PUBC, [4] PUBS, [5] INCH, [6] DRUG, [7] HMBD, [8] KEGG, [9] KEGD, [10] MESH
      * @param source indicates whether found by the CRF, the dictionary or taken from goldstandard
      */
-	public Mention(int start, int end, String text, String ids, String source, String documentText) {
+	public Mention(int start, int end, String text, String ids, String source, String documentText, String type) {
 		this.start = start;
 		this.end = end;
 		this.text = text;
@@ -51,6 +52,11 @@ public class Mention implements Comparable<Object> {
         }
         this.source = source;
         this.documentText = documentText;
+        this.type = type;
+	}
+	
+	public Mention(int start, int end, String text, String ids, String source, String documentText) {
+		this(start, end, text, ids, source, documentText, null); 
 	}
 
     public Mention(int start, int end, String text) {
@@ -66,7 +72,7 @@ public class Mention implements Comparable<Object> {
     }
 
     public Mention(NamedEntity entity) {
-        this(entity.getBegin(), entity.getEnd(), entity.getCoveredText(), entity.getId(), entity.getSource(), entity.getCAS().getDocumentText());
+        this(entity.getBegin(), entity.getEnd(), entity.getCoveredText(), entity.getId(), entity.getSource(), entity.getCAS().getDocumentText(), entity.getEntityType());
     }
 
     public int getStart() {
@@ -296,7 +302,15 @@ public class Mention implements Comparable<Object> {
 		return documentText;
 	}
 
-	public void setCas(String documentText) {
+	public void setDocumentText(String documentText) {
 		this.documentText = documentText;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 }
