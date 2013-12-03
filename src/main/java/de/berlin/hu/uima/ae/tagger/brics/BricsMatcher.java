@@ -39,12 +39,12 @@ import java.util.zip.ZipFile;
  * Time: 2:20 PM
  */
 public class BricsMatcher {
-	private static final int TERMS_PER_AUTOMATON = 100000;
+	public static final int DEFAULT_TERMS_PER_AUTOMATON = 100000;
 	
     private Collection<RunAutomaton> matchers = new ArrayList<RunAutomaton>();
 
     public BricsMatcher() throws IOException, ClassNotFoundException {
-    	this(Normalizer.getIds().keySet(), TERMS_PER_AUTOMATON);
+    	this(Normalizer.getIds().keySet(), DEFAULT_TERMS_PER_AUTOMATON);
     }
     
     public BricsMatcher(Collection<String> chemicals) throws IOException, ClassNotFoundException {
