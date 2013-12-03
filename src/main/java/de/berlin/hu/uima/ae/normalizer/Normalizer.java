@@ -16,7 +16,7 @@ import de.berlin.hu.chemspot.ChemSpotConfiguration;
 import de.berlin.hu.chemspot.ChemSpotConfiguration.Component;
 import de.berlin.hu.util.Constants;
 import de.berlin.hu.util.Constants.ChemicalID;
-import groovyNormalizerBeans.NameNormalizer;
+//import groovyNormalizerBeans.NameNormalizer;
 
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
@@ -57,7 +57,7 @@ public class Normalizer extends JCasAnnotator_ImplBase {
     private static Map<String,String[]> normalizedIds = new HashMap<String,String[]>();
     private NameToInchi nameToInChi;
     private static final String PATH_TO_IDS = "PathToIDs";
-    private NameNormalizer nameNormalizer = null;
+    //private NameNormalizer nameNormalizer = null;
     
     private Map<String, String> fdaIds = null;
     private Map<String, String> fdaDates = null;
@@ -251,10 +251,10 @@ public class Normalizer extends JCasAnnotator_ImplBase {
 			e.printStackTrace();
 		}
         
-        if (ChemSpotConfiguration.useComponent(Component.CHEMHITS))  {
+        /*if (ChemSpotConfiguration.useComponent(Component.CHEMHITS))  {
         	System.out.println("  Initializing ChemHits...");
         	nameNormalizer = new NameNormalizer();
-        }
+        }*/
         
         String idsFile = aContext.getConfigParameterValue(PATH_TO_IDS).toString();
         try {
@@ -367,23 +367,37 @@ public class Normalizer extends JCasAnnotator_ImplBase {
     private static int chemHitsIdNotFound = 0;
     private static int chemHitsdifferentIdFound = 0;
     
+    private static int nE = 0;
+    private static int nN = 0;
+    private static int fda = 0;
+    private static int one = 0;
+    private static int two = 0;
+    private static int twoAll = 0;
+    
     @Override
     public void process(JCas jCas) throws AnalysisEngineProcessException {
         Iterator<NamedEntity> entities = JCasUtil.iterator(jCas, NamedEntity.class);
-        int nE = 0;
-        int nN = 0;
-        int fda = 0;
         
         List<NamedEntity> entiti = new ArrayList<NamedEntity>();
         while (entities.hasNext()) {
             NamedEntity entity = entities.next();
             String inchi = nameToInChi != null ? nameToInChi.parseToStdInchi(entity.getCoveredText()) : null;
             
+            if (entity.getCoveredText().matches("[a-zA-Z]+")) {
+            	one++;
+            }
+            if (entity.getCoveredText().matches("[a-zA-Z]+ [a-zA-Z]+")) {
+            	two++;
+            }
+            if (entity.getCoveredText().matches("[a-zA-Z0-9]+( [a-zA-Z0-9]+)?")) {
+            	twoAll++;
+            }
+            
             if (!Constants.GOLDSTANDARD.equals(entity.getSource())) {
                 nE++;
                 String[] normalized = ids.get(entity.getCoveredText().toLowerCase());
                 
-                if (nameNormalizer != null) {
+                /*if (nameNormalizer != null) {
                 	nameNormalizer.setName(entity.getCoveredText());
                 	String chemHitsnormalizedString = nameNormalizer.getNormName();
                 	
@@ -434,7 +448,7 @@ public class Normalizer extends JCasAnnotator_ImplBase {
                     	normalized = chemhitsNormalized;
                     	System.out.println("replacing id with the one found by ChemHits: " + entity.getCoveredText() + " -> " + chemHitsnormalizedString);
                     }
-            	}
+            	}*/
                 
                 /*if (normalized == null) {
                 	normalized = getBestMatch(entity.getCoveredText().toLowerCase(), ids);
@@ -461,7 +475,6 @@ public class Normalizer extends JCasAnnotator_ImplBase {
                         nN++;
                     }
                 }
-                
                 
                 if (fdaIds != null && fdaIds.containsKey(entity.getCoveredText().toLowerCase())) {
                 	fda++;
@@ -494,9 +507,10 @@ public class Normalizer extends JCasAnnotator_ImplBase {
 	        }
         }
         
-        if (nameNormalizer != null) printChemHitsStatistic();
+        //if (nameNormalizer != null) printChemHitsStatistic();
         //System.out.println(fda);
         //System.out.println(nN + "/" + nE);
+        //System.out.printf("not normalized: %d, all: %d, one word: %d, two words: %d, two words all: %d%n", nN, nE, one, two, twoAll);
     }
     
     private void printChemHitsStatistic() {
