@@ -95,6 +95,11 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
 			<optional>false</optional>
 		</dependency>
 		<dependency>
+			<groupId>commons-net</groupId>
+			<artifactId>commons-net</artifactId>
+			<version>3.3</version>
+		</dependency>
+		<dependency>
 			<groupId>opennlp</groupId>
 			<artifactId>opennlp-uima</artifactId>
 			<version>1.4.3</version>
