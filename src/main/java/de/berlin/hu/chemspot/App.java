@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -53,6 +54,7 @@ import de.berlin.hu.chemspot.ChemSpotConfiguration.Corpus;
 import de.berlin.hu.chemspot.ChemSpotConfiguration.Component;
 import de.berlin.hu.types.PubmedDocument;
 import de.berlin.hu.uima.ae.tagger.brics.DictionaryUpdater;
+import de.berlin.hu.uima.cr.chemdner.CHEMDNERReader;
 import de.berlin.hu.uima.cr.ddi.DDICorpusCR;
 import de.berlin.hu.util.Constants;
 
@@ -261,15 +263,19 @@ public class App {
 					corpora.put(Corpus.PATENT, arguments.getPathToNaCTeMCorpus());
 				}
             	if (arguments.isPathToDDICorpus()) {
-					corpora.put(Corpus.PATENT, arguments.getPathToDDICorpus());
+					corpora.put(Corpus.DDI, arguments.getPathToDDICorpus());
             	}
             	if (arguments.isPathToTextCorpus()) {
 					corpora.put(Corpus.TXT, arguments.getPathToTextCorpus());
             	}
+            	if (arguments.isPathToCHEMDNERCorpus()) {
+					corpora.put(Corpus.CHEMDNER, arguments.getPathToCHEMDNERCorpus());
+            	}
             	if (arguments.isUpdate()) {
             		if (pathToDictionaryFile != null && pathToIDsFile != null) {
             			try {
-            				DictionaryUpdater.updateFiles(new File(pathToDictionaryFile), new File(pathToIDsFile), true );
+            				DictionaryUpdater.initialize();
+            				DictionaryUpdater.updateFiles(new File(pathToDictionaryFile), new File(pathToIDsFile), ChemSpotConfiguration.isRemoveTemporaryUpdateFiles());
             				System.out.println("Update successful.");
             			} catch (IOException e) {
             				System.out.println("Update failed.");
@@ -370,6 +376,10 @@ public class App {
             	case DDI:
             		reader = CollectionReaderFactory.createCollectionReader(UIMAFramework.getXMLParser().parseCollectionReaderDescription(new XMLInputSource(typeSystem.getClass().getClassLoader()
                             .getResource("desc/cr/DDICorpusCR.xml"))), DDICorpusCR.PARAM_INPUTDIR, pathToCorpus, DDICorpusCR.PARAM_SUBDIR, true);   
+            		break;
+            	case CHEMDNER:
+            		reader = CollectionReaderFactory.createCollectionReader(UIMAFramework.getXMLParser().parseCollectionReaderDescription(new XMLInputSource(typeSystem.getClass().getClassLoader()
+                            .getResource("desc/cr/CHEMDNERCorpusCR.xml"))), CHEMDNERReader.PARAM_INPUTDIR, pathToCorpus);   
             		break;
             	default:
             		throw new IOException("Corpus " + corpus + " does not match any known format.");
@@ -535,13 +545,27 @@ public class App {
 	    	        SourceDocumentInformation src = srcIterator.next();
 	    	        outputFilePath = src.getUri().replaceFirst(".*/", outputPathString) + fileType;
 	            } else {
-	            	if (runNr == 1 && !reader.hasNext()) {
+	            	// simply use the filename if we are just tagging one file
+	            	if (runNr == 1 && !reader.hasNext() && filename != null) {
 	            		outputFilePath = outputPathString + filename;
-	            	} else {
+	            	// otherwise try using the pubmed id of the document as filename
+	            	} else if (JCasUtil.iterate(jcas, PubmedDocument.class).iterator().hasNext()) {
+	            		Collection<PubmedDocument> documents = JCasUtil.select(jcas, PubmedDocument.class);
+	            		if (documents.size() == 1) {
+	            			String pmId = documents.iterator().next().getPmid();
+	            			
+	            			if (pmId != null && !pmId.isEmpty()) {
+	            				outputFilePath = outputPathString + pmId + fileType;
+	            			}
+	            		}
+	            	} 
+
+	            	// or generate a generic filename
+	            	if (outputFilePath == null) {
 	            		String prefix = "";
 	            		if (filename != null) {
 	            			int prefixPos = filename.indexOf('.') > -1 ? filename.indexOf('.') : filename.length();
-	            			prefix = filename != null ? filename.substring(0, prefixPos) + "-" : "";
+	            			prefix = filename.substring(0, prefixPos);
 	            		}
 		            	outputFilePath = String.format("%s%s%04d%s", outputPathString, prefix, runNr, fileType);
 	            	}
