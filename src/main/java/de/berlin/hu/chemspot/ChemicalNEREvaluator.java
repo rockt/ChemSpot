@@ -30,6 +30,7 @@ public class ChemicalNEREvaluator {
     private List<Mention> truePositives = new ArrayList<Mention>();
     private List<Mention> falsePositives = new ArrayList<Mention>();
     private List<Mention> falseNegatives = new ArrayList<Mention>();
+    private List<Mention> goldstandard = new ArrayList<Mention>();
     
     private List<Mention> normalizedAll = new ArrayList<Mention>();
     private List<Mention> normalized = new ArrayList<Mention>();
@@ -46,6 +47,8 @@ public class ChemicalNEREvaluator {
     	
     	List<Mention> mentions = ChemSpot.getMentions(jcas);
     	List<Mention> goldstandardAnnotations = ChemSpot.getGoldstandardAnnotations(jcas);
+    	
+    	goldstandard.addAll(goldstandardAnnotations);
 
         synchronized(evaluationLock) {
 	        if (goldstandardAnnotations.size() == 0) {
@@ -73,6 +76,7 @@ public class ChemicalNEREvaluator {
 	            double recall = (double) TP / ((double) TP + FN);
 	            double fscore = precision + recall > 0 ? 2 * (precision * recall) / (precision + recall) : 0;
 	            System.out.format("Precision:\t\t%f\nRecall:\t\t\t%f\nF1 Score:\t\t%f\n", precision, recall, fscore);
+	            
             	if (!normalized.isEmpty()) {
             		double correctAllRatio = !normalizedAll.isEmpty() ? (double)normalizedCorrect.size() / (double)normalizedAll.size() : 0;
             		double correctNormalizedRatio = !normalized.isEmpty() ? (double)normalizedCorrect.size() / (double)normalized.size() : 0;
@@ -81,6 +85,36 @@ public class ChemicalNEREvaluator {
 	            System.out.println();
 	        }
         }
+    }
+    
+    private void evaluateByType(List<Mention> tps, List<Mention> goldstandard) {
+    	Map<String, List<Mention>> mapTypeToGoldstandard = new HashMap<String, List<Mention>>();
+    	
+    	for (Mention goldstandardMention : goldstandard) {
+    		String type = goldstandardMention.getType();
+    		if (type != null && !type.isEmpty()) {
+    			if (!mapTypeToGoldstandard.containsKey(type)) {
+    				mapTypeToGoldstandard.put(type, new ArrayList<Mention>());
+    			}
+    			mapTypeToGoldstandard.get(type).add(goldstandardMention);
+    		}
+    	}
+    	
+    	System.out.println();
+    	
+    	if (!mapTypeToGoldstandard.isEmpty()) {
+    		for (String type : mapTypeToGoldstandard.keySet()) {
+    			List<Mention> typeGoldstandard = mapTypeToGoldstandard.get(type);
+    			List<Mention> typeTruePositives = new ArrayList<Mention>(tps);
+    			typeTruePositives.retainAll(typeGoldstandard);
+    			
+    			int typeTPs = typeTruePositives.size();
+    			int typeAll = typeGoldstandard.size();
+    			double precision = typeAll != 0 ? (double)typeTPs / (double)typeAll : 0;
+    			
+    			System.out.printf("%s - TPs: %d, All: %d, precision: %.4f %%%n", type, typeTPs, typeAll, precision * 100);
+    		}
+    	}
     }
     
     private double evaluateNormalization(List<Mention> tps, List<Mention> goldStandard) {
@@ -308,6 +342,8 @@ public class ChemicalNEREvaluator {
     
     public void writeDetailedEvaluationResults(String outputPath) throws IOException {
     	synchronized (evaluationLock) {
+    		evaluateByType(truePositives, goldstandard);
+    		
     		if (outputPath == null) outputPath = "";
     		
     		File evaluationFile  = new File(outputPath + "evaluation.txt");
