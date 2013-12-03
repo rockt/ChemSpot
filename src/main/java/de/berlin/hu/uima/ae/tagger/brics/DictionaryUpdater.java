@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.SocketException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Date;
@@ -18,10 +19,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -33,6 +34,9 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.net.ftp.FTP;
+import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPFile;
 
 import de.berlin.hu.chemspot.ChemSpotConfiguration;
 import de.berlin.hu.chemspot.Mention;
@@ -40,10 +44,7 @@ import de.berlin.hu.uima.ae.normalizer.Normalizer;
 import de.berlin.hu.uima.ae.tagger.abbrev.ExtractAbbrev;
 import de.berlin.hu.util.Constants;
 import de.berlin.hu.util.Constants.ChemicalID;
-import dk.brics.automaton.Automaton;
 import dk.brics.automaton.RunAutomaton;
-import dk.brics.automaton.State;
-import dk.brics.automaton.StringUnionOperations;
 
 public class DictionaryUpdater {
 	
@@ -78,11 +79,23 @@ public class DictionaryUpdater {
 			"iupac names",
 			"synonyms"
 	));
+	private static final List<String> PUBCHEM_KEYS = new ArrayList<String>(Arrays.asList(
+			"pubchem_compound_cid", 
+			"pubchem_iupac_openeye_name",
+			"pubchem_iupac_cas_name",
+			"pubchem_iupac_name",
+			"pubchem_iupac_systematic_name",
+			"pubchem_iupac_traditional_name",
+			"pubchem_iupac_inchi",
+			"pubchem_molecular_formula"
+	));
 	
 	private static String dictFilePath = null;
 	private static String idsFilePath = null;
 	private static URL chebiSDFURL = null;
 	private static boolean chebiMustContainFormula = false;
+	private static URL pubchemSDFURL = null;
+	private static int pubchemMaxLength = 25;
 	
 	private static ExtractAbbrev extractAbbrev = null;
 	private static Set<String> filteredList = null;
@@ -94,22 +107,23 @@ public class DictionaryUpdater {
 	private static BufferedWriter rewriteLog = null;
 	private static BufferedWriter deletedLog = null;
 
-	static {
+	public static void initialize() {
 		try {
-			InputStream in = DictionaryUpdater.class.getResourceAsStream("resources/conf/update.cfg");
+			InputStream in = DictionaryUpdater.class.getResourceAsStream("/resources/conf/update.cfg");
 			if (in != null) {
-				ChemSpotConfiguration.initialize(in);
+				ChemSpotConfiguration.initialize(in, false);
 			}
-			ChemSpotConfiguration.initialize();
 		} catch (IOException e) {
 				e.printStackTrace();
 		}
 		
 		outputLocation = ChemSpotConfiguration.getUpdateOutputPath();
 		chebiSDFURL = ChemSpotConfiguration.getChEBISDFUpdateURL();
+		pubchemSDFURL = ChemSpotConfiguration.getPubChemSDFUpdateURL();
 		dictFilePath = ChemSpotConfiguration.getDictionaryUpdatePath();
 		idsFilePath = ChemSpotConfiguration.getIdsFileUpdatePath();
 		chebiMustContainFormula = ChemSpotConfiguration.isChEBIUpdateMustContainFormula();
+		pubchemMaxLength = ChemSpotConfiguration.getPubChemMaxLength();
 		
 		extractAbbrev = new ExtractAbbrev();
 		filteredList = new HashSet<String>();
@@ -259,7 +273,9 @@ public class DictionaryUpdater {
 		String report = added != 0 ? added + " entries added" : "";
 		report += updated != 0 ? (report.isEmpty() ? "" : ", ") + updated + " entries updated" : "";
 		report += exactDuplicates != 0 ? (report.isEmpty() ? "" : ", ") + exactDuplicates + " exact duplicates removed" : "";
-		System.out.println("  " + report + ".");
+		if (!report.isEmpty()) {
+			System.out.println("  " + report + ".");
+		}
 		
 		String mergersReport = "";
 		for (ChemicalID id : Constants.ChemicalID.values()) {
@@ -338,7 +354,6 @@ public class DictionaryUpdater {
 		String line = null;
 		Map<String, String> data = new HashMap<String, String>();
 		
-		Pattern whiteSpacePattern = Pattern.compile("\\s+");
 		while ((line = reader.readLine()) != null) {
 			if (line.startsWith("$$$$")) {
 				result.add(data);
@@ -350,7 +365,7 @@ public class DictionaryUpdater {
 				if (m.matches()) {
 					String key = m.group(1).toLowerCase();
 					
-					if (CHEBI_KEYS.contains(key)) {
+					if (CHEBI_KEYS.contains(key) || PUBCHEM_KEYS.contains(key)) {
 						String value = "";
 						while ((line = reader.readLine()) != null && !line.isEmpty() && !line.startsWith("$$$$")) {
 							if (!value.isEmpty()) value += "|";
@@ -425,6 +440,69 @@ public class DictionaryUpdater {
 			/*if (result.containsKey("voltage")) {
 				System.out.println("now");
 			}*/
+		}
+		
+		try {
+			appendToFilterLog(String.format("%n%n%n%n%n"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		System.out.println("Done.");
+		System.out.println("  " + result.size() + " chemicals successfully converted.");
+		
+		return result;
+	}
+	
+	public static Map<String, String[]> convertPubChemSDFToDict(List<Map<String, String>> pubchemSDF) {
+		Map<String, String[]> result = new HashMap<String, String[]>();
+		
+		System.out.print("Converting PubChem SDF data to dictionary format... ");
+		
+		for (Map<String, String> data : pubchemSDF) {
+			String pubchemCompoundId = data.get("pubchem_compound_cid");
+			String name = data.get("pubchem_iupac_name");
+			
+			Set<String> names = new HashSet<String>();
+			names.add(data.get("pubchem_iupac_openeye_name"));
+			names.add(data.get("pubchem_iupac_cas_name"));
+			names.add(data.get("pubchem_iupac_systematic_name"));
+			names.add(data.get("pubchem_iupac_traditional_name"));
+			
+			if (name == null && !names.isEmpty()) {
+				name = names.iterator().next();
+			}
+			
+			names.remove(name);
+			
+			if (pubchemCompoundId == null || name == null) {
+				continue;
+			}
+			
+			if (!(data.containsKey("pubchem_molecular_formula") && data.get("pubchem_molecular_formula") != null && !data.get("pubchem_molecular_formula").isEmpty() && data.get("pubchem_molecular_formula").length() > 2)) {
+				filteredList.add(name);
+				try {
+					appendToFilterLog(name);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				continue;
+			}
+			
+			String[] ids = new String[Constants.ChemicalID.values().length];
+			ids[Constants.ChemicalID.PUBC.ordinal()] = pubchemCompoundId;
+			
+			if (data.containsKey("pubchem_iupac_inchi")) {
+				ids[Constants.ChemicalID.INCH.ordinal()] = data.get("pubchem_iupac_inchi");
+			}
+			
+			for (String otherName : names) {
+				if (otherName != null) {
+					result.put(otherName, ids);
+				}
+			}
+			
+			result.put(name, ids);
 		}
 		
 		try {
@@ -530,11 +608,12 @@ public class DictionaryUpdater {
 		rewriteLog.newLine();
 	}
 	
-	private static int processed = 0;
-	private static int filtered = 0;
-	private static int rewritten = 0;
+
 	public static Map<String, String[]> processChemicals(Map<String, String[]> chemicals) {
 		Map<String, String[]> result = new HashMap<String, String[]>();
+		int processed = 0;
+		int filtered = 0;
+		int rewritten = 0;
 		
 		System.out.print("Processing chemicals... ");
 		
@@ -597,11 +676,11 @@ public class DictionaryUpdater {
 		return result;
 	}
 	
-	public static void writeDictionary(Map<String, String[]> ids, File outputFile) throws IOException {
+	public static void writeIdsFile(Map<String, String[]> ids, File outputFile) throws IOException {
 		outputFile.getParentFile().mkdirs();
 		BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
 		
-		System.out.print("Writing dictionary to '" + outputFile + "'... ");
+		System.out.print("Writing ids file to '" + outputFile + "'... ");
 		
 		for (String chem : ids.keySet()) {
         	String[] chemIds = ids.get(chem);
@@ -625,18 +704,45 @@ public class DictionaryUpdater {
 		System.out.println("Done.");
 	}
 	
-	public static void writeAutomaton(Collection<String> chemicals, File outputFile) throws FileNotFoundException, IOException {
+	public static List<File> writeAutomata(Collection<String> chemicals, String outputLocation, String prefix) throws FileNotFoundException, IOException {
+		List<File> automataFiles = new ArrayList<File>();
+		
+		List<Collection<String>> batches = new ArrayList<Collection<String>>();
+		Iterator<String> chemical = chemicals.iterator();
+		int batchSize = BricsMatcher.DEFAULT_TERMS_PER_AUTOMATON;
+		while (chemical.hasNext()) {
+			int i = 0;
+			List<String> batch = new ArrayList<String>();
+			while (i < batchSize && chemical.hasNext()) {
+				batch.add(chemical.next());
+				i++;
+			}
+			batches.add(batch);
+		}
+		
+		int i = 1;
+		for (Collection<String> batch : batches) {
+			System.out.printf("\rCreating dictionary automata... %d / %d", i, batches.size());
+			RunAutomaton runAutomaton = BricsMatcher.createAutomaton(batch);
+			
+			File outputFile = new File(outputLocation + prefix + "_" + i++ + ".atm");
+			OutputStream s = new FileOutputStream(outputFile);
+			runAutomaton.store(s);
+			s.close();
+			
+			automataFiles.add(outputFile);
+		}
+		
+		System.out.printf("\rCreating dictionary automata... Done.%n", i, batches.size());
+		
+		return automataFiles;
+	}
+	
+	public static File writeAutomaton(Collection<String> chemicals, File outputFile) throws FileNotFoundException, IOException {
 		System.out.print("Writing chemical automaton to '" + outputFile + "'");
 		
-		List<String> sortedList = new ArrayList<String>(chemicals);
-		Collections.sort(sortedList, StringUnionOperations.LEXICOGRAPHIC_ORDER);
 		System.out.print(".");
-		State state = StringUnionOperations.build(sortedList.toArray(new String[sortedList.size()]));
-		Automaton automaton = new Automaton();
-		automaton.setInitialState(state);
-		System.out.print(".");
-		
-		RunAutomaton runAutomaton = new RunAutomaton(automaton);
+		RunAutomaton runAutomaton = BricsMatcher.createAutomaton(chemicals);
 		System.out.print(".");
 		outputFile.getParentFile().mkdirs();
 		OutputStream s = new FileOutputStream(outputFile);
@@ -644,7 +750,10 @@ public class DictionaryUpdater {
 		
 		s.close();
 		
+		System.out.print(".");
 		System.out.println(" Done.");
+		
+		return outputFile;
 	}
 	
 	public static Map<String, String[]> getChebi(URL url) {
@@ -674,14 +783,125 @@ public class DictionaryUpdater {
 		return ids;
 	}
 	
-	public static void updateDictionaryFile(File dictionaryFile, List<String> newAutomatonFiles) throws IOException {
+	public static List<File> downloadFilesFromFTP(URL url, String outputLocation) throws SocketException, IOException {
+		List<File> result = new ArrayList<File>();
+		
+		FTPClient client = new FTPClient();
+		client.connect(url.getHost());
+		client.login("anonymous", "");
+		client.changeWorkingDirectory(url.getPath());
+		client.setFileType(FTP.BINARY_FILE_TYPE);
+		client.setBufferSize(1*1024);
+		client.enterLocalPassiveMode();
+		
+		System.out.println("Downloading files from " + url.toString() + "...");
+		
+		FTPFile[] files = client.listFiles();
+		int i = 0;
+		for (FTPFile file : files) {
+			if (file.getName().endsWith(".sdf") || file.getName().endsWith(".sdf.gz")) {
+				File outputFile = new File(outputLocation + "/" + file.getName());
+				if (outputFile.exists()) {
+					System.out.printf("\r%.2f%% File %s already exists. ", Math.round((double) i / (double) files.length * 10000.0) / 100.0, file.getName());
+					if (outputFile.length() == file.getSize()) {
+						System.out.print("Files are identical. Skipping.");
+						i++;
+						continue;
+					} else {
+						System.out.print("Files are different. Redownloading.");
+					}
+				}
+				long start = System.currentTimeMillis();
+				//InputStream in = client.retrieveFileStream(file.getName());
+				OutputStream out = new FileOutputStream(outputFile);
+				//IOUtils.copy(in, out);
+				client.retrieveFile(file.getName(), out);
+				//in.close();
+				out.close();
+				//client.completePendingCommand();
+				long end = System.currentTimeMillis();
+				System.out.printf("\r%.2f%% @ %d kB/s", Math.round((double) i++ / (double) files.length * 10000.0) / 100.0, Math.round((double)outputFile.length() / (double)(end - start)));
+				
+				result.add(outputFile);
+			}
+			
+		}
+		
+		client.logout();
+		client.disconnect();
+		System.out.println("\nDone.");
+		
+		return result;
+	}
+	
+	public static Map<String, String[]> getPubChem(URL url) throws SocketException, IOException {
+		System.out.println();
+		System.out.println("--- Generating PubChem Update ---");
+		
+		File pubchemOutputLocation = new File(outputLocation + "pubchem/");
+		pubchemOutputLocation.mkdirs();
+		List<File> downloadedFiles = downloadFilesFromFTP(url, pubchemOutputLocation.getAbsolutePath());
+		downloadedFiles = new ArrayList<File>();
+		
+		List<File> idsFiles = new ArrayList<File>();
+		for (File file : pubchemOutputLocation.listFiles()) {
+			if (file.getName().endsWith(".sdf") || file.getName().endsWith(".sdf.gz")) {
+				List<Map<String, String>> sdfData = null;
+				
+				File idsFile = new File(file.getAbsolutePath().replaceAll("(\\.[^/\\\\]+)+$", ".map"));
+				if (downloadedFiles.contains(file.getAbsoluteFile()) && idsFile.exists()) {
+					System.out.printf("Deleting old ids file %s because a new version has been downloaded%n", idsFile.getName());
+					idsFile.delete();
+				}
+				if (!idsFile.exists()) {
+					try {
+						sdfData = readSDFFile(file);
+						writeIdsFile(convertPubChemSDFToDict(sdfData), idsFile);
+					} catch (IOException e) {
+						System.err.println("Could not read SDF file from " + outputLocation);
+						e.printStackTrace();
+					}
+				} else {
+					System.out.printf("Skipping %s because an ids file already exists%n", file.getName());
+				}
+				idsFiles.add(idsFile);
+			}
+		}
+		
+		Map<String, String[]> ids = new HashMap<String, String[]>();
+		for (File idsFile : idsFiles) {
+			System.out.println("Loading file " + idsFile.getName());
+			Map<String, String[]> loadedIds = Normalizer.loadIdsFromFile(idsFile.getAbsolutePath());
+			int filteredCount = 0;
+			for (String chemical : new ArrayList<String>(loadedIds.keySet())) {
+				if (chemical.length() > pubchemMaxLength) {
+					loadedIds.remove(chemical);
+					filteredCount++;
+				}
+			}
+			
+			mergeIDs(ids, loadedIds, false);
+			if (filteredCount > 0) {
+				System.out.printf("  %d filtered (length > %d)%n", filteredCount, pubchemMaxLength);
+			}
+		}
+		
+		return ids;
+	}
+	
+	public static void updateDictionaryFile(File dictionaryFile, List<File> newAutomatonFiles) throws IOException {
 		ZipFile zipFile = new ZipFile(dictionaryFile);
 		ZipOutputStream out = new ZipOutputStream(new FileOutputStream(outputLocation + "dict.zip"));
+		
+		List<String> newAutomatonNames = new ArrayList<String>();
+		for (File automatonFile: newAutomatonFiles) {
+			newAutomatonNames.add(automatonFile.getName());
+		}
 		
         Enumeration<? extends ZipEntry> entries = zipFile.entries();
         while (entries.hasMoreElements()) {
             ZipEntry entry = entries.nextElement();
-            if (!newAutomatonFiles.contains(entry.getName())) {
+            if (!newAutomatonNames.contains(entry.getName())) {
 	            InputStream in = zipFile.getInputStream(entry);
 	            out.putNextEntry(new ZipEntry(entry.getName()));
 	            IOUtils.copy(in, out);
@@ -691,8 +911,7 @@ public class DictionaryUpdater {
         
         zipFile.close();
         
-        for (String fileName : newAutomatonFiles) {
-        	File newAutomatonFile = new File(outputLocation + fileName);
+        for (File newAutomatonFile : newAutomatonFiles) {
 		    InputStream in = new FileInputStream(newAutomatonFile);
 		    out.putNextEntry(new ZipEntry(newAutomatonFile.getName()));
 		    IOUtils.copy(in, out);
@@ -704,7 +923,8 @@ public class DictionaryUpdater {
 	}
 	
 	public static void update(File dictionaryFile, File idsFile) throws FileNotFoundException, IOException {
-		Map<String, String[]> chemicals = getChebi(chebiSDFURL);
+		Map<String, String[]> update = new HashMap<String, String[]>();
+		List<File> automatonFiles = new ArrayList<File>();
 		
 		if (!new File(outputLocation).exists()) {
 			new File(outputLocation).mkdir();
@@ -715,8 +935,8 @@ public class DictionaryUpdater {
 		if (rewriteLogFile.exists()) rewriteLogFile.delete();
 		if (deletedLogFile.exists()) deletedLogFile.delete();
 		
-		List<String> automatonFiles = new ArrayList<String>();
-		if (chemicals != null) {
+		if (ChemSpotConfiguration.isUpdate("chebi")) {
+			Map<String, String[]> chemicals = getChebi(chebiSDFURL);
 			chemicals = processChemicals(chemicals);
 			
 			/*for (String chemical : new ArrayList<String>(chemicals.keySet())) {
@@ -724,9 +944,24 @@ public class DictionaryUpdater {
 				if (chemical.matches("[\\w':,\\-]+")) chemicals.remove(chemical);
 			}*/
 			
-			writeDictionary(chemicals, new File(outputLocation + "chebi.map"));
-			writeAutomaton(chemicals.keySet(), new File(outputLocation + "chebi_updated.atm"));
-			automatonFiles.add("chebi_updated.atm");
+			writeIdsFile(chemicals, new File(outputLocation + "chebi.map"));
+			automatonFiles.add(writeAutomaton(chemicals.keySet(), new File(outputLocation + "chebi_updated.atm")));
+			mergeIDs(update, chemicals, false);
+			
+		}
+		
+		if (ChemSpotConfiguration.isUpdate("pubchem")) {
+			Map<String, String[]> chemicals = getPubChem(pubchemSDFURL);
+			chemicals = processChemicals(chemicals);
+			
+			/*for (String chemical : new ArrayList<String>(chemicals.keySet())) {
+				//if (chemical.matches("[\\w':,\\-]+( [\\w':,\\-]+)?")) chemicals.remove(chemical);
+				if (chemical.matches("[\\w':,\\-]+")) chemicals.remove(chemical);
+			}*/
+			
+			writeIdsFile(chemicals, new File(outputLocation + "pubchem.map"));
+			automatonFiles.addAll(writeAutomata(chemicals.keySet(), outputLocation, "pubchem_updated"));
+			mergeIDs(update, chemicals, false);
 		}
 		
 		Map<String, String[]> ids = null;	
@@ -741,23 +976,21 @@ public class DictionaryUpdater {
 			}
 		}
 		
-		if (ids != null) {
+		if (ids != null && !update.isEmpty()) {
 			System.out.println();
 			System.out.println("--- Updating IDs ---");
-			System.out.println("Merging ChEBI ids...");
-			ids = mergeIDs(ids, chemicals, true);
+			System.out.println("Merging ids into dictionary...");
+			ids = mergeIDs(ids, update, true);
 			System.out.println("Done.");
-		}
 		
-		if (rewriteLog != null) {
-			rewriteLog.close();
-		}
-		if (deletedLog != null) {
-			deletedLog.close();
-		}
+			if (rewriteLog != null) {
+				rewriteLog.close();
+			}
+			if (deletedLog != null) {
+				deletedLog.close();
+			}
 			
-		if (ids != null) {
-			System.out.print("Writing ids to 'output/ids.zip'... ");
+			System.out.print("Writing ids to '" + outputLocation + "ids.zip'... ");
 			Normalizer.writeIDs(outputLocation + "ids.map", ids);
 			
 			FileInputStream in = new FileInputStream(outputLocation + "ids.map");
@@ -769,13 +1002,13 @@ public class DictionaryUpdater {
 			out.close();
 			
 			System.out.println("Done.");
-		}
-		
+		}		
 		ids = null;	
-		if (dictionaryFile != null) {
+		
+		if (dictionaryFile != null && !automatonFiles.isEmpty()) {
 			System.out.println();
 			System.out.println("--- Updating Dictionary ---");
-			System.out.print("Writing dictionary to 'output/dict.zip'... ");
+			System.out.print("Writing dictionary to '" + outputLocation + "dict.zip'... ");
 			
 			updateDictionaryFile(dictionaryFile, automatonFiles);
 			
@@ -801,9 +1034,14 @@ public class DictionaryUpdater {
 			}
 			
 			System.out.printf("Renaming '%s' to '%s'%n", dictionaryFile, oldFilePath);
-			dictionaryFile.renameTo(new File(oldFilePath));
-			System.out.printf("Moving '%s' to '%s'%n", newDictFile, dictionaryFile);
-			newDictFile.renameTo(dictionaryFile);
+			if (dictionaryFile.renameTo(new File(oldFilePath))) {
+				System.out.printf("Moving '%s' to '%s'%n", newDictFile, dictionaryFile);
+				if (!newDictFile.renameTo(dictionaryFile)) {
+					System.out.printf("Could not move '%s' to '%s'%n", newDictFile, dictionaryFile);
+				}
+			} else {
+				System.out.printf("Could not rename '%s' to '%s'%n", dictionaryFile, oldFilePath);
+			}
 		}
 		
 		if (newIdsFile.exists() && idsFile.exists()) {
@@ -815,21 +1053,37 @@ public class DictionaryUpdater {
 			}
 			
 			System.out.printf("Renaming '%s' to '%s'%n", idsFile, oldFilePath);
-			idsFile.renameTo(new File(oldFilePath));
-			System.out.printf("Moving '%s' to '%s'%n", newIdsFile, idsFile);
-			newIdsFile.renameTo(idsFile);
+			if (idsFile.renameTo(new File(oldFilePath))) {
+				System.out.printf("Moving '%s' to '%s'%n", newIdsFile, idsFile);
+				if (!newIdsFile.renameTo(idsFile)) {
+					System.out.printf("Could not move '%s' to '%s'%n", newIdsFile, idsFile);
+				}
+			} else {
+				System.out.printf("Could not rename '%s' to '%s'%n", idsFile, oldFilePath);
+			}
 		}
 		
 		if (removeTemporaryFiles) {
-			File outputDir = new File(outputLocation);
-			for (File file : outputDir.listFiles()) {
-				file.delete();
-			}
-			outputDir.delete();
+			System.out.println("Removing temporary files");
+			removeDir(outputLocation);
 		}
 	}
 	
+	public static void removeDir(String dir) {
+		File outputDir = new File(outputLocation);
+		for (File file : outputDir.listFiles()) {
+			if (file.isFile()) {
+				file.delete();
+			} else if (file.isDirectory()) {
+				removeDir(file.getAbsolutePath());
+			}
+		}
+		outputDir.delete();
+	}
+	
 	public static void main(String[] args) throws FileNotFoundException, IOException {
+		ChemSpotConfiguration.initialize();
+		initialize();
 		update(new File(dictFilePath), new File(idsFilePath));
 	}
 }
