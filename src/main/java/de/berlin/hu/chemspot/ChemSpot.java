@@ -212,7 +212,7 @@ public class ChemSpot {
             }
             
             if (ChemSpotConfiguration.useComponent(Component.FEATURE_GENERATOR)) {
-	            //featureGenerator = new FeatureTokenGenerator();
+	            featureGenerator = new FeatureTokenGenerator();
             }
             
             setEvaluator(new ChemicalNEREvaluator());
