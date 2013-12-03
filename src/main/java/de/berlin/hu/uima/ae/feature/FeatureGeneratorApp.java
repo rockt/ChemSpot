@@ -22,7 +22,7 @@ public class FeatureGeneratorApp {
 	private static Map<Long, JCas> jCases = new HashMap<Long, JCas>();
 	
 	public static void initialize(String pathToDictionaryFile, String pathToIDsFile) {
-		chemspot = new ChemSpot(null, pathToDictionaryFile, null, pathToIDsFile);
+		chemspot = new ChemSpot(null, pathToDictionaryFile, null, pathToIDsFile, null);
 		try {
 			typeSystem = UIMAFramework.getXMLParser().parseTypeSystemDescription(new XMLInputSource(chemspot.getClass().getClassLoader().getResource("desc/TypeSystem.xml")));
 		} catch (InvalidXMLException e) {
@@ -60,17 +60,18 @@ public class FeatureGeneratorApp {
         pd.addToIndexes(jcas);
         
 		chemspot.tag(jcas);
+		System.out.println(ChemSpot.serializeAnnotations(jcas));
         
         return chemspot.getFeatureTokenGenerator().getFeatureTokens(jcas);
 	}
 	
 	public static void main(String[] args) throws InvalidXMLException, IOException {
-		String pathToDictionaryFile = "../../ChemSpot/data/dict.zip";
-	    String pathToIDsFile = "../../ChemSpot/data/ids.zip";
+		String pathToDictionaryFile = null;//"../../data/dict.zip";
+	    String pathToIDsFile = null;//"../../data/ids.zip";
 	    
 	    // String text = "We examined the effect of exogenous estradiol on the changes in serum steroid hormone levels. Induced by a nonlethal dose of Escherichia coli endotoxin in male rats and the deaths due to nonlethal and lethal doses of endotoxin.";
 	 	// String text = "A serum of 18-bromo-12-butyl-11-chloro-4,8-diethyl-5-hydroxy-15-methoxy is great.";
-	 	String text = "A serum of 18-bromo-12-butyl-11-bromo-4,8-diethyl-5-hydroxy is great for combination with aspirin and water.";
+	 	String text = "A serum of 18-bromo-12-butyl-11-bromo-4,8-diethyl-5-hydroxy is great for combination with aspirin and Lysophosphatidate as well as LoseC and associated names and Antidiarrheals.";
 		
 	    initialize(pathToDictionaryFile, pathToIDsFile);
 		

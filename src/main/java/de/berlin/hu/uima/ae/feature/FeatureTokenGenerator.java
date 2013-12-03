@@ -57,20 +57,6 @@ public class FeatureTokenGenerator {
 		CHEMICAL_PREFIX,
 		CHEMICAL_SUFFIX;
 	};
-		
-	private final ChemSpot_Feature[] DICTIONARY_FEATURES = {
-		ChemSpot_Feature.CHID,
-		ChemSpot_Feature.CHEB,
-		ChemSpot_Feature.CAS,
-		ChemSpot_Feature.PUBC,
-		ChemSpot_Feature.PUBS,
-		ChemSpot_Feature.INCH,
-		ChemSpot_Feature.DRUG,
-		ChemSpot_Feature.HMBD,
-		ChemSpot_Feature.KEGG,
-		ChemSpot_Feature.KEGD,
-		ChemSpot_Feature.MESH
-	};
 	
 	private Map<Integer, List<FeatureToken>> tokens = null;
 	
@@ -83,6 +69,7 @@ public class FeatureTokenGenerator {
 	private List<String> suffixes = null;
 	
 	private Map<List<String>, String> phareData = null;
+	private Map<String, String> whoAtcList = null;
 	
 	private void loadChebiData(String file) throws IOException {
 		chebiMinDepth = new HashMap<String, Integer>();
@@ -90,7 +77,7 @@ public class FeatureTokenGenerator {
 		chebiMaxDepth = new HashMap<String, Integer>();
 		nrChildNodes = new HashMap<String, Integer>();
 		
-		System.out.println("Loading chebi data from resource " + file + "...");
+		System.out.print("Loading chebi data from resource " + file + "... ");
 		
 		BufferedReader reader = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(file)));
 		
@@ -126,7 +113,7 @@ public class FeatureTokenGenerator {
 	}
 	
 	private void loadPrefixesSuffixes(String path) throws IOException {
-		System.out.println("Loading prefixes and suffixes from resource directory " + path + "...");
+		System.out.print("Loading prefixes and suffixes from resource directory " + path + "... ");
 		
 		prefixes = new ArrayList<String>();
 		suffixes = new ArrayList<String>();
@@ -150,7 +137,7 @@ public class FeatureTokenGenerator {
 	}
 	
 	private void loadPhareData(String file) throws IOException {
-		System.out.println("Loading pharmagenomics relationship ontology data from resource " + file + "...");
+		System.out.print("Loading pharmagenomics relationship ontology data from resource " + file + "... ");
 		
 		phareData = new HashMap<List<String>, String>();
 		
@@ -167,6 +154,43 @@ public class FeatureTokenGenerator {
 			}
 			
 			phareData.put(terms, label);
+		}
+		reader.close();
+		
+		System.out.println("Done.");
+	}
+	
+	private void loadWHOATCData(String path) throws IOException {
+		System.out.print("Loading WHO ATC list from resource directory " + path + "... ");
+		
+		whoAtcList = new HashMap<String, String>();
+		
+		BufferedReader reader = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(path)));
+		
+		String line = null;
+		String identifier = null;
+		int i = 0;
+		while ((line = reader.readLine()) != null) {
+			String term = null;
+			line = line.trim();
+			
+			if (line.contains(" - ")) {
+				String[] split = line.split(" - ");
+				identifier = split[0].trim();
+				term = split[1].trim();
+				i = 0;
+			} else {
+				term = line;
+				i++;
+			}
+			
+			String mapIdentifier = identifier + (i > 0 ? "/" + i : "");
+
+			whoAtcList.put(mapIdentifier, term);
+			
+			if (term.contains(",")) {
+				whoAtcList.put(mapIdentifier + "/C", term.replaceAll(",.*", ""));
+			}
 		}
 		reader.close();
 		
@@ -206,6 +230,15 @@ public class FeatureTokenGenerator {
 			}
 		}
 		
+		if (whoAtcList == null) {
+			try {
+				loadWHOATCData("/resources/who/WHO-ATC.txt");
+			} catch (IOException e) {
+				System.out.println("Error while loading WHO ATC list");
+				e.printStackTrace();
+			}
+		}
+		
 		System.out.println("Feature generator initialized.");
 		System.out.println();
 	}
@@ -227,6 +260,7 @@ public class FeatureTokenGenerator {
 			checkNormalization(aJCas);
 			checkPrefixesSuffixes(aJCas);
 			checkPhareData(aJCas);
+			checkWHOATC(aJCas);
 			//printFeatureTokens(aJCas);
 			break;
 		}
@@ -343,7 +377,7 @@ public class FeatureTokenGenerator {
 				
 				for (int i = 0; i < ids.length; i++) {
 					if (ids[i] != null && !ids[i].isEmpty()) {
-						token.addFeature(DICTIONARY_FEATURES[i]);
+						token.addFeature(Constants.ChemicalID.values()[i].toString());
 					}
 				}
 				
@@ -371,12 +405,14 @@ public class FeatureTokenGenerator {
 			for (String prefix : prefixes) {
 				if (token.getCoveredText().toLowerCase().startsWith(prefix)) {
 					token.addFeature(ChemSpot_Feature.CHEMICAL_PREFIX);
+					token.addFeature(ChemSpot_Feature.CHEMICAL_PREFIX + "_" + prefix.toUpperCase());
 				}
 			}
 			
 			for (String suffix : suffixes) {
 				if (token.getCoveredText().toLowerCase().endsWith(suffix)) {
 					token.addFeature(ChemSpot_Feature.CHEMICAL_SUFFIX);
+					token.addFeature(ChemSpot_Feature.CHEMICAL_SUFFIX + "_" + suffix.toUpperCase());
 				}
 			}
 		}
@@ -388,17 +424,54 @@ public class FeatureTokenGenerator {
 			for (List<String> terms : phareData.keySet()) {
 				for (String term : terms) {
 					int index = sentenceString.indexOf(term.toLowerCase());
-					if (index != -1
-							&& (index - 1 < 0 || !Character.isLetter(sentenceString.charAt(index-1)))
+					while (index != -1) {
+						if ((index - 1 < 0 || !Character.isLetter(sentenceString.charAt(index-1)))
+								&& (index + term.length() >= sentenceString.length() || !Character.isLetter(sentenceString.charAt(index+term.length())))
+								) 
+						{
+							for (FeatureToken token : getFeatureTokens(aJCas, sentence)) {
+								if (token.getBegin() >= sentence.getBegin() + index && token.getEnd() <= sentence.getBegin() + index + term.length()) {
+									token.addFeature(phareData.get(terms).replaceAll("\\s+", "_").toUpperCase());
+								}
+							}
+						}
+						
+						index = sentenceString.indexOf(term.toLowerCase(), index + term.length());
+					}
+				}
+			}
+		}
+	}
+	
+	private void checkWHOATC(JCas aJCas) {
+		for (Sentence sentence : JCasUtil.iterate(aJCas, Sentence.class)) {
+			String sentenceString = sentence.getCoveredText().toLowerCase();
+			for (String identifier : whoAtcList.keySet()) {
+				String term = whoAtcList.get(identifier);
+				
+				int index = sentenceString.indexOf(term.toLowerCase());
+				while (index != -1) {
+					if ((index - 1 < 0 || !Character.isLetter(sentenceString.charAt(index-1)))
 							&& (index + term.length() >= sentenceString.length() || !Character.isLetter(sentenceString.charAt(index+term.length())))
 							) 
 					{
+						List<String> whoAtcFeatures = new ArrayList<String>();
+						whoAtcFeatures.add("WHO-ATC-"+ identifier + ":" + term.replaceAll("\\s+", "_").toUpperCase());
+						for (String identifier2 : whoAtcList.keySet()) {
+							if (identifier.startsWith(identifier2)) {
+								String term2 = whoAtcList.get(identifier2);
+								whoAtcFeatures.add("WHO-ATC-"+ identifier2 + ":" + term2.replaceAll("\\s+", "_").toUpperCase());
+							}
+						}
+							
 						for (FeatureToken token : getFeatureTokens(aJCas, sentence)) {
 							if (token.getBegin() >= sentence.getBegin() + index && token.getEnd() <= sentence.getBegin() + index + term.length()) {
-								token.addFeature(phareData.get(terms));
+								token.getFeatures().addAll(whoAtcFeatures);
 							}
 						}
 					}
+					
+					index = sentenceString.indexOf(term.toLowerCase(), index + term.length());
 				}
 			}
 		}
