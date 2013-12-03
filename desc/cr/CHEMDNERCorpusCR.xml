@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?><collectionReaderDescription xmlns="http://uima.apache.org/resourceSpecifier">
+  <frameworkImplementation>org.apache.uima.java</frameworkImplementation>
+  <implementationName>de.berlin.hu.uima.cr.chemdner.CHEMDNERReader</implementationName>
+  <processingResourceMetaData>
+    <name>File System Collection Reader</name>
+    <description>Reads files from the filesystem.  This CollectionReader may be used
+          with or without a CAS Initializer.  If a CAS Initializer is supplied, it will
+          be passed an InputStream to the file and must populate the CAS from that
+          InputStream.  If no CAS Initializer is supplied, this CollectionReader will
+          read the file itself and set treat the entire contents of the file as the
+          document to be inserted into the CAS.</description>
+    <version>1.0</version>
+    <vendor>The Apache Software Foundation</vendor>
+    <configurationParameters>
+      <configurationParameter>
+        <name>InputDirectory</name>
+        <description>Directory containing input files</description>
+        <type>String</type>
+        <multiValued>false</multiValued>
+        <mandatory>true</mandatory>
+      </configurationParameter>
+    </configurationParameters>
+    <configurationParameterSettings>
+      <nameValuePair>
+        <name>InputDirectory</name>
+        <value>
+          <string>/vol/fob-vol5/mi06/trocktae/workspaces/studienarbeit/sprint/data/testcorpus</string>
+        </value>
+      </nameValuePair>
+    </configurationParameterSettings>
+    <typeSystemDescription>
+      <imports>
+        <import location="../DDITypeSystem.xml"/>
+      </imports>
+    </typeSystemDescription>
+    <typePriorities>
+      <imports>
+        <import location="../DDITypePriorities.xml"/>
+      </imports>
+    </typePriorities>
+    <fsIndexCollection/>
+    <capabilities>
+      <capability>
+        <inputs/>
+        <outputs>
+          <type allAnnotatorFeatures="true">org.apache.uima.examples.SourceDocumentInformation</type>
+          <type allAnnotatorFeatures="true">sprint.uima.types.Sentence</type>
+          <type allAnnotatorFeatures="true">sprint.uima.types.Pair</type>
+          <type allAnnotatorFeatures="true">sprint.uima.types.Entity</type>
+          <type allAnnotatorFeatures="true">sprint.uima.types.CorpusDocument</type>
+          <type allAnnotatorFeatures="true">sprint.uima.types.Token</type>
+        </outputs>
+        <languagesSupported/>
+      </capability>
+    </capabilities>
+    <operationalProperties>
+      <modifiesCas>true</modifiesCas>
+      <multipleDeploymentAllowed>false</multipleDeploymentAllowed>
+      <outputsNewCASes>true</outputsNewCASes>
+    </operationalProperties>
+  </processingResourceMetaData>
+  <resourceManagerConfiguration/>
+</collectionReaderDescription>

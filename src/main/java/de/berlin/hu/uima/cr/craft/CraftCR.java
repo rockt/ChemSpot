@@ -40,7 +40,7 @@ public class CraftCR extends XmiCollectionReader {
 			PubmedDocument abstractAnnotation = new PubmedDocument(jcas);
 			abstractAnnotation.setBegin(docBegin);
 			abstractAnnotation.setEnd(docEnd);
-			abstractAnnotation.addToIndexes(jcas);		
+			abstractAnnotation.addToIndexes(jcas);
 			
 			/*for (Annotation a : jcas.getAnnotationIndex()) {
 				StringBuffer buffer = new StringBuffer();
