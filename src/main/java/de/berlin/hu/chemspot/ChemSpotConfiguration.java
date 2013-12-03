@@ -1,8 +1,8 @@
 package de.berlin.hu.chemspot;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -12,7 +12,7 @@ import java.util.Properties;
 
 public class ChemSpotConfiguration {
 	// Constants
-	public static enum Corpus {IOB, CRAFT, GZ, NACTEM, PATENT, DDI, XMI, TXT};
+	public static enum Corpus {IOB, CRAFT, GZ, NACTEM, PATENT, DDI, XMI, CHEMDNER, TXT};
 	public static enum Component {TOKENIZER, SENTENCE_DETECTOR, POS_TAGGER, CRF, DICTIONARY, SUM_TAGGER, ABBREV, DRUG_TAGGER, MENTION_EXPANDER, ANNOTATION_MERGER, STOPWORD_FILTER, NORMALIZER, OPSIN, FEATURE_GENERATOR, CHEMHITS, PROFILER};
 	private static final Component[] DEFAULT_DEACTIVATED = {Component.FEATURE_GENERATOR, Component.CHEMHITS, Component.PROFILER, Component.DRUG_TAGGER};
 	
@@ -39,8 +39,11 @@ public class ChemSpotConfiguration {
 	private static final String DICTIONARY_FILTER_LENGTH = COMPONENT_PREFIX + Component.DICTIONARY.toString().toLowerCase() + ".filterLength";
 	
 	private static final String UPDATE_PREFIX = "update.";
+	private static final String UPDATE_REMOVE_TEMPORARY_FILES = UPDATE_PREFIX + "removeTemporaryFiles";
 	private static final String UPDATE_CHEBI_SDF_URL = UPDATE_PREFIX + "chebi.sdf.url";
 	private static final String UPDATE_CHEBI_MUST_CONTAIN_FORMULA = UPDATE_PREFIX + "chebi.mustContainFormula";
+	private static final String UPDATE_PUBCHEM_SDF_URL = UPDATE_PREFIX + "pubchem.sdf.url";
+	private static final String UPDATE_PUBCHEM_MAX_LENGTH = UPDATE_PREFIX + "pubchem.maxLength";
 	
 	// Variables
 	private static Properties properties = null;
@@ -51,18 +54,29 @@ public class ChemSpotConfiguration {
 	
 	public static void initialize() throws FileNotFoundException, IOException {
 		if (new File("conf/chemspot.cfg").exists()) {
-			properties.load(new FileReader("conf/chemspot.cfg"));
+			initialize("conf/chemspot.cfg");
 		} else if (new File("chemspot.cfg").exists()) {
-			properties.load(new FileReader("chemspot.cfg"));
+			initialize("chemspot.cfg");
 		}
 	}
 	
 	public static void initialize(String configFilePath) throws FileNotFoundException, IOException {
-		properties.load(new FileReader(configFilePath));
+		initialize(configFilePath, true);
 	}
 	
-	public static void initialize(InputStream inStream) throws IOException {
-		properties.load(inStream);
+	public static void initialize(String configFilePath, boolean overwrite) throws FileNotFoundException, IOException {
+		initialize(new FileInputStream(configFilePath), overwrite);
+	}
+	
+	public static void initialize(InputStream inStream, boolean overwrite) throws IOException {
+		if (overwrite) {
+			properties.load(inStream);
+		} else {
+			Properties temp = new Properties();
+			temp.load(inStream);
+			temp.putAll(properties);
+			properties = temp;
+		}
 	}
 	
 	public static String getProperty(String property) {
@@ -157,6 +171,10 @@ public class ChemSpotConfiguration {
 		}
 	}
 	
+	public static boolean isUpdate(String s) {
+		return "true".equals(getProperty(UPDATE_PREFIX + s.toLowerCase()));
+	}
+	
 	public static URL getChEBISDFUpdateURL() {
 		String urlString = getProperty(UPDATE_CHEBI_SDF_URL);
 		try {
@@ -170,5 +188,24 @@ public class ChemSpotConfiguration {
 	
 	public static boolean isChEBIUpdateMustContainFormula() {
 		return "true".equals(getProperty(UPDATE_CHEBI_MUST_CONTAIN_FORMULA));
+	}
+	
+	public static URL getPubChemSDFUpdateURL() {
+		String urlString = getProperty(UPDATE_PUBCHEM_SDF_URL);
+		try {
+			return new URL(urlString);
+		} catch (MalformedURLException e) {
+			System.err.println("The PubChem update URL '" + urlString + "' in your configuration file is not a valid url");
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public static int getPubChemMaxLength() {
+		return Integer.parseInt(getProperty(UPDATE_PUBCHEM_MAX_LENGTH));
+	}
+	
+	public static boolean isRemoveTemporaryUpdateFiles() {
+		return "true".equals(getProperty(UPDATE_REMOVE_TEMPORARY_FILES, "false"));
 	}
 }
