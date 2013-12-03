@@ -1,0 +1,2102 @@
+A - Alimentary tract and metabolism
+	A02 - Drugs for acid related disorders
+		A02B - Drugs for treatment of peptic ulcer
+			A02BC - Proton pump inhibitors
+				A02BC01 - Omeprazole
+					Losec and associated names
+				A02BC02 - Pantoprazole
+					CONTROLOC Control
+					PANTECTA Control
+					PANTOLOC Control
+					Pantoprazole Bluefish
+					Pantoprazole Olinka (1169)
+					Pantoprazole Olinka (1170)
+					PANTOZOL Control
+					Protium and associated names
+					SOMAC Control
+				A02BC03 - Lansoprazole
+					Agopton
+					Lansopon
+					Lansoprazol AbZ-Pharma
+					Lansoprazol CT-Arzneimittel
+					Lansoprazol HEXAL and associated names
+					Lansoprazol Ratiopharm
+					Lansoprazole
+	A03 - Drugs for functional gastrointestinal disorders
+		A03A - Drugs for functional bowel disorders
+			A03AE - Drugs acting on serotonin receptors
+				A03AE02 - Tegaserod
+					Zelnorm
+		A03F - Propulsives
+			A03FA - Propulsives
+				A03FA02 - Cisapride
+					Cisapride
+				A03FA03 - Domperidone
+					Domperidone
+	A04 - Antiemetics and antinauseants
+		A04A - Antiemetics and antinauseants
+			A04AA - Serotonin (5HT3) antagonists
+				A04AA02 - Granisetron
+					Kytril and associated names
+					SANCUSO
+				A04AA05 - Palonosetron
+					Aloxi
+			A04AD - Other antiemetics
+				A04AD12 - Aprepitant
+					Emend
+					Ivemend
+	A05 - Bile and liver therapy
+		A05A - Bile therapy
+			A05AA - Bile acid preparations
+				A05AA03 - Cholic acid
+					Orphacol
+	A06 - Laxatives
+		A06A - Laxatives
+			A06AH - Peripheral opioid receptor antagonists
+				A06AH01 - Methylnaltrexone bromide
+					Relistor
+			A06AX - Other laxatives
+				A06AX05 - Prucalopride
+					Resolor
+	A07 - Antidiarrheals, intestinal antiinflammatory/antiinfective agents
+		A07A - Intestinal antiinfectives
+			A07AA - Antibiotics
+				A07AA12 - Fidaxomicin
+					Dificlir
+	A08 - Antiobesity preparations, excluding diet products
+		A08A - Antiobesity preparations, excluding diet products
+			A08AA - Centrally acting antiobesity products
+				A08AA01 - Phentermine
+					Phentermine
+				A08AA02 - Fenfluramine
+					Fenfluramine
+				A08AA03 - Amfepramone
+					Amfepramone
+				A08AA04 - Dexfenfluramine
+					Dexfenfluramine
+				A08AA05 - Mazindol
+					Mazindol
+				A08AA08 - Clobenzorex
+					Clobenzorex
+				A08AA09 - Mefenorex
+					Mefenorex
+				A08AA10 - Sibutramine
+					Sibutramine
+				Fenproporex
+			A08AB - Peripherally acting antiobesity products
+				A08AB01 - Orlistat
+					alli
+					Xenical
+			A08AX - Other antiobesity drugs
+				A08AX01 - Rimonabant
+					ACOMPLIA
+					Zimulti
+	A10 - Drugs used in diabetes
+		A10A - Insulins and analogues
+			A10AB - Insulins and analogues for injection, fast-acting
+				A10AB01 - Insulin
+					Actrapid
+					Insulin Human Winthrop
+					Insuman
+					Velosulin
+				A10AB04 - Insulin lispro
+					Humalog
+					Humalog-Humaject
+					Humalog-Humaject (Mix)
+					Humalog-Pen
+					Humalog-Pen (Mix)
+					Liprolog
+					Liprolog
+				A10AB05 - Insulin aspart
+					NovoRapid
+				A10AB06 - Insulin glulisine
+					Apidra
+			A10AC - Insulins and analogues for injection, intermediate-acting
+				A10AC01 - Insulin
+					Insulatard
+					Monotard
+					Protaphane
+					Ultratard
+			A10AD - Insulins and analogues for injection, intermediate-acting combined with fast-acting
+				A10AD01 - Insulin
+					Actraphane
+					Mixtard
+				A10AD05 - Insulin aspart
+					NovoMix
+			A10AE - Insulins and analogues for injection, long-acting
+				A10AE04 - Insulin glargine
+					Lantus
+					Optisulin
+				A10AE05 - Insulin detemir
+					Levemir
+			A10AF - Insulins and analogues, for inhalation
+				A10AF01 - Insulin
+					Exubera
+		A10B - Blood glucose lowering drugs, excluding insulins
+			A10BA - Biguanides
+				A10BA02 - Metformin
+					Glucophage
+			A10BB - Sulfonamides, urea derivatives
+				A10BB12 - Glimepiride
+					Amaryl
+					Glimepirida Parke-Davis and associated names
+			A10BD - Combinations of oral blood glucose lowering drugs
+				A10BD03 - Metformin and rosiglitazone
+					Avandamet
+				A10BD04 - Glimepiride and rosiglitazone
+					Avaglim
+				A10BD05 - Metformin and pioglitazone
+					Competact
+					Glubrava
+				A10BD06 - Glimepiride and pioglitazone
+					Tandemact
+				A10BD07 - Metformin and sitagliptin
+					Efficib
+					Janumet
+					Ristfor
+					Velmetia
+				A10BD08 - Metformin and vildagliptin
+					Eucreas
+					Icandra
+					Zomarist
+				A10BD11 - Metformin and linagliptin
+					Jentadueto
+				Komboglyze
+			A10BG - Thiazolidinediones
+				A10BG02 - Rosiglitazone
+					Avandia
+					Nyracta
+					VENVIA
+				A10BG03 - Pioglitazone
+					Actos
+					Glidipion
+					Glustin
+					Paglitaz
+					Pioglitazone Accord
+					Pioglitazone Actavis
+					Pioglitazone Krka
+					Pioglitazone Teva
+					Pioglitazone Teva Pharma
+					Sepioglin
+			A10BH - Dipeptidyl peptidase 4 (dpp-4) inhibitors
+				A10BH01 - Sitagliptin
+					Januvia
+					Ristaben
+					Tesavel
+					Xelevia
+				A10BH02 - Vildagliptin
+					Galvus
+					Jalra
+					Xiliarx
+				A10BH03 - Saxagliptin
+					Onglyza
+				A10BH05 - Linagliptin
+					Trajenta
+			A10BX - Other oral blood glucose lowering drugs
+				A10BX02 - Repaglinide
+					Enyglid
+					NovoNorm
+					Prandin
+					Repaglinide Accord
+					Repaglinide Krka
+					Repaglinide Teva
+				A10BX03 - Nateglinide
+					Starlix
+					Trazec
+				A10BX04 - Exenatide
+					BYDUREON
+					Byetta
+				A10BX06 - Benfluorex
+					benfluorex
+				A10BX07 - Liraglutide
+					Victoza
+				A10BX09 - Dapagliflozin
+					Forxiga
+	A11 - Vitamins
+		A11H - Other plain vitamin preparations
+			A11HA - Other plain vitamin preparations
+				A11HA08 - Tocofersolan
+					Vedrop
+	A16 - Other alimentary tract and metabolism products
+		A16A - Other alimentary tract and metabolism products
+			A16AA - Amino acids and derivatives
+				A16AA04 - Mercaptamine
+					Cystagon
+				A16AA05 - Carglumic acid
+					Carbaglu
+				A16AA06 - Betaine
+					Cystadane
+			A16AB - Enzymes
+				A16AB02 - Imiglucerase
+					Cerezyme
+				A16AB03 - Agalsidase alfa
+					Replagal
+				A16AB04 - Agalsidase beta
+					Fabrazyme
+				A16AB05 - Laronidase
+					Aldurazyme
+				A16AB07 - Alglucosidase alfa
+					Myozyme
+				A16AB08 - Galsulfase
+					Naglazyme
+				A16AB09 - Idursulfase
+					Elaprase
+				A16AB10 - Velaglucerase alfa
+					VPRIV
+				A16AB11 - Taliglucerase alfa
+					Elelyso
+			A16AX - Various alimentary tract and metabolism products
+				A16AX03 - Sodium phenylbutyrate
+					Ammonaps
+				A16AX04 - Nitisinone
+					Orfadin
+				A16AX05 - Zinc acetate
+					Wilzin
+				A16AX06 - Miglustat
+					Zavesca
+				A16AX07 - Sapropterin
+					Kuvan
+				A16AX08 - Teduglutide
+					Revestive
+B - Blood and blood forming organs
+	B01 - Antithrombotic agents
+		B01A - Antithrombotic agents
+			B01AB - Heparin group
+				B01AB02 - Antithrombin
+					ATryn
+			B01AC - Platelet aggregation inhibitors excluding Heparin
+				B01AC04 - Clopidogrel
+					Clopidogrel 1A Pharma
+					Clopidogrel Acino
+					Clopidogrel Acino Pharma
+					Clopidogrel Acino Pharma GmbH
+					Clopidogrel Apotex
+					Clopidogrel BMS
+					Clopidogrel DURA
+					Clopidogrel HCS
+					Clopidogrel Hexal
+					Clopidogrel Krka
+					Clopidogrel Krka d.d.
+					Clopidogrel Mylan
+					Clopidogrel Orion
+					Clopidogrel Qualimed
+					Clopidogrel ratiopharm
+					Clopidogrel ratiopharm GmbH
+					Clopidogrel Sandoz
+					Clopidogrel TAD
+					Clopidogrel Teva
+					Clopidogrel Teva and associated names
+					Clopidogrel Teva Generics B.V.
+					Clopidogrel Teva Pharma
+					Clopidogrel Teva Pharma B.V.
+					Clopidogrel Zentiva
+					Grepid
+					Iscover
+					Plavix
+					Zylagren
+					Zyllt
+				B01AC09 - Epoprostenol
+					Flolan and associated names
+				B01AC11 - Iloprost
+					Ventavis
+				B01AC16 - Eptifibatide
+					Integrilin
+				B01AC17 - Tirofiban
+					Aggrastat
+				B01AC22 - Prasugrel
+					Efient
+				B01AC24 - Ticagrelor
+					Brilique
+					Possia
+				B01AC30 - Combinations
+					DuoCover
+					DuoPlavin
+			B01AD - Enzymes
+				B01AD02 - Alteplase
+					Actilyse
+				B01AD07 - Reteplase
+					Ecokinase
+					Rapilysin
+				B01AD08 - Saruplase
+					Rescupase
+				B01AD10 - Drotrecogin alfa
+					Xigris
+				B01AD11 - Tenecteplase
+					Metalyse
+					Tenecteplase Boehringer Ingelheim Pharma GmbH & Co. KG
+				B01AD12 - Protein C
+					Ceprotin
+			B01AE - Direct thrombin inhibitors
+				B01AE01 - Desirudin
+					Revasc
+				B01AE02 - Lepirudin
+					Refludan
+				B01AE06 - Bivalirudin
+					Angiox
+				B01AE07 - Dabigatran etexilate
+					Pradaxa
+			B01AF - Direct factor Xa inhibitors
+				B01AF02 - Apixaban
+					Eliquis
+			B01AX - Other antithrombotic agents
+				B01AX05 - Fondaparinux
+					Arixtra
+					Quixidar
+				B01AX06 - Rivaroxaban
+					Xarelto
+	B02 - Antihemorrhagics
+		B02A - Antifibrinolytics
+			B02AA - Amino acids
+				B02AA01 - Aminocaproic acid
+					Aminocaproic acid containing medicinal products
+				B02AA02 - Tranexamic acid
+					Cyklo-f
+			B02AB - Proteinase inhibitors
+				B02AB01 - Aprotinin
+					Aprotinin
+		B02B - Vitamin K and other hemostatics
+			B02BC - Local hemostatics
+				B02BC30 - Combinations
+					TachoSil
+				Evicel
+			B02BD - Blood coagulation factors
+				B02BD02 - Coagulation factor VIII
+					Advate
+					Beriate P
+					Helixate NexGen
+					KOGENATE Bayer
+					ReFacto AF
+				B02BD04 - Coagulation factor IX
+					BeneFIX
+					Nonafact
+				B02BD05 - Coagulation factor VII
+					NovoSeven
+				B02BD11 - Catridecacog
+					NovoThirteen
+			B02BX - Other systemic hemostatics
+				B02BX04 - Romiplostim
+					Nplate
+				B02BX05 - Eltrombopag
+					Revolade
+	B03 - Antianemic preparations
+		B03X - Other antianemic preparations
+			B03XA - Other antianemic preparations
+				B03XA01 - Erythropoietin
+					Abseamed
+					Binocrit
+					Biopoin
+					Epoetin alfa Hexal
+					Eporatio
+					Eprex
+					Retacrit
+					Silapo
+				B03XA02 - Darbepoetin alfa
+					Aranesp
+					Nespo
+				B03XA03 - Methoxy polyethylene glycol-epoetin beta
+					Mircera
+				Dynepo
+				NeoRecormon
+	B05 - Plasma substitutes and perfusion solutions
+		B05D - Peritoneal dialytics
+			B05D - Peritoneal dialytics
+			B05DA - Isotonic solutions
+				Extraneal
+			Dianeal PD4 and Extraneal
+			Dianeal, Extraneal and Nutrineal
+			Dianeal, Extraneal, Nutrineal, Monosol and sodium chloride 0,9% solution for haemodialysis (Baxter - Castlebar site)
+	B06 - Other hematological agents
+		B06A - Other hematological agents
+			B06AC - Drugs used in hereditary angioedema
+				B06AC01 - C1-inhibitor, plasma derived
+					Cinryze
+				B06AC04 - Conestat alfa
+					Ruconest
+C - Cardiovascular system
+	C01 - Cardiac therapy
+		C01B - Antiarrhythmics, class I and III
+			C01BD - Antiarrhythmics, class III
+				C01BD04 - Dofetilide
+					Tikosyn
+				C01BD07 - Dronedarone
+					Multaq
+			C01BG - Other class I antiarrhythmics
+				C01BG11 - Vernakalant
+					Brinavess
+		C01E - Other cardiac preparations
+			C01EB - Other cardiac preparations
+				C01EB16 - Ibuprofen
+					Pedea
+				C01EB17 - Ivabradine
+					Corlentor
+					Procoralan
+				C01EB18 - Ranolazine
+					Ranexa
+				C01EB19 - Icatibant
+					Firazyr
+				C01EB21 - Regadenoson
+					Rapiscan
+	C02 - Antihypertensives
+		C02C - Antiadrenergic agents, peripherally acting
+			C02CA - Alpha-adrenoceptor blocking agents
+				C02CA04 - Doxazosin
+					Doxazosin (Cardoreg)
+					Doxazosin (Doxagamma)
+					Doxazosin (Doxastad)
+					Doxazosin (Doxazosin Retard Arrow)
+					Doxazosin (Doxazosin Winthrop)
+		C02K - Other antihypertensives
+			C02KX - Other antihypertensives
+				C02KX01 - Bosentan
+					Tracleer
+				C02KX02 - Ambrisentan
+					Volibris
+				C02KX03 - Sitaxentan
+					Thelin
+	C03 - Diuretics
+		C03X - Other diuretics
+			C03XA - Vasopressin antagonists
+				C03XA01 - Tolvaptan
+					Samsca
+	C04 - Peripheral vasodilators
+		C04A - Peripheral vasodilators
+			C04AX - Other peripheral vasodilators
+				C04AX21 - Naftidrofuryl
+					Naftidrofuril
+	C07 - Beta blocking agents
+		C07A - Beta blocking agents, plain
+			C07AB - Beta blocking agents, plain, selective
+				C07AB52 - Metoprolol, combinations
+					Metoprolol / Felodipine
+	C08 - Calcium channel blockers
+		C08C - Selective calcium channel blockers with mainly vascular effects
+			C08CA - Dihydropyridine derivatives
+				C08CA01 - Amlodipine
+					Amlodipine W�rwag
+					Amlovita
+					Norvasc and associated names
+					Talam
+				C08CA02 - Felodipine
+					Felodipine
+				C08CA05 - Nifedipine
+					Nifedipine Pharmamatch 30/60 mg
+	C09 - Agents acting on the renin-angiotensin system
+		C09A - ACE inhibitors, plain
+			C09AA - ACE inhibitors, plain
+				C09AA01 - Captopril
+					Captopril
+				C09AA02 - Enalapril
+					Enalapril
+				C09AA03 - Lisinopril
+					Cardiostad
+					Lisinopril Biochemie
+					Zestril
+				C09AA04 - Perindopril
+					Perindopril (Coversyl)
+				C09AA05 - Ramipril
+					Tritace
+				C09AA07 - Benazepril
+					Fortekor and associated names
+				C09AA08 - Cilazapril
+					Cilazapril Teva and associated names
+					Vascace and associated names
+				C09AA15 - Zofenopril
+					Zofenil
+				Bifril
+		C09B - ACE inhibitors, combinations
+			C09BA - ACE inhibitors and diuretics
+				C09BA08 - Cilazapril and diuretics
+					Vascace Plus and associated names
+			C09BB - ACE inhibitors and calcium channel blockers
+				C09BB03 - Lisinopril and amlodipine
+					Lisonorm
+		C09C - Angiotensin II antagonists, plain
+			C09CA - Angiotensin II antagonists, plain
+				C09CA01 - Losartan
+					Cozaar
+					Cozaar Comp
+					Cozaar PAED
+				C09CA03 - Valsartan
+					Diovan
+					Diovan (1219)
+					Diovan (1220)
+				C09CA04 - Irbesartan
+					Aprovel
+					Ifirmasta
+					Irbesartan BMS
+					Irbesartan Teva
+					Karvea
+					Sabervel
+				C09CA07 - Telmisartan
+					Kinzalmono
+					Micardis
+					MicardisPlus
+					Pritor
+					Telmisartan Actavis
+					Telmisartan Teva
+					Telmisartan Teva Pharma
+					Tolura
+				C09CA09 - Azilsartan medoxomil
+					Edarbi
+					Ipreziv
+		C09D - Angiotensin II antagonists, combinations
+			C09DA - Angiotensin II antagonists and diuretics
+				C09DA04 - Irbesartan and diuretics
+					CoAprovel
+					Ifirmacombi
+					Irbesartan / Hydrochlorothiazide Teva
+					Irbesartan HCT BMS
+					Irbesartan HCT Zentiva
+					Irbesartan Zentiva
+				C09DA06 - Candesartan and diuretics
+					Atacand and associated names
+					Atacand Plus and associated names
+				C09DA07 - Telmisartan and diuretics
+					Kinzalkomb
+					PritorPlus
+				Karvezide
+			C09DB - Angiotensin II antagonists and calcium channel blockers
+				C09DB01 - Valsartan and amlodipine
+					Copalia
+					Dafiro
+					Exforge
+					Imprida
+				C09DB04 - Telmisartan and amlodipine
+					Onduarp
+					Twynsta
+			C09DX - Angiotensin II antagonists, other combinations
+				C09DX01 - Valsartan, amlodipine and hydrochlorothiazide
+					Copalia HCT
+					Dafiro HCT
+					Diovan comp
+					Ethirfin
+					Exforge HCT
+					Imprida HCT
+		C09X - Other agents acting on the renin-angiotensin system
+			C09XA - Renin-inhibitors
+				C09XA02 - Aliskiren
+					Enviage
+					Rasilez
+					Riprazo
+					Sprimeo
+					Tekturna
+				C09XA52 - Aliskiren and hydrochlorothiazide
+					Rasilez HCT
+					Riprazo HCT
+					Sprimeo HCT
+				C09XA53 - Aliskiren and amlodipine
+					Rasilamlo
+				C09XA54 - Aliskiren, amlodipine and hydrochlorothiazide
+					Rasitrio
+	C10 - Lipid modifying agents
+		C10A - Lipid modifying agents, plain
+			C10AA - Hmg coa reductase inhibitors
+				C10AA01 - Simvastatin
+					Simvastatin 10, 20, 40, 80 mg and associated names
+					Simvastatin Krka
+					Zocord
+				C10AA03 - Pravastatin
+					Pravachol
+				C10AA04 - Fluvastatin
+					Lescol
+				C10AA05 - Atorvastatin
+					Atorvastatin
+					Lipitor and associated names
+				C10AA06 - Cerivastatin
+					Cerivastatine
+				C10AA07 - Rosuvastatin
+					Crestor
+			C10AB - Fibrates
+				C10AB04 - Gemfibrozil
+					Lopid
+				fenofibrate, bezafibrate, ciprofibrate, gemfibrozil
+			C10AC - Bile acid sequestrants
+				C10AC04 - Colesevelam
+					Cholestagel
+			C10AD - Nicotinic acid and derivatives
+				C10AD52 - Nicotinic acid, combinations
+					Pelzont
+					Tredaptive
+					Trevaclyn
+			C10AX - Other lipid modifying agents
+				C10AX10 - Alipogene tiparvovec
+					Glybera
+		C10B - Lipid modifying agents, combinations
+			C10BA - HMG CoA reductase inhibitors in combination with other lipid modifying agents
+				C10BA03 - Pravastatin and fenofibrate
+					Pravafenix
+D - Dermatologicals
+	D01 - Antifungals for dermatological use
+		D01A - Antifungals for topical use
+			D01AC - Imidazole derivatives
+				D01AC15 - Fluconazole
+					Fluconazol Tiefenbacher
+	D03 - Preparations for treatment of wounds & ulcers
+		D03A - Cicatrizants
+			D03AX - Other cicatrizants
+				D03AX06 - Becaplermin
+					Regranex
+	D05 - Antipsoriatics
+		D05A - Antipsoriatics for topical use
+			D05AX - Other antipsoriatics for topical use
+				D05AX52 - Calcipotriol, combinations
+					Daivobet and associated names
+	D06 - Antibiotics and chemotherapeutics for dermatological use
+		D06A - Antibiotics for topical use
+			D06AX - Other antibiotics for topical use
+				D06AX13 - Retapamulin
+					Altargo
+		D06B - Chemotherapeutics for topical use
+			D06BB - Antivirals
+				D06BB10 - Imiquimod
+					Aldara
+					Zartra
+					Zyclara
+			D06BX - Other chemotherapeutics
+				D06BX02 - Ingenol mebutate
+					Picato
+	D10 - Anti-acne preparations
+		D10A - Anti-acne preparations for topical use
+			D10AD - Retinoids for topical use in acne
+				D10AD04 - Isotretinoin
+					Isotretinoin
+					Roaccutane
+	D11 - Other dermatological preparations
+		D11A - Other dermatological preparations
+			D11AH - Agents for atopic dermatitis, excluding corticosteroids
+				D11AH01 - Tacrolimus
+					Protopic
+					Protopy
+				D11AH02 - Pimecrolimus
+					Pimecrolimus
+			D11AX - Other dermatologicals
+				D11AX16 - Eflornithine
+					Vaniqa
+G - Genito urinary system and sex hormones
+	G02 - Other gynecologicals
+		G02C - Other gynecologicals
+			G02CX - Other gynecologicals
+				G02CX01 - Atosiban
+					Tractocile
+	G03 - Sex hormones and modulators of the genital system
+		G03A - Hormonal contraceptives for systemic use
+			G03AA - Progestogens and estrogens, fixed combinations
+				G03AA12 - Drospirenone and estrogen
+					Ethinylestradiol-Drospirenone 24+4 and associated names
+				G03AA14 - Nomegestrol and estrogen
+					IOA
+					Zoely
+				Evra
+			G03AB - Progestogens and estrogens,sequential preparations
+				G03AB05 - Desogestrel and estrogen
+					Desogestrel/ethinylestradiol (Laurina)
+			G03AC - Progestogens
+				G03AC08 - Etonogestrel
+					Implanon
+			G03AD - Emergency contraceptives
+				G03AD02 - Ulipristal
+					ellaOne
+		G03B - Androgens
+			G03BA - 3-oxoandrosten (4) derivatives
+				G03BA03 - Testosterone
+					Intrinsa
+					Livensa
+		G03F - Progestogens and estrogens in combination
+			G03FA - Progestogens and estrogens, fixed combinations
+				G03FA01 - Norethisterone and estrogen
+					Activelle
+		G03G - Gonadotropins and other ovulation stimulants
+			G03GA - Gonadotropins
+				G03GA01 - Chorionic gonadotrophin
+					Ovitrelle
+				G03GA05 - Follitropin alfa
+					GONAL-f
+					Pergoveris
+				G03GA06 - Follitropin beta
+					Fertavid
+					Puregon
+				G03GA07 - Lutropin alfa
+					Luveris
+				G03GA09 - Corifollitropin alfa
+					Elonva
+		G03X - Other sex hormones and modulators of the genital system
+			G03XB - Antiprogestogens
+				G03XB01 - Mifepristone
+					Mifegyne
+					Mifepristone Linepharma and associated names
+			G03XC - Selective estrogen receptor modulators
+				G03XC01 - Raloxifene
+					Evista
+					Optruma
+					Raloxifene Teva
+				G03XC02 - Bazedoxifene
+					Conbriza
+				G03XC03 - Lasofoxifene
+					Fablyn
+	G04 - Urologicals
+		G04B - Other urologicals, including antispasmodics
+			G04BD - Urinary antispasmodics
+				G04BD04 - Oxybutynin
+					Kentera
+				G04BD10 - Darifenacin
+					Emselex
+				G04BD11 - Fesoterodine
+					Toviaz
+				G04BD12 - Mirabegron
+					Betmiga
+			G04BE - Drugs used in erectile dysfunction
+				G04BE03 - Sildenafil
+					Patrex
+					Revatio
+					Sildenafil Actavis
+					Sildenafil ratiopharm
+					Sildenafil Teva
+					Viagra
+					Vizarsin
+				G04BE07 - Apomorphine
+					Ixense
+					Taluvian
+					Uprima
+				G04BE08 - Tadalafil
+					Adcirca
+					Cialis
+				G04BE09 - Vardenafil
+					Levitra
+					Vivanza
+		G04C - Drugs used in benign prostatic hypertrophy
+			G04CA - Alpha-adrenoreceptor antagonists
+				G04CA04 - Silodosin
+					Silodyx
+					Urorec
+H - Systemic hormonal prep, excluding sex hormones
+	H01 - Pituitary and hypothalamic hormones
+		H01A - Anterior pituitary lobe hormones
+			H01AB - Thyrotropin
+				H01AB01 - Thyrotropin
+					Thyrogen
+			H01AC - Somatropin and analogues
+				H01AC01 - Somatropin
+					Genotropin
+					NutropinAq
+					Omnitrope
+					Valtropin
+				H01AC03 - Mecasermin
+					INCRELEX
+			H01AX - Other anterior pituitary lobe hormones and analogues
+				H01AX01 - Pegvisomant
+					Somavert
+		H01C - Hypothalamic hormones
+			H01CA - Gonadotrophin-releasing hormones
+				H01CA03 - Histrelin
+					Vantas
+			H01CB - Antigrowth hormone
+				H01CB05 - Pasireotide
+					Signifor
+			H01CC - Anti-gonadotropin-releasing hormones
+				H01CC01 - Ganirelix
+					Orgalutran
+	H02 - Corticosteroids for systemic use
+		H02A - Corticosteroids for systemic use, plain
+			H02AB - Glucocorticoids
+				H02AB02 - Dexamethasone
+					Dexamethasone Alapis
+				H02AB09 - Hydrocortisone
+					Plenadren
+	H05 - Calcium homeostasis
+		H05A - Parathyroid hormones
+			H05AA - Parathyroid hormones
+				H05AA02 - Teriparatide
+					Forsteo
+				H05AA03 - Parathyroid hormone
+					Preotact
+		H05B - Anti-parathyroid hormones
+			H05BA - Calcitonin preparations
+				H05BA01 - Calcitonin (salmon synthetic)
+					Cetrotide
+					Forcaltonin
+			H05BX - Other anti-parathyroid agents
+				H05BX01 - Cinacalcet
+					Mimpara
+					Parareg
+J - General antiinfectives for systemic use
+	J01 - Antibacterials for systemic use
+		J01A - Tetracyclines
+			J01AA - Tetracyclines
+				J01AA12 - Tigecycline
+					Tygacil
+		J01C - Beta-lactam antibacterials, penicillins
+			J01CE - Beta-lactamase sensitive penicillins
+				J01CE08 - Benzathine benzylpenicillin
+					Benzathine Benzylpenicillin
+			J01CR - Combinations of penicillins, including beta-lactamase inhibitors
+				J01CR02 - Amoxicillin and enzyme inhibitor
+					Augmentin
+				J01CR05 - Piperacillin and enzyme inhibitor
+					Tazocin and associated names
+		J01D - Other beta-lactam antibacterials
+			J01DC - Second-generation cephalosporins
+				J01DC02 - Cefuroxime
+					Zinacef and associated names
+					Zinnat and associated names
+			J01DD - Third-generation cephalosporins
+				J01DD02 - Ceftazidime
+					Fortum and associated names
+				J01DD04 - Ceftriaxone
+					Ceftriaxone Tyrol Pharma and asssociated names
+			J01DF - Monobactams
+				J01DF01 - Aztreonam
+					Cayston
+			J01DH - Carbapenems
+				J01DH02 - Meropenem
+					Meronem
+				J01DH03 - Ertapenem
+					Invanz
+				J01DH04 - Doripenem
+					Doribax
+				J01DH51 - Imipenem and enzyme inhibitor
+					Tienam
+			J01DI - Other cephalosporins
+				J01DI01 - Ceftobiprole medocaril
+					Zeftera
+				J01DI02 - Ceftaroline fosamil
+					Zinforo
+		J01F - Macrolides and lincosamides
+			J01FA - Macrolides
+				J01FA15 - Telithromycin
+					Ketek
+					Levviax
+		J01G - Aminoglycoside antibacterials
+			J01GB - Other aminoglycosides
+				J01GB01 - Tobramycin
+					TOBI Podhaler
+		J01M - Quinolone antibacterials
+			J01MA - Fluoroquinolones
+				J01MA02 - Ciprofloxacin
+					Ciprofloxacin Bayer and associated names
+					Ciprofloxacin Hikma and associated names
+					Ciprofloxacin Kabi and associated names
+					Ciprofloxacin Nycomed and associated names
+				J01MA09 - Sparfloxacin
+					Zagam 100
+					Zagam 200
+				J01MA13 - Trovafloxacin
+					Trovan
+					Trovan IV
+				J01MA14 - Moxifloxacin
+					Actira 400 mg film coated tablets and associated names
+					Avalox
+					Avalox 400mg film coated tablets and associated names
+					Moxifloxacin
+					Octegra
+					Octegra 400 mg film coated tablets and associated names
+				J01MA16 - Gatifloxacin
+					Gatifloxacine
+				Turvel
+				Turvel IV
+		J01X - Other antibacterials
+			J01XA - Glycopeptide antibacterials
+				J01XA02 - Teicoplanin
+					Teicoplanin Hospira and associated names
+				J01XA03 - Telavancin
+					Vibativ
+			J01XX - Other antibacterials
+				J01XX09 - Daptomycin
+					Cubicin
+	J02 - Antimycotics for systemic use
+		J02A - Antimycotics for systemic use
+			J02AC - Triazole derivatives
+				J02AC01 - Fluconazole
+					Diflucan and associated names
+				J02AC03 - Voriconazole
+					Vfend
+				J02AC04 - Posaconazole
+					Noxafil
+					Posaconazole SP
+			J02AX - Other antimycotics for systemic use
+				J02AX04 - Caspofungin
+					CANCIDAS
+				J02AX05 - Micafungin
+					Mycamine
+				J02AX06 - Anidulafungin
+					Ecalta
+	J05 - Antivirals for systemic use
+		J05A - Agents affecting the virus directly
+			J05AB - Nucleosides
+				J05AB04 - Ribavirin
+					Cotronak
+					Rebetol
+					Ribavirin BioPartners
+					Ribavirin iQur
+					Ribavirin Mylan
+					Ribavirin Teva
+					Ribavirin Teva Pharma BV
+				J05AB06 - Ganciclovir
+					Vitrasert implant
+				J05AB09 - Famciclovir
+					Famvir and associated names
+				J05AB11 - Valaciclovir
+					Valtrex and associated names
+				J05AB12 - Cidofovir
+					Vistide
+			J05AE - Protease inhibitors
+				J05AE01 - Saquinavir
+					Fortovase
+					Invirase
+				J05AE02 - Indinavir
+					Crixivan
+				J05AE03 - Ritonavir
+					Norvir
+				J05AE04 - Nelfinavir
+					Viracept
+				J05AE05 - Amprenavir
+					Agenerase
+				J05AE06 - Lopinavir
+					Kaletra
+				J05AE07 - Fosamprenavir
+					Telzir
+				J05AE08 - Atazanavir
+					Reyataz
+				J05AE09 - Tipranavir
+					APTIVUS
+				J05AE10 - Darunavir
+					PREZISTA
+				J05AE11 - Telaprevir
+					Incivo
+				Victrelis
+			J05AF - Nucleoside and nucleotide reverse transcriptase inhibitors
+				J05AF04 - Stavudine
+					Zerit
+				J05AF05 - Lamivudine
+					Epivir
+					Lamivudine Teva
+					Lamivudine Teva Pharma B.V.
+					Zeffix
+				J05AF06 - Abacavir
+					Ziagen
+				J05AF07 - Tenofovir disoproxil
+					Viread
+				J05AF08 - Adefovir dipivoxil
+					Hepsera
+				J05AF09 - Emtricitabine
+					Emtriva
+				J05AF10 - Entecavir
+					Baraclude
+				J05AF11 - Telbivudine
+					Sebivo
+			J05AG - Non-nucleoside reverse transcriptase inhibitors
+				J05AG01 - Nevirapine
+					Nevirapine Teva
+					Viramune
+				J05AG03 - Efavirenz
+					Efavirenz Teva
+					Stocrin
+					Sustiva
+				J05AG04 - Etravirine
+					Intelence
+				J05AG05 - Rilpivirine
+					EDURANT
+			J05AH - Neuraminidase inhibitors
+				J05AH02 - Oseltamivir
+					Tamiflu
+			J05AR - Antivirals for treatment of hiv infections, combinations
+				J05AR01 - Zidovudine and lamivudine
+					Combivir
+					Lamivudine / Zidovudine Teva
+				J05AR02 - Lamivudine and abacavir
+					Kivexa
+					Trizivir
+				J05AR03 - Tenofovir disoproxil and emtricitabine
+					Truvada
+				J05AR06 - Emtricitabine, tenofovir disoproxil and efavirenz
+					Atripla
+				J05AR08 - Emtricitabine, rilpivirine and tenofovir disoproxil
+					Eviplera
+			J05AX - Other antivirals
+				J05AX07 - Enfuvirtide
+					Fuzeon
+				J05AX08 - Raltegravir
+					Isentress
+				J05AX09 - Maraviroc
+					Celsentri
+	J06 - Immune sera and immunoglobulins
+		J06B - Immunoglobulins
+			J06BA - Immunoglobulins, normal human
+				J06BA01 - Immunoglobulins, normal human, for extravascular administration
+					Hizentra
+				J06BA02 - Immunoglobulins, normal human, for intravascular administration
+					Flebogamma DIF
+					Kiovig
+					Privigen
+			J06BB - Specific immunoglobulins
+				J06BB04 - Hepatitis B immunoglobulin
+					ImmunoGam
+					Uman Big
+					Zutectra
+				J06BB16 - Palivizumab
+					Synagis
+	J07 - Vaccines
+		J07A - Bacterial vaccines
+			J07AE - Cholera vaccines
+				J07AE01 - Cholera, inactivated, whole cell
+					Dukoral
+			J07AG - Hemophilus influenza B vaccines
+				J07AG01 - Hemophilus influenzae B, purified antigen conjugated
+					HibTITER
+			J07AH - Meningococcal vaccines
+				J07AH08 - Meningococcus, tetravalent purified polysaccharides antigen conjugated
+					Menveo
+					Nimenrix
+				J07AH09 - Meningococcus B, multicomponent vaccine
+					Bexsero
+			J07AL - Pneumococcal vaccines
+				J07AL02 - Pneumococcus, purified polysaccharides antigen conjugated
+					Prevenar
+					Prevenar 13
+				J07AL52 - Pneumococcus purified polysaccharides antigen and Haemophilus influenzae, conjugated
+					Synflorix
+		J07B - Viral vaccines
+			J07BA - Encephalitis vaccines
+				J07BA02 - Encephalitis, japanese, inactivated, whole virus
+					Ixiaro
+			J07BB - Influenza vaccines
+				J07BB01 - Influenza, inactivated, whole virus
+					Celvapan
+					Daronrix
+					Pandemic influenza vaccine H5N1 BAXTER
+					Vepacel
+				J07BB02 - Influenza, purified antigen
+					Adjupanrix
+					Aflunov
+					Arepanrix
+					Focetria
+					Foclivia
+					Humenza
+					IDflu
+					Intanza
+					Optaflu
+					Pandemrix
+					Prepandemic Influenza
+					Prepandemic influenza vaccine (H5N1) (split virion, inactivated, adjuvanted) GlaxoSmithKline Biologicals
+					Prepandrix
+					Pumarix
+				J07BB03 - Influenza, live attenuated
+					FLUENZ
+			J07BC - Hepatitis vaccines
+				J07BC01 - Hepatitis B, purified antigen
+					Engerix B
+					Fendrix
+					HBVAXPRO
+					Hepacare
+				J07BC20 - Combinations
+					Ambirix
+					Twinrix Adult
+					Twinrix Paediatric
+			J07BD - Measles vaccines
+				J07BD52 - Measles, combinations with mumps and rubella, live attenuated
+					M-M-RVAXPRO
+					Priorix and associated names
+				J07BD54 - Measles, combinations with mumps, rubella and varicella, live attenuated
+					ProQuad
+			J07BH - Rota virus diarrhea vaccines
+				J07BH01 - Rota virus, live attenuated
+					Rotarix
+					RotaShield
+				J07BH02 - Rota virus, pentavalent, live, reassorted
+					RotaTeq
+			J07BK - Varicella zoster vaccines
+				J07BK02 - Zoster, live attenuated
+					Zostavax
+			J07BL - Yellow fever vaccines
+				J07BL01 - Yellow fever, live attenuated
+					Stamaril
+			J07BM - Papillomavirus vaccines
+				J07BM01 - Papillomavirus (human types 6, 11, 16, 18) Papillomavirus (human types 16, 18)
+					Gardasil
+					Silgard
+				J07BM02 - Papillomavirus (human types 16, 18)
+					Cervarix
+		J07C - Bacterial and viral vaccines, combined
+			J07CA - Bacterial and viral vaccines, combined
+				J07CA01 - Diphtheria-poliomyelitis-tetanus
+					Triacelluvax
+				J07CA05 - Diphtheria-hepatitis B-pertussis-tetanus
+					Infanrix HepB
+					Tritanrix HepB
+				J07CA07 - Diphtheria-hepatitis B-tetanus
+					Primavax
+				J07CA08 - Hemophilus influenzae B and hepatitis B
+					Procomvax
+				J07CA09 - Diphtheria-hemophilus influenzae B-pertussis-poliomyelitis-tetanus-hepatitis B
+					Hexavac
+					Infanrix hexa
+				J07CA10 - Typhoid-hepatitis A
+					Quintanrix
+				J07CA12 - Diphtheria-pertussis-poliomyelitis-tetanus-hepatitis B
+					Infanrix penta
+L - Antineoplastic and immunomodulating agents
+	L01 - Cytostatics
+		L01A - Alkylating agents
+			L01AB - Alkyl sulphonates
+				L01AB01 - Busulfan
+					Busilvex
+			L01AC - Ethylene imines
+				L01AC01 - Thiotepa
+					Tepadina
+			L01AX - Other alkylating agents
+				L01AX03 - Temozolomide
+					Temodal
+					Temomedac
+					Temozolomide HEXAL
+					Temozolomide Hospira
+					Temozolomide Sandoz
+					Temozolomide SUN
+					Temozolomide Teva
+				L01AX04 - Dacarbazine
+					Dacarbazine Faulding
+		L01B - Antimetabolites
+			L01BA - Folic acid analogues
+				L01BA04 - Pemetrexed
+					Alimta
+				L01BA05 - Pralatrexate
+					Folotyn
+			L01BB - Purine analogues
+				L01BB02 - Mercaptopurine
+					Xaluprine
+				L01BB04 - Cladribine
+					Litak
+					Movectro
+				L01BB06 - Clofarabine
+					Evoltra
+				L01BB07 - Nelarabine
+					Atriance
+			L01BC - Pyrimidine analogues
+				L01BC01 - Cytarabine
+					DepoCyte
+				L01BC05 - Gemcitabine
+					Gemzar
+				L01BC06 - Capecitabine
+					Capecitabine Accord
+					Capecitabine medac
+					Capecitabine Teva
+					Ecansya (ex Capecitabine Krka)
+					Xeloda
+				L01BC07 - Azacitidine
+					Vidaza
+				L01BC08 - Decitabine
+					Dacogen
+				L01BC53 - Tegafur, combinations
+					Teysuno
+		L01C - Plant alkaloids and other natural products
+			L01CA - Vinca alkaloids and analogues
+				L01CA05 - Vinflunine
+					Javlor
+			L01CD - Taxanes
+				L01CD01 - Paclitaxel
+					Abraxane
+					Paxene
+				L01CD02 - Docetaxel
+					Docefrez
+					Docetaxel Accord
+					Docetaxel Kabi
+					Docetaxel Mylan
+					Docetaxel Teva
+					Docetaxel Teva Generics and associated names
+					Docetaxel Teva Pharma
+					Docetaxel Winthrop
+					Taxotere
+				L01CD04 - Cabazitaxel
+					JEVTANA
+			L01CX - Other plant alkaloids and natural products
+				L01CX01 - Trabectedin
+					Yondelis
+					Yondelis
+		L01D - Cytotoxic antibiotics
+			L01DB - Anthracyclines
+				L01DB01 - Doxorubicin
+					Caelyx
+					Myocet
+				L01DB11 - Pixantrone
+					Pixuvri
+		L01X - Other cytostatics
+			L01XC - Monoclonal antibodies
+				L01XC02 - Rituximab
+					Mabthera
+				L01XC03 - Trastuzumab
+					Herceptin
+				L01XC04 - Alemtuzumab
+					MabCampath
+				L01XC06 - Cetuximab
+					Erbitux
+				L01XC07 - Bevacizumab
+					Avastin
+				L01XC08 - Panitumumab
+					Vectibix
+				L01XC09 - Catumaxomab
+					Removab
+				L01XC10 - Ofatumumab
+					Arzerra
+				L01XC11 - Ipilimumab
+					Yervoy
+				L01XC12 - Brentuximab vedotin
+					ADCETRIS
+			L01XD - Sensitizers used in photodynamic/radiation therapy
+				L01XD01 - Porfimer sodium
+					PhotoBarr
+				L01XD04 - Aminolevulinic acid
+					Ameluz
+					Gliolan
+				L01XD05 - Temoporfin
+					Foscan
+			L01XE - Protein kinase inhibitors
+				L01XE01 - Imatinib
+					Glivec
+					Imatinib Teva
+				L01XE02 - Gefitinib
+					Iressa
+				L01XE03 - Erlotinib
+					Tarceva
+				L01XE04 - Sunitinib
+					Sutent
+				L01XE05 - Sorafenib
+					Nexavar
+				L01XE06 - Dasatinib
+					Sprycel
+				L01XE07 - Lapatinib
+					Tyverb
+				L01XE08 - Nilotinib
+					Tasigna
+				L01XE09 - Temsirolimus
+					Torisel
+				L01XE10 - Everolimus
+					Afinitor
+					Votubia
+				L01XE11 - Pazopanib
+					Votrient
+				L01XE12 - Vandetanib
+					Caprelsa
+				L01XE15 - Vemurafenib
+					Zelboraf
+				L01XE16 - Crizotinib
+					XALKORI
+				L01XE17 - Axitinib
+					Inlyta
+				L01XE18 - Ruxolitinib
+					Jakavi
+			L01XX - Other antineoplastic agents
+				L01XX05 - Hydroxycarbamide
+					Siklos
+				L01XX17 - Topotecan
+					Evotopin
+					Hycamtin
+					Potactasol
+					Topotecan Actavis
+					Topotecan Eagle
+					Topotecan Hospira
+					Topotecan Teva
+				L01XX22 - Alitretinoin
+					Panretin
+				L01XX23 - Mitotane
+					Lysodren
+				L01XX25 - Bexarotene
+					Targretin
+				L01XX27 - Arsenic trioxide
+					Trisenox
+				L01XX32 - Bortezomib
+					VELCADE
+				L01XX33 - Celecoxib
+					Onsenal
+				L01XX35 - Anagrelide
+					Xagrid
+				L01XX41 - Eribulin
+					HALAVEN
+				ZALTRAP
+	L02 - Endocrine therapy
+		L02A - Hormones and related agents
+			L02AE - Gonadotrophin releasing hormone analogues
+				L02AE03 - Goserelin
+					Goserelin cell pharm 3,6 mg Implantat and associated names
+		L02B - Hormone antagonists and related agents
+			L02BA - Anti-estrogens
+				L02BA02 - Toremifene
+					Fareston
+				L02BA03 - Fulvestrant
+					Faslodex
+			L02BB - Anti-androgens
+				L02BB03 - Bicalutamide
+					Bicaluplex
+					Bicalutamide
+			L02BG - Enzyme inhibitors
+				L02BG03 - Anastrozole
+					Arimidex
+					Arimidex and associated names
+				L02BG04 - Letrozole
+					Femara and associated names
+			L02BX - Other hormone antagonists and related agents
+				L02BX02 - Degarelix
+					Firmagon
+				L02BX03 - Abiraterone
+					Zytiga
+	L03 - Immunomodulating agents
+		L03A - Immunostimulating agents
+			L03AA - Cytokines
+				L03AA02 - Filgrastim
+					Biograstim
+					Filgrastim Hexal
+					Filgrastim ratiopharm
+					Nivestim
+					Ratiograstim
+					Tevagrastim
+					Zarzio
+				L03AA03 - Molgramostim
+					Leucomax/Mielogen/SCH34300
+				L03AA13 - Pegfilgrastim
+					Neulasta
+					Neupopeg
+			L03AB - Interferons
+				L03AB01 - Interferon alfa natural
+					Roferon-A
+				L03AB05 - Interferon alfa-2b
+					Intron A
+					IntronA
+					Viraferon
+				L03AB07 - Interferon beta-1a
+					Avonex
+					Rebif
+				L03AB08 - Interferon beta-1b
+					Betaferon
+					Extavia
+				L03AB09 - Interferon alfacon-1
+					Infergen
+				L03AB10 - Peginterferon alfa-2b
+					PegIntron
+					ViraferonPeg
+				L03AB11 - Peginterferon alfa-2a
+					Pegasys
+			L03AX - Other immunostimulating agents
+				L03AX11 - Tasonermin
+					Beromun
+				L03AX14 - Histamine dihydrochloride
+					Ceplene
+				L03AX15 - Mifamurtide
+					Mepact
+				L03AX16 - Plerixafor
+					Mozobil
+	L04 - Immunosuppressive agents
+		L04A - Immunosuppressive agents
+			L04AA - Selective immunosuppressive agents
+				L04AA02 - Muromonab-CD3
+					Simulect
+				L04AA06 - Mycophenolic acid
+					CellCept
+					Myclausen
+					Mycophenolate mofetil Teva
+					Myfenax
+				L04AA10 - Sirolimus
+					Rapamune
+				L04AA13 - Leflunomide
+					Arava
+					Leflunomide medac
+					Leflunomide ratiopharm
+					Leflunomide Teva
+					Leflunomide Winthrop
+					Repso
+				L04AA21 - Efalizumab
+					Raptiva
+				L04AA23 - Natalizumab
+					Natalizumab Elan Pharma
+					Tysabri
+				L04AA24 - Abatacept
+					Orencia
+				L04AA25 - Eculizumab
+					Soliris
+				L04AA26 - Belimumab
+					Benlysta
+				L04AA27 - Fingolimod
+					GILENYA
+				L04AA28 - Belatacept
+					NULOJIX
+			L04AB - Tumor necrosis factor alpha (TNF-a) inhibitors
+				L04AB02 - Infliximab
+					Remicade
+				L04AB04 - Adalimumab
+					Humira
+					Trudexa
+				L04AB05 - Certolizumab pegol
+					Cimzia
+				L04AB06 - Golimumab
+					Simponi
+			L04AB01 - Etanercept
+				L04AB02 - Infliximab
+					Remicade
+				L04AB04 - Adalimumab
+					Humira
+					Trudexa
+				L04AB05 - Certolizumab pegol
+					Cimzia
+				L04AB06 - Golimumab
+					Simponi
+				Enbrel
+			L04AC - Interleukin inhibitors
+				L04AC01 - Daclizumab
+					Zenapax
+				L04AC03 - Anakinra
+					Kineret
+				L04AC04 - Rilonacept
+					Rilonacept Regeneron
+				L04AC05 - Ustekinumab
+					Stelara
+				L04AC07 - Tocilizumab
+					RoActemra
+				L04AC08 - Canakinumab
+					Ilaris
+			L04AD - Calcineurin inhibitors
+				L04AD02 - Tacrolimus
+					Advagraf
+					Modigraf
+					Prograf
+				L04AD03 - Voclosporin
+					Luveniq
+			L04AX - Other immunosuppressive agents
+				L04AX02 - Thalidomide
+					Thalidomide Celgene
+				L04AX04 - Lenalidomide
+					Revlimid
+				L04AX05 - Pirfenidone
+					Esbriet
+M - Musculo-skeletal system
+	M01 - Antiinflammatory and antirheumatic products
+		M01A - Antiinflammatory and antirheumatic products, non-steroids
+			M01AC - Oxicams
+				M01AC01 - Piroxicam
+					Piroxicam
+				M01AC05 - Lornoxicam
+					Xefo
+			M01AE - Propionic acid derivatives
+				M01AE03 - Ketoprofen
+					Ketoprofen
+			M01AH - Coxibs
+				M01AH02 - Rofecoxib
+					Rofecoxib
+				M01AH03 - Valdecoxib
+					Bextra
+					Valdyn
+					Valdyn (ex Kudeq)
+				M01AH04 - Parecoxib
+					Dynastat
+					Rayzon
+					Xapit
+				M01AH05 - Etoricoxib
+					Arcoxia and associated names
+					Etoricoxib
+				M01AH06 - Lumiracoxib
+					Lumiracoxib
+			M01AX - Other antiinflammatory and antirheumatic agents, non-steroids
+				M01AX05 - Glucosamine
+					Glucomed
+				M01AX17 - Nimesulide
+					Coxtral Gel
+					Nimesulide
+	M03 - Muscle relaxants
+		M03A - Muscle relaxants, peripherally acting agents
+			M03AX - Other muscle relaxants, peripherally acting
+				M03AX01 - Botulinum toxin
+					NeuroBloc
+					Xeomin
+		M03B - Muscle relaxants, centrally acting agents
+			M03BA - Carbamic acid esters
+				M03BA02 - Carisoprodol
+					Carisoprodol
+			M03BB - Oxazol-, thiazine-, triazine derivatives
+				M03BB02 - Chlormezanone
+					Chlormezanone
+			M03BX - Other centrally acting agents
+				M03BX04 - Tolperisone
+					Myderison
+					Tolperisone and associated names
+	M04 - Antigout preparations
+		M04A - Antigout preparations
+			M04AA - Preparations inhibiting uric acid production
+				M04AA03 - Febuxostat
+					Adenuric
+			M04AX - Other antigout preparations
+				M04AX02 - Pegloticase
+					Krystexxa
+	M05 - Drugs for treatment of bone diseases
+		M05B - Drugs affecting bone structure and mineralization
+			M05BA - Biphosphonates
+				M05BA04 - Alendronic acid
+					Alendronate Hexal
+				M05BA06 - Ibandronic acid
+					Bondenza
+					Bondronat
+					Bonviva
+					Destara
+					Iasibon
+					Ibandronic acid Accord
+					Ibandronic acid Sandoz
+					Ibandronic Acid Teva
+				M05BA08 - Zoledronic acid
+					Aclasta
+					Zoledronic acid Actavis
+					Zoledronic acid medac
+					Zoledronic acid Mylan
+					Zoledronic acid Teva
+					Zoledronic acid Teva Pharma
+					Zometa
+				alendronic acid, clodronic acid, etidronic acid, ibandronic acid, neridronic acid, pamidronic acid, risedronic acid and tiludronic acid
+				Alendros 70
+				Zoledronic acid Hospira
+			M05BB - Bisphosphonates, combinations
+				M05BB03 - Alendronic acid and colecalciferol
+					Adrovance
+					Fosavance
+					Vantavo
+				M05BB04 - Risedronic acid, calcium and colecalciferol, sequential
+					Fortipan Combi D and associated names
+			M05BC - Bone morphogenetic proteins
+				M05BC01 - Dibotermin alfa
+					InductOs
+				M05BC02 - Eptotermin alfa
+					Opgenra
+					Osigraft
+			M05BX - Other drugs affecting bone structure and mineralization
+				M05BX03 - Strontium ranelate
+					Osseor
+					Protelos
+				M05BX04 - Denosumab
+					Prolia
+					Xgeva
+	M09 - Other drugs for disorders of the musculo-skeletal system
+		M09A - Other drugs for disorders of the musculo-skeletal system
+			M09AB - Enzymes
+				M09AB02 - Collagenase clostridium histolyticum
+					Xiapex
+			M09AX - Other drugs for disorders of the musculo-skeletal system
+				M09AX02 - Chondrocytes, autologous
+					ChondroCelect
+N - Nervous system
+	N01 - Anesthetics
+		N01A - Anesthetics, general
+			N01AH - Opioid anesthetics
+				N01AH01 - Fentanyl
+					Fentanyl (Fentador)
+					Fentanyl (Fentastad)
+					Fentanyl (Fentrans)
+					Fentanyl (Matrigesic)
+					Fentanyl (Matripain)
+					Fentanyl Matrixpflaster
+					Fentanyl TTS
+					Fentrix
+					Rapinyl
+		N01B - Anesthetics, local
+			N01BX - Other local anesthetics
+				N01BX04 - Capsaicin
+					Qutenza
+	N02 - Analgesics
+		N02A - Opioids
+			N02AB - Phenylpiperidine derivatives
+				N02AB03 - Fentanyl
+					Effentora
+					Instanyl
+					Ionsys
+					PecFent
+			N02AC - Diphenylpropylamine derivatives
+				N02AC54 - Dextropropoxyphene, combinations excluding psycholept
+					Dextropropoxyphene
+			N02AX - Other opioids
+				N02AX02 - Tramadol
+					Tramadol hydrochloride
+		N02B - Other analgesics and antipyretics
+			N02BG - Other analgesics and antipyretics
+				N02BG08 - Ziconotide
+					Prialt
+		N02C - Antimigraine preparations
+			N02CX - Other antimigraine preparations
+				N02CX04 - Sumatriptan
+					Sumatriptan Galpharm
+	N03 - Antiepileptics
+		N03A - Antiepileptics
+			N03AF - Carboxamide derivatives
+				N03AF03 - Rufinamide
+					Inovelon
+				N03AF04 - Eslicarbazepine
+					Exalief
+					Zebinix
+			N03AG - Fatty acid derivatives
+				N03AG01 - Valproic acid
+					Valproate-ratiopharm chrono 300/500 mg Retardtabletten
+					valproic acid/valproate
+				N03AG04 - Vigabatrin
+					Vigabatrin
+			N03AX - Other antiepileptics
+				N03AX09 - Lamotrigine
+					Lamictal and associated names
+				N03AX11 - Topiramate
+					Topamax
+				N03AX12 - Gabapentin
+					Neurontin
+				N03AX14 - Levetiracetam
+					Keppra
+					Levetiracetam Accord
+					Levetiracetam Actavis
+					Levetiracetam Actavis Group
+					Levetiracetam ratiopharm
+					Levetiracetam SUN
+					Levetiracetam Teva
+					Matever
+				N03AX15 - Zonisamide
+					Zonegran
+				N03AX16 - Pregabalin
+					Lyrica
+				N03AX17 - Stiripentol
+					Diacomit
+				N03AX18 - Lacosamide
+					Vimpat
+				N03AX21 - Retigabine
+					Trobalt
+				N03AX22 - Perampanel
+					Fycompa
+	N04 - Anti-parkinson drugs
+		N04B - Dopaminergic agents
+			N04BA - Dopa and dopa derivatives
+				N04BA03 - Levodopa, decarboxylase inhibitor and COMT inhibitor
+					Levodopa/Carbidopa/Entacapone Orion
+					Stalevo
+			N04BC - Dopamine agonists
+				N04BC04 - Ropinirole
+					Adartrel
+				N04BC05 - Pramipexole
+					Daquiran
+					Mirapexin
+					Oprymea
+					Pramipexole Accord
+					Pramipexole Teva
+					Sifrol
+				N04BC09 - Rotigotine
+					Leganto
+					Neupro
+			N04BD - Monoamine oxidase type B inhibitors
+				N04BD02 - Rasagiline
+					Azilect
+			N04BX - Other dopaminergic agents
+				N04BX01 - Tolcapone
+					Tasmar
+				N04BX02 - Entacapone
+					Comtan
+					Comtess
+					Entacapone Orion
+					Entacapone Teva
+	N05 - Psycholeptics
+		N05A - Antipsychotics
+			N05AE - Indole derivatives
+				N05AE03 - Sertindole
+					Sertindole
+			N05AH - Diazepines, oxazepines, thiazepines and oxepines
+				N05AH02 - Clozapine
+					Clozapine (Leponex)
+				N05AH03 - Olanzapine
+					Olansek
+					Olanzapine Apotex
+					Olanzapine Cipla
+					Olanzapine Glenmark
+					Olanzapine Glenmark Europe
+					Olanzapine Mylan
+					Olanzapine Teva
+					Olazax
+					Olazax Disperzi
+					Zalasta
+					Zypadhera
+					Zyprexa
+					Zyprexa Velotab
+				N05AH04 - Quetiapine
+					Seroquel XR and associated names
+				N05AH05 - Asenapine
+					Sycrest
+			N05AL - Benzamides
+				N05AL06 - Veralipride
+					Agreal
+			N05AX - Other antipsychotics
+				N05AX08 - Risperidone
+					Risperdal
+					Risperdal Consta
+				N05AX12 - Aripiprazole
+					Abilify
+				N05AX13 - Paliperidone
+					Invega
+					Xeplion
+		N05C - Hypnotics and sedatives
+			N05CD - Benzodiazepine derivatives
+				N05CD08 - Midazolam
+					Buccolam
+					Midazolam
+					Midazolam Hydrochloride (oromucosal use)
+			N05CF - Cyclopyrrolones
+				N05CF03 - Zaleplon
+					Sonata
+					Zerene
+			N05CH - Melatonin receptor agonists
+				N05CH01 - Melatonin
+					Circadin
+			N05CM - Other hypnotics and sedatives
+				N05CM18 - Dexmedetomidine
+					Dexdor
+	N06 - Psychoanaleptics
+		N06A - Antidepressants
+			N06AB - Bicyclic derivatives
+				N06AB03 - Fluoxetine
+					Fluoxetin NM
+					Fluoxetine
+					Prozac
+					SSRIs, SNRIs
+				N06AB04 - Citalopram
+					SSRIs, SNRIs
+				N06AB05 - Paroxetine
+					Paroxetine
+					SSRIs, SNRIs
+				N06AB06 - Sertraline
+					SSRIs, SNRIs
+					Zoloft
+				N06AB08 - Fluvoxamine
+					Fluvoxamine
+					SSRIs, SNRIs
+			N06AX - Other antidepressants
+				N06AX11 - Mirtazapine
+					Remeron
+					SSRIs, SNRIs
+				N06AX12 - Bupropion
+					Bupropion
+				N06AX16 - Venlafaxine
+					Efexor
+					Efexor Depot
+					SSRIs, SNRIs
+				N06AX17 - Milnacipran
+					Impulsor
+					Milnacipran Pierre Fabre Medicament
+					SSRIs, SNRIs
+				N06AX18 - Reboxetine
+					SSRIs, SNRIs
+				N06AX21 - Duloxetine
+					Ariclaim
+					Cymbalta
+					Duloxetine Boehringer Ingelheim
+					Xeristar
+					Yentreve
+				N06AX22 - Agomelatine
+					Thymanax
+					Thymanax
+					Valdoxan
+		N06B - Psychostimulants
+			N06BA - Phenylethylamine derivatives
+				N06BA04 - Methylphenidate
+					methylphenidate
+				N06BA09 - Atomoxetine
+					SSRIs, SNRIs
+			N06BC - Xanthine derivatives
+				N06BC01 - Caffeine
+					Peyona
+				N06BC02 - Propentofylline
+					Kronos
+					Viviq
+		N06D - Anti-dementia drugs
+			N06DA - Anticholinesterases
+				N06DA03 - Rivastigmine
+					Exelon
+					Nimvastid
+					Prometax
+					Rivastigmine 1 A Pharma
+					Rivastigmine Actavis
+					Rivastigmine HEXAL
+					Rivastigmine Sandoz
+					Rivastigmine Teva
+				N06DA04 - Galantamine
+					Galantamine STADA and associated names
+			N06DX - Other anti-dementia drugs
+				N06DX01 - Memantine
+					Axura
+					Ebixa
+					Maruxa
+					Memantine Merz
+	N07 - Other nervous system drugs
+		N07B - Drugs used in addictive disorders
+			N07BA - Drugs used in nicotine dependence
+				N07BA03 - Varenicline
+					Champix
+			N07BC - Drugs used in opioid dependence
+				N07BC03 - Levacetylmethadol
+					Orlaam
+				N07BC51 - Buprenorphine, combinations
+					Suboxone
+		N07C - Antivertigo preparations
+			N07CA - Antivertigo preparations
+				N07CA01 - Betahistine
+					Betavert N and associated names
+		N07X - Other nervous system drugs
+			N07XX - Other nervous system drugs
+				N07XX02 - Riluzole
+					Rilutek
+					Riluzole Zentiva
+				N07XX04 - Hydroxybutyric acid
+					Xyrem
+				N07XX05 - Amifampridine
+					Firdapse
+				N07XX07 - Fampridine
+					Fampyra
+				N07XX08 - Tafamidis
+					Vyndaqel
+P - Antiparasitic products
+	P01 - Antiprotozoals
+		P01B - Antimalarials
+			P01BF - Artemisinin and derivatives, combinations
+				P01BF05 - Artenimol and piperaquine
+					Eurartesim
+R - Respiratory system
+	R01 - Nasal preparations
+		R01A - Nasal decongestants for topical use
+			R01AD - Corticosteroids
+				R01AD09 - Mometasone
+					Mometasone Furoate Sandoz and associated names
+				R01AD12 - Flucticasone furoate
+					Alisade
+					Avamys
+	R03 - Anti-asthmatics
+		R03A - Adrenergics, inhalants
+			R03AC - Selective beta-2-adrenoceptor agonists
+				R03AC02 - Salbutamol
+					Sabumalin and associated names
+					Sanohex and associated names
+				R03AC13 - Formoterol
+					Atifor Chiesi 12 mcg
+					Eformax
+					Forair Chiesi 12 mcg
+				R03AC18 - Indacaterol
+					Hirobriz Breezhaler
+					Onbrez Breezhaler
+					Oslif Breezhaler
+			R03AK - Adrenergics and other anti-asthmatics
+				R03AK06 - Salmeterol and other drugs for obstructive airway diseases
+					Viani
+				R03AK07 - Formoterol and other drugs for obstructive airway diseases
+					Flutiform and associated names
+					Iffeza
+		R03B - Other anti-asthmatics, inhalants
+			R03BA - Glucocorticoids
+				R03BA02 - Budesonide
+					Pulairmax
+				R03BA08 - Ciclesonide
+					Alvesco
+			R03BB - Anticholinergics
+				R03BB05 - Aclidinium bromide
+					Bretaris Genuair
+					Eklira Genuair
+				R03BB06 - Glycopyrronium bromide
+					Enurev Breezhaler
+					Seebri Breezhaler
+					Tovanor Breezhaler
+		R03C - Adrenergics for systemic use
+			R03CA - Alpha- and beta-adrenoceptor agonists
+				Alpha2-adrenoreceptor agonists
+		R03D - Other anti-asthmatics for systemic use
+			R03DC - Leukotriene receptor antagonists
+				R03DC03 - Montelukast
+					Singulair
+			R03DX - Other anti-asthmatics for systemic use
+				R03DX05 - Omalizumab
+					Xolair
+				R03DX07 - Roflumilast
+					Daliresp
+					Daxas
+					Libertek
+	R05 - Cough and cold preparations
+		R05C - Expectorants, excluding combinations with antitussives
+			R05CB - Mucolytics
+				R05CB16 - Mannitol
+					Bronchitol
+		R05D - Antitussives, excluding combinations with expectorants
+			R05DA - Opium alkaloids and derivatives
+				R05DA08 - Pholcodine
+					Pholcodine-containing medicinal products
+			R05DB - Antitussives chemically close to local anesthetics
+				R05DB03 - Clobutinol
+					Clobutinol
+	R06 - Antihistamines for systemic use
+		R06A - Antihistamines for systemic use
+			R06AE - Piperazine derivatives
+				R06AE07 - Cetirizine
+					Zyrtec
+			R06AX - Other antihistamines for systemic use
+				R06AX12 - Terfenadine
+					Terfenadine
+				R06AX13 - Loratadine
+					Loratadine
+					Loratadine / pseudoephedrine
+					Loratadine Sandoz 10
+				R06AX25 - Mizolastine
+					Mizollen
+				R06AX27 - Desloratadine
+					Aerinaze
+					Aerius
+					Allex
+					Azomyr
+					Dasselta
+					Desloratadine Actavis
+					Desloratadine ratiopharm
+					Desloratadine Teva
+					Neoclarityn
+					Opulis
+	R07 - Other respiratory system products
+		R07A - Other respiratory system products
+			R07AX - Other respiratory system products
+				R07AX01 - Nitric oxide
+					INOmax
+				Colobreathe
+S - Sensory organs
+	S01 - Ophthalmologicals
+		S01A - Antiinfectives
+			S01AD - Antivirals
+				S01AD08 - Fomivirsen
+					Vitravene
+			S01AX - Other antiinfectives
+				S01AX12 - Norfloxacin
+					Norfloxacin
+		S01B - Antiinflammatory agents
+			S01BA - Corticosteroids, plain
+				S01BA01 - Dexamethasone
+					Ozurdex
+			S01BC - Antiinflammatory agents, non-steroids
+				S01BC10 - Nepafenac
+					Nevanac
+				S01BC11 - Bromfenac
+					Yellox
+		S01E - Antiglaucoma preparations and miotics
+			S01EC - Carbonic anhydrase inhibitors
+				S01EC04 - Brinzolamide
+					Azopt
+			S01ED - Beta blocking agents
+				S01ED51 - Timolol, combinations
+					Azarga
+					DuoTrav
+					Ganfort
+			S01EE - Prostaglandin analogues
+				S01EE01 - Latanoprost
+					Xalatan
+				S01EE03 - Bimatoprost
+					Lumigan
+				S01EE04 - Travoprost
+					Travatan
+		S01G - Decongestants and antiallergics
+			S01GX - Other antiallergics
+				S01GX06 - Emedastine
+					Emadine
+				S01GX09 - Olopatadine
+					Opatanol
+		S01L - Ocular vascular disorder agents
+			S01LA - Antineovascularisation agents
+				S01LA01 - Verteporfin
+					Visudyne
+				S01LA03 - Pegaptanib
+					Macugen
+				S01LA04 - Ranibizumab
+					Lucentis
+				S01LA05 - Aflibercept
+					Eylea
+V - Various
+	V03 - All other therapeutic products
+		V03A - All other therapeutic products
+			V03AB - Antidotes
+				V03AB17 - Methylthionine
+					Methylthioninium chloride Proveblue
+				V03AB33 - Hydroxocobalamin
+					Cyanokit
+				V03AB35 - Sugammadex
+					Bridion
+			V03AC - Iron chelating agents
+				V03AC02 - Deferiprone
+					Ferriprox
+				V03AC03 - Deferasirox
+					Exjade
+			V03AE - Drugs for treatment of hyperkalemia and hyperphosphatemia
+				V03AE02 - Sevelamer
+					Renagel
+					Renvela
+			V03AF - Detoxifying agents for antineoplastic treatment
+				V03AF02 - Dexrazoxane
+					Dexrazoxane
+					Savene
+				V03AF03 - Calcium folinate
+					Lederfoline
+				V03AF07 - Rasburicase
+					Fasturtec
+				V03AF08 - Palifermin
+					Kepivance
+	V04 - Diagnostic agents
+		V04C - Other diagnostic agents
+			V04CX - Other diagnostic agents
+				Helicobacter Test INFAI
+				Pylobactell
+				Pylori-Chek
+	V08 - Contrast media
+		V08C - Magnetic resonance imaging contrast media
+			V08CA - Paramagnetic contrast media
+				V08CA02 - Gadoteric acid
+					Artirem
+				V08CA05 - Mangafodipir
+					Teslascan
+				V08CA06 - Gadoversetamide
+					Optimark
+				V08CA08 - Gadobenic acid
+					MultiHance
+				V08CA09 - Gadobutrol
+					Gadograf
+					Gadovist
+				V08CA11 - Gadofosveset
+					Ablavar
+				Gadolinium
+		V08D - Ultrasound contrast media
+			V08DA - Ultrasound contrast media
+				V08DA01 - Microspheres of human albumin
+					Optison
+				V08DA04 - Microspheres of phospholipids
+					Luminity
+				V08DA05 - Sulfur hexafluoride
+					SonoVue
+				EchoGen
+	V09 - Diagnostic radiopharmaceuticals
+		V09A - Central nervous system
+			V09AB - Iodine (123I) compounds
+				V09AB03 - Iodine ioflupane (123I)
+					DaTSCAN
+			V09AX - Other central nervous system diagnostic radiopharmaceuticals
+				V09AX05 - florbetapir (18F)
+					Amyvid
+		V09H - Inflammation and infection detection
+			V09HA - Technetium (99mTc) compounds
+				V09HA03 - Technetium (99mTc) antigranulocyte antibody
+					Scintimun
+				V09HA04 - Technetium (99mTc) sulesomab
+					LeukoScan
+		V09I - Tumour detection
+			V09IA - Technetium (99mTc) compounds
+				V09IA01 - Technetium (99mTc) antiCarcinoEmbryonicAntigen antibody
+					CEA-Scan
+					HumaSPECT
+				V09IA02 - Technetium (99mTc) antimelanoma antibody
+					Tecnemab-K-1
+				V09IA05 - Technetium (99mTc) depreotide
+					NeoSpect
+			V09IB - Indium (111In) compounds
+				V09IB03 - Indium (111In) antiovariumcarcinoma antibody
+					Indimacis 125
+			V09IX - Other diagnostic radiopharmaceuticals for tumour detection
+				V09IX04 - Fludeoxyglucose (18F)
+					Gluscan 500
+	V10 - Therapeutic radiopharmaceuticals
+		V10B - Pain palliation (bone seeking agents)
+			V10BX - Various pain palliation radiopharmaceuticals
+				V10BX02 - Samarium (153Sm) lexidronam
+					Quadramet
+		V10X - Other therapeutic radiopharmaceuticals
+			V10X - Other therapeutic radiopharmaceuticals
+			V10XX - Various therapeutic radiopharmaceuticals
+				V10XX02 - Ibritumomab tiuxetan
+					Zevalin
+			Yttriga
