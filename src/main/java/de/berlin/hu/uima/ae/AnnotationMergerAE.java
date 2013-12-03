@@ -150,6 +150,9 @@ public class AnnotationMergerAE extends JCasAnnotator_ImplBase {
 							//System.out.printf("replacing %s annotation %s at [%d-%d], because it was identified as an abbreviation for %s%n", entity.getSource(), entity.getCoveredText(), entity.getBegin(), entity.getEnd(), lastEntity.getId());
 							entity.removeFromIndexes(aJCas);
 							filtered = true;
+						} else {
+							lastEntity.removeFromIndexes(aJCas);
+							chemicals.remove(lastEntity);
 						}
 					} else if (Constants.ABBREV.equals(entity.getSource())) {
 						boolean isRemove = false;
