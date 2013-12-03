@@ -1,6 +1,14 @@
 CHANGELOG of ChemSpot
 ----------------------
 
+1.6 - 2013-12-03
+-----------------------------------------------------------------------
+- Updated dictionary file and ids list (ChEBI version 2013-12-03)
+- Some improvements in annotation merger component
+- Fixed bug where ChemSpot would not process some sentences if they
+  weren't annotated properly
+- various minor improvements and bugfixes
+
 1.5 - 2013-04-02
 -----------------------------------------------------------------------
 - Improved annotation merging component
