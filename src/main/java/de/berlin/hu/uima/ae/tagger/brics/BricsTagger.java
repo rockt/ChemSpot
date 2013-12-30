@@ -15,6 +15,8 @@ package de.berlin.hu.uima.ae.tagger.brics;
 import de.berlin.hu.chemspot.Mention;
 import de.berlin.hu.uima.ae.normalizer.Normalizer;
 import de.berlin.hu.util.Constants;
+import de.berlin.hu.util.Constants.ChemicalType;
+
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
@@ -276,6 +278,7 @@ public class BricsTagger extends JCasAnnotator_ImplBase {
         //ID is set by normalizer
         drug.setId("");
    		drug.setSource(Constants.DICTIONARY);
+   		drug.setEntityType(aJCas.getDocumentText().substring(begin, end).matches("\\[a-zA-Z]") ? ChemicalType.TRIVIAL.toString() : ChemicalType.SYSTEMATIC.toString());
    		drug.addToIndexes();
    		return drug;
    	}

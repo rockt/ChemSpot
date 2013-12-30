@@ -4,6 +4,7 @@ import banner.tagging.CRFTagger;
 import banner.types.Mention;
 import de.berlin.hu.uima.util.Util;
 import de.berlin.hu.util.Constants;
+import de.berlin.hu.util.Constants.ChemicalType;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
@@ -181,6 +182,7 @@ public class BannerTagger extends JCasAnnotator_ImplBase {
 			entity.setEntityType(mention.getEntityType().getText());
 			entity.setConfidence(mention.getProbability());
 			entity.setSource(Constants.CRF);
+			entity.setEntityType(ChemicalType.SYSTEMATIC.toString());
 			entity.addToIndexes();
 			
 			assert entity.getCoveredText().equals(mention.getText());

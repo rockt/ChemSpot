@@ -9,6 +9,7 @@ import org.apache.uima.jcas.JCas;
 import org.u_compare.shared.semantic.chemical.Chemical;
 
 import de.berlin.hu.util.Constants;
+import de.berlin.hu.util.Constants.ChemicalType;
 
 public class ChemicalFormulaTagger extends JCasAnnotator_ImplBase {
 	private static final String ELEMENT_PATTERN = "(Ac|Ag|Al|Am|Ar|As|At|Au|B|Ba|Be|Bh|Bi|Bk|Br|Ca|Cd|Ce|Cf|Cl|Cm|Cn|Co|Cr|Cs|Cu|C|Db|Ds|Dy|Er|Es|Eu|" +
@@ -48,6 +49,7 @@ public class ChemicalFormulaTagger extends JCasAnnotator_ImplBase {
 		formula.setEnd(end);
         formula.setId(id);
 		formula.setSource(Constants.SUM_TAGGER);
+		formula.setEntityType(ChemicalType.FORMULA.toString());
 		formula.addToIndexes();
 		return formula;
 	}

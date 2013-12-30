@@ -13,6 +13,7 @@ import de.berlin.hu.chemspot.ChemSpot;
 import de.berlin.hu.chemspot.Mention;
 import de.berlin.hu.types.PubmedDocument;
 import de.berlin.hu.util.Constants;
+import de.berlin.hu.util.Constants.ChemicalType;
 
 public class AbbreviationTagger extends JCasAnnotator_ImplBase {
 	private static boolean TAG_PUBMED = true;
@@ -74,6 +75,7 @@ public class AbbreviationTagger extends JCasAnnotator_ImplBase {
 		abbreviation.setEnd(end);
         abbreviation.setId(id);
 		abbreviation.setSource(Constants.ABBREV);
+		abbreviation.setEntityType(ChemicalType.ABBREVIATION.toString());
 		abbreviation.addToIndexes();
 		return abbreviation;
 	}
