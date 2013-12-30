@@ -463,7 +463,7 @@ public class IOBDirectoryCollectionReader extends CollectionReader_ImplBase {
 			NamedEntity namedEntity = new NamedEntity(jcas);
 			namedEntity.setBegin(begin);
 			namedEntity.setEnd(end);
-			namedEntity.setEntityType(ENTITY_TYPE);
+			namedEntity.setEntityType(type.replaceAll("^[^\\-]+-", ""));
 			namedEntity.setConfidence(1.0);
 			namedEntity.setSource(Constants.GOLDSTANDARD);
 			namedEntity.addToIndexes();
