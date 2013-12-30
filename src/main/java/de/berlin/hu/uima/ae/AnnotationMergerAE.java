@@ -35,7 +35,7 @@ public class AnnotationMergerAE extends JCasAnnotator_ImplBase {
 			documents.add(null);
 		}
 		
-		int drug_overlaps = 0;
+		int eumed_overlaps = 0;
 		int total = 0;
 		for (PubmedDocument document : documents) {
 			//System.out.println("\nMerging annotations of document " + (document != null ? document.getPmid() : ""));
@@ -208,14 +208,14 @@ public class AnnotationMergerAE extends JCasAnnotator_ImplBase {
 					}
 				}
 				
-				if (!filtered && (Constants.DICTIONARY.equals(entity.getSource()) || Constants.DRUG.equals(entity.getSource())) && entity.getEnd() - entity.getBegin() <= DEFAULT_DICTIONARY_FILTER_LENGTH) {
+				if (!filtered && Constants.DICTIONARY.equals(entity.getSource()) && entity.getEnd() - entity.getBegin() <= DEFAULT_DICTIONARY_FILTER_LENGTH) {
 					entity.removeFromIndexes(aJCas);
 					filtered = true;
 				}
 				
 				if (!filtered) {
-					if (lastEntity != null && crosses(lastEntity, entity) && Constants.DRUG.equals(entity.getSource()) && !Constants.DRUG.equals(lastEntity.getSource())) {
-						drug_overlaps++;
+					if (lastEntity != null && crosses(lastEntity, entity) && Constants.EUMED.equals(entity.getSource()) && !Constants.EUMED.equals(lastEntity.getSource())) {
+						eumed_overlaps++;
 					}
 					
 					total++;
