@@ -14,6 +14,7 @@ package de.berlin.hu.chemspot;
 
 import de.berlin.hu.util.Constants;
 import de.berlin.hu.util.Constants.ChemicalID;
+import de.berlin.hu.util.Constants.ChemicalType;
 
 import org.apache.uima.jcas.tcas.Annotation;
 import org.u_compare.shared.semantic.NamedEntity;
@@ -25,7 +26,7 @@ public class Mention implements Comparable<Object> {
 	private String[] ids;
 	private String source;
 	private String documentText;
-	private String type;
+	private ChemicalType type;
 
     /**
      * Represents a chemical entity found in a text.
@@ -35,7 +36,7 @@ public class Mention implements Comparable<Object> {
      * @param ids a string representation of an array of identifiers of the form: [0] CHID, [1] CHEB, [2] CAS, [3] PUBC, [4] PUBS, [5] INCH, [6] DRUG, [7] HMBD, [8] KEGG, [9] KEGD, [10] MESH
      * @param source indicates whether found by the CRF, the dictionary or taken from goldstandard
      */
-	public Mention(int start, int end, String text, String ids, String source, String documentText, String type) {
+	public Mention(int start, int end, String text, String ids, String source, String documentText, ChemicalType type) {
 		this.start = start;
 		this.end = end;
 		this.text = text;
@@ -50,9 +51,10 @@ public class Mention implements Comparable<Object> {
             	setId(ChemicalID.values()[i++], id.trim());
             }
         }
-        this.source = source;
+       	
         this.documentText = documentText;
-        this.type = type;
+        setSource(source);
+        setType(type);
 	}
 	
 	public Mention(int start, int end, String text, String ids, String source, String documentText) {
@@ -60,19 +62,15 @@ public class Mention implements Comparable<Object> {
 	}
 
     public Mention(int start, int end, String text) {
-   		this.start = start;
-   		this.end = end;
-   		this.text = text;
-        this.source = Constants.DICTIONARY;
+    	this(start, end, text, null, null, null);
    	}
 
     public Mention(int start, int end) {
-        this.start = start;
-        this.end = end;
+    	this(start, end, null);
     }
 
     public Mention(NamedEntity entity) {
-        this(entity.getBegin(), entity.getEnd(), entity.getCoveredText(), entity.getId(), entity.getSource(), entity.getCAS().getDocumentText(), entity.getEntityType());
+        this(entity.getBegin(), entity.getEnd(), entity.getCoveredText(), entity.getId(), entity.getSource(), entity.getCAS().getDocumentText(), ChemicalType.fromString(entity.getEntityType()));
     }
 
     public int getStart() {
@@ -97,7 +95,11 @@ public class Mention implements Comparable<Object> {
 		return source;
 	}
 	public void setSource(String source) {
-		this.source = source;
+		this.source = source == null ? Constants.UNKNOWN : source;
+		
+		if (getType() == null || ChemicalType.UNKNOWN.equals(getType())) {
+			setType(ChemicalType.fromString(source));
+		}
 	}
 
     public String getCHID() {
@@ -306,11 +308,11 @@ public class Mention implements Comparable<Object> {
 		this.documentText = documentText;
 	}
 
-	public String getType() {
+	public ChemicalType getType() {
 		return type;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setType(ChemicalType type) {
+		this.type = type == null ? ChemicalType.UNKNOWN : type;
 	}
 }
