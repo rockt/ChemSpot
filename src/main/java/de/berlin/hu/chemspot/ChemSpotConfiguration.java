@@ -10,11 +10,15 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Properties;
 
+import de.berlin.hu.util.Constants.ChemicalType;
+
 public class ChemSpotConfiguration {
 	// Constants
 	public static enum Corpus {IOB, CRAFT, GZ, NACTEM, PATENT, DDI, XMI, CHEMDNER, TXT};
-	public static enum Component {TOKENIZER, SENTENCE_DETECTOR, POS_TAGGER, CRF, DICTIONARY, SUM_TAGGER, ABBREV, DRUG_TAGGER, MENTION_EXPANDER, ANNOTATION_MERGER, STOPWORD_FILTER, NORMALIZER, OPSIN, FEATURE_GENERATOR, CHEMHITS, PROFILER};
-	private static final Component[] DEFAULT_DEACTIVATED = {Component.FEATURE_GENERATOR, Component.CHEMHITS, Component.PROFILER, Component.DRUG_TAGGER};
+	public static enum Component {TOKENIZER, SENTENCE_DETECTOR, POS_TAGGER, CRF, DICTIONARY, SUM_TAGGER, ABBREV, EUMED_TAGGER, MENTION_EXPANDER, ANNOTATION_MERGER, STOPWORD_FILTER, NORMALIZER, OPSIN, FEATURE_GENERATOR, CHEMHITS, PROFILER};
+	private static final Component[] DEFAULT_DEACTIVATED = {Component.FEATURE_GENERATOR, Component.CHEMHITS, Component.PROFILER};
+	private static final ChemicalType[] DEFAULT_DEACTIVATED_ANNOTATIONS = {};
+	private static final ChemicalType[] DEFAULT_DEACTIVATED_ANNOTATIONS_EUMED = {};
 	
 	private static final String CORPUS_PREFIX = "corpus.";
 	
@@ -37,6 +41,9 @@ public class ChemSpotConfiguration {
 	private static final String COMPONENT_PREFIX = "component.";
 	private static final String DICTIONARY_INITIALIZE_FROM_NORMALIZER = COMPONENT_PREFIX + Component.DICTIONARY.toString().toLowerCase() + ".initializeFromNormalizer";
 	private static final String DICTIONARY_FILTER_LENGTH = COMPONENT_PREFIX + Component.DICTIONARY.toString().toLowerCase() + ".filterLength";
+	
+	private static final String ANNOTATIONS_PREFIX = "annotation.";
+	private static final String ANNOTATIONS_PREFIX_EUMED = "annotation.eumed.";
 	
 	private static final String UPDATE_PREFIX = "update.";
 	private static final String UPDATE_REMOVE_TEMPORARY_FILES = UPDATE_PREFIX + "removeTemporaryFiles";
@@ -148,6 +155,16 @@ public class ChemSpotConfiguration {
 	public static boolean useComponent(Component component) {
 		String defaultValue = Arrays.asList(DEFAULT_DEACTIVATED).contains(component) ? "false" : "true";
 		return "true".equals(getProperty(COMPONENT_PREFIX + component.toString().toLowerCase(), defaultValue).toLowerCase().trim());
+	}
+	
+	public static boolean isAnnotate(ChemicalType type) {
+		String defaultValue = Arrays.asList(DEFAULT_DEACTIVATED_ANNOTATIONS).contains(type) ? "false" : "true";
+		return "true".equals(getProperty(ANNOTATIONS_PREFIX + type.toString().toLowerCase(), defaultValue).toLowerCase().trim());
+	}
+	
+	public static boolean isAnnotateEumed(ChemicalType type) {
+		String defaultValue = Arrays.asList(DEFAULT_DEACTIVATED_ANNOTATIONS_EUMED).contains(type) ? "false" : "true";
+		return isAnnotate(type) && "true".equals(getProperty(ANNOTATIONS_PREFIX_EUMED + type.toString().toLowerCase(), defaultValue).toLowerCase().trim());
 	}
 	
 	public static boolean initializeDictionaryFromNormalizer() {
