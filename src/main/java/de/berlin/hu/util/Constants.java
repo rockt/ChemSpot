@@ -7,6 +7,31 @@ package de.berlin.hu.util;
  */
 public class Constants {
 	public static enum ChemicalID {CHID, CHEB, CAS, PUBC, PUBS, INCH, DRUG, HMBD, KEGG, KEGD, MESH, FDA, FDA_DATE};
+	public static enum ChemicalType {SYSTEMATIC, IDENTIFIER, FORMULA, TRIVIAL, ABBREVIATION, FAMILY, MULTIPLE, UNKNOWN;
+		public static ChemicalType fromString(String s) {
+			if (s == null) {
+				return UNKNOWN;
+			} else {
+				s = s.trim();
+			}
+			
+			if (ABBREV.equals(s)) {
+				return ABBREVIATION;
+			} else if (CRF.equals(s) || s.toLowerCase().contains("iupac")) {
+				return SYSTEMATIC;
+			} else if (DICTIONARY.equals(s)) {
+				return SYSTEMATIC;
+			} else if (SUM_TAGGER.equals(s) || "sum".equalsIgnoreCase(s)) {
+				return FORMULA;
+			}
+			
+			try {
+				return ChemicalType.valueOf(s.toUpperCase());
+			} catch (IllegalArgumentException e) {
+				return UNKNOWN;
+			}
+		}
+	};
 	
 	public static final String ABBREV = "ABBREV";
     public static final String CRF = "crf";
