@@ -147,7 +147,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
             <artifactId>eumed</artifactId>
             <version>2013-6-4</version>
             <scope>system</scope>
-            <systemPath>${basedir}/lib/eumed.jar</systemPath>
+            <systemPath>${basedir}/lib/eumed-light.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>dragontool</groupId>

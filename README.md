@@ -1,6 +1,6 @@
 # ChemSpot
 
-ChemSpot is a named entity recognition tool for identifying mentions of chemicals in natural language texts, including trivial names, drugs, abbreviations, molecular formulas and IUPAC entities. Since the different classes of relevant entities have rather different naming characteristics, ChemSpot uses a hybrid approach combining a Conditional Random Field with a dictionary. It achieves an F1 measure of 74.2% on the SCAI corpus.
+ChemSpot is a named entity recognition tool for identifying mentions of chemicals in natural language texts, including trivial names, drugs, abbreviations, molecular formulas and IUPAC entities. Since the different classes of relevant entities have rather different naming characteristics, ChemSpot uses a hybrid approach combining a Conditional Random Field with a dictionary. It achieves an F1 measure of 75.2% on the SCAI corpus.
 
 ChemSpot is released under the Common Public License 1.0 (see LICENSE).
 
