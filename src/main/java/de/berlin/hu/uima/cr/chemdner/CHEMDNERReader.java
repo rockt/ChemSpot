@@ -22,6 +22,7 @@ import org.u_compare.shared.semantic.NamedEntity;
 import de.berlin.hu.chemspot.Mention;
 import de.berlin.hu.types.PubmedDocument;
 import de.berlin.hu.util.Constants;
+import de.berlin.hu.util.Constants.ChemicalType;
 
 public class CHEMDNERReader  extends CollectionReader_ImplBase {
 	public static final String PARAM_INPUTDIR = "InputDirectory";
@@ -62,7 +63,7 @@ public class CHEMDNERReader  extends CollectionReader_ImplBase {
 				String type = data[5];
 				
 				Mention mention = new Mention(begin, end, text);
-				mention.setType(type);
+				mention.setType(ChemicalType.fromString(type));
 				mention.setSource(Constants.GOLDSTANDARD);
 				
 				String key = docId + ":" + section;
@@ -127,9 +128,9 @@ public class CHEMDNERReader  extends CollectionReader_ImplBase {
 				NamedEntity entity = new NamedEntity(jcas);
 				entity.setBegin(mention.getStart());
 				entity.setEnd(mention.getEnd());
-				entity.setEntityType(mention.getType());
+				entity.setEntityType(mention.getType().toString());
 				entity.setSource(Constants.GOLDSTANDARD);
-				entity.setEntityType(mention.getType());
+				entity.setEntityType(mention.getType().toString());
 				entity.addToIndexes();
 				//System.out.println(entity.getCoveredText());
 			}
