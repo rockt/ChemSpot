@@ -57,6 +57,7 @@ import de.berlin.hu.uima.ae.tagger.brics.DictionaryUpdater;
 import de.berlin.hu.uima.cr.chemdner.CHEMDNERReader;
 import de.berlin.hu.uima.cr.ddi.DDICorpusCR;
 import de.berlin.hu.util.Constants;
+import de.berlin.hu.util.Constants.ChemicalType;
 
 import uk.co.flamingpenguin.jewel.cli.ArgumentValidationException;
 import uk.co.flamingpenguin.jewel.cli.CliFactory;
@@ -66,7 +67,7 @@ public class App {
 	private static String pathToSentenceFile;
 	private static String pathToDictionaryFile = "dict.zip";
 	private static String pathToIDsFile = "ids.zip";
-	private static String pathToDrugModel = "drug-model.bin";
+	private static String pathToEumedModel = "multiclass.bin";
 	private static String pathToOutputFile;
 	private static boolean convertToIOB = false;
 	private static ChemSpotArguments arguments;
@@ -100,7 +101,7 @@ public class App {
     	pathToSentenceFile = ChemSpotConfiguration.getSentenceModelPath();
     	pathToModelFile = ChemSpotConfiguration.getCRFModelPath();
     	pathToDictionaryFile = ChemSpotConfiguration.getDictionaryPath();
-    	pathToDrugModel = ChemSpotConfiguration.getDrugModelPath();
+    	pathToEumedModel = ChemSpotConfiguration.getDrugModelPath();
     	
     	pathToOutputFile = ChemSpotConfiguration.getOutputPath();
     	pathToXMIOutput = ChemSpotConfiguration.getXMIOutputPath();
@@ -144,6 +145,15 @@ public class App {
         for (Component component : Component.values()) {
         	if (!ChemSpotConfiguration.useComponent(component)) {
         		System.out.printf("%s component is deactivated%n", component.toString().replace('_', ' ').toLowerCase());
+        	}
+        }
+        
+        // print disabled annotations
+        for (ChemicalType type : ChemicalType.values()) {
+        	if (!ChemSpotConfiguration.isAnnotate(type)) {
+        		System.out.printf("Annotation of %s is disabled%n", type.toString());
+        	} else if (!ChemSpotConfiguration.isAnnotateEumed(type)) {
+        		System.out.printf("Annotation of %s is disabled for eumed tagger%n", type.toString());
         	}
         }
     }
@@ -232,8 +242,8 @@ public class App {
 			if (arguments.isPathToIDs()) {
          		pathToIDsFile = arguments.getPathToIDs();
             }
-			if (arguments.isPathToDrugModelFile()) {
-         		pathToDrugModel = arguments.getPathToDrugModelFile();
+			if (arguments.isPathToEumedModelFile()) {
+         		pathToEumedModel = arguments.getPathToEumedModelFile();
             }
 			if (arguments.isThreadNr()) {
 				threaded = true;
@@ -318,7 +328,7 @@ public class App {
 		}
 
         //initializing ChemSpot with a CRF model file and an LINNAEUS automaton (the latter is optional)
-        ChemSpot chemspot = new ChemSpot(pathToModelFile, pathToDictionaryFile, pathToSentenceFile, pathToIDsFile, pathToDrugModel);
+        ChemSpot chemspot = new ChemSpot(pathToModelFile, pathToDictionaryFile, pathToSentenceFile, pathToIDsFile, pathToEumedModel);
 
         TypeSystemDescription typeSystem = UIMAFramework.getXMLParser().parseTypeSystemDescription(new XMLInputSource(chemspot.getClass().getClassLoader().getResource("desc/TypeSystem.xml")));
         
@@ -466,7 +476,7 @@ public class App {
 		    	FileWriter outputFile = outputPath != null ? new FileWriter(new File(outputPath)) : null;
 		        if (outputFile != null) {
 		        	outputFile.write(output);
-		        	System.out.println("\nOutput written to: " + outputPath);
+		        	System.out.println("Output written to: " + outputPath);
 		        	outputFile.close();
 		        }
 		        

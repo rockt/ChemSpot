@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><analysisEngineDescription xmlns="http://uima.apache.org/resourceSpecifier">
   <frameworkImplementation>org.apache.uima.java</frameworkImplementation>
   <primitive>true</primitive>
-  <annotatorImplementationName>de.berlin.hu.uima.ae.tagger.drug.DrugNERTagger</annotatorImplementationName>
+  <annotatorImplementationName>de.berlin.hu.uima.ae.tagger.drug.EumedNERTagger</annotatorImplementationName>
   <analysisEngineMetaData>
     <name>DrugTaggerAEDescriptor</name>
     <description/>

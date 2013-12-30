@@ -20,8 +20,8 @@ public interface ChemSpotArguments {
       boolean isPathToIDs();
 	  
 	  @Option(shortName="M")
-	  String getPathToDrugModelFile();
-	  boolean isPathToDrugModelFile();
+	  String getPathToEumedModelFile();
+	  boolean isPathToEumedModelFile();
 
 	  @Option(shortName="c")
 	  String getPathToIOBCorpora();

@@ -17,7 +17,7 @@ import de.berlin.hu.types.PubmedDocument;
 import de.berlin.hu.uima.ae.feature.FeatureTokenGenerator;
 import de.berlin.hu.uima.ae.feature.FeatureTokenGenerator.Feature_Phase;
 import de.berlin.hu.uima.ae.tagger.brics.BricsTagger;
-import de.berlin.hu.uima.ae.tagger.drug.DrugNERTagger;
+import de.berlin.hu.uima.ae.tagger.drug.EumedNERTagger;
 import de.berlin.hu.util.Constants;
 import de.berlin.hu.util.Constants.ChemicalID;
 
@@ -110,7 +110,7 @@ public class ChemSpot {
      * @param pathToCRFModelFile the path to a CRF model
      * @param pathToDictionaryFile the path to a dictionary automaton
      */
-    public ChemSpot(String pathToCRFModelFile, String pathToDictionaryFile, String pathToSentenceModelFile, String pathToIDs, String pathToDrugModel) {
+    public ChemSpot(String pathToCRFModelFile, String pathToDictionaryFile, String pathToSentenceModelFile, String pathToIDs, String pathToEumedModel) {
     	try {
     		// converting CRF and sentence model paths to URLs to allow loading of models from jar file
     		pathToCRFModelFile = pathToCRFModelFile == null ? this.getClass().getClassLoader().getResource(CRF_MODEL_RESOURCE_PATH).toString() : new File(pathToCRFModelFile).toURI().toURL().toString(); 
@@ -167,17 +167,17 @@ public class ChemSpot {
 	                    .getResource("desc/ae/tagger/AbbreviationTaggerAE.xml"))), CAS.NAME_DEFAULT_SOFA);
             }
             
-            if (ChemSpotConfiguration.useComponent(Component.DRUG_TAGGER)) {
-            	if (pathToDrugModel != null) {
-            		if (new File(pathToDrugModel).exists()) {
-            			System.out.println("Initializing drug tagger...");
+            if (ChemSpotConfiguration.useComponent(Component.EUMED_TAGGER)) {
+            	if (pathToEumedModel != null) {
+            		if (new File(pathToEumedModel).exists()) {
+            			System.out.println("Initializing multi-class tagger...");
             			drugTagger = AnalysisEngineFactory.createPrimitive(UIMAFramework.getXMLParser().parseAnalysisEngineDescription(new XMLInputSource(this.getClass().getClassLoader()
-        	                    .getResource("desc/ae/tagger/DrugTaggerAE.xml"))), DrugNERTagger.PATH_TO_DRUG_MODEL, pathToDrugModel);
+        	                    .getResource("desc/ae/tagger/EumedTaggerAE.xml"))), EumedNERTagger.PATH_TO_EUMED_MODEL, pathToEumedModel);
             		}  else {
-             			System.out.println("Drug Model file '" + pathToDrugModel +  "' does not exist. Tagging without drug tagger...");
+             			System.out.println("Multi-class model file '" + pathToEumedModel +  "' does not exist. Tagging without multi-class tagger...");
              		}
             	} else {
-            		System.out.println("No drug model location specified! Tagging without drug tagger...");
+            		System.out.println("No multi-class model location specified! Tagging without multi-class tagger...");
             	}
             }
             
@@ -240,7 +240,10 @@ public class ChemSpot {
             NamedEntity entity = entities.next();
             //disregards gold-standard mentions
             if (!Constants.GOLDSTANDARD.equals(entity.getSource())) {
-                mentions.add(new Mention(entity));
+            	Mention mention = new Mention(entity);
+            	if (ChemSpotConfiguration.isAnnotate(mention.getType())) {
+            		mentions.add(mention);
+            	}
             }
         }
 

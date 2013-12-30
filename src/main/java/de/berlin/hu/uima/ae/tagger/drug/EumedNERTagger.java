@@ -21,13 +21,15 @@ import scala.Tuple2;
 import scala.collection.Iterator;
 import simplexnlp.core.Entity;
 
+import de.berlin.hu.chemspot.ChemSpotConfiguration;
 import de.berlin.hu.eumed.Config;
 import de.berlin.hu.eumed.EntityTagger;
 import de.berlin.hu.types.PubmedDocument;
 import de.berlin.hu.util.Constants;
+import de.berlin.hu.util.Constants.ChemicalType;
 
-public class DrugNERTagger extends JCasAnnotator_ImplBase {
-	public static final String PATH_TO_DRUG_MODEL = "pathToDrugModel";
+public class EumedNERTagger extends JCasAnnotator_ImplBase {
+	public static final String PATH_TO_EUMED_MODEL = "pathToEumedModel";
 	
 	private EntityTagger tagger = null;
 	
@@ -38,10 +40,10 @@ public class DrugNERTagger extends JCasAnnotator_ImplBase {
 	
 	@Override
 	public void initialize(UimaContext aContext) throws ResourceInitializationException {
-		String drugModel = (String)aContext.getConfigParameterValue(PATH_TO_DRUG_MODEL);
+		String eumedModel = (String)aContext.getConfigParameterValue(PATH_TO_EUMED_MODEL);
 		
 		tagger = new EntityTagger();
-		tagger.add(new Tuple2<String, String>("path", drugModel));
+		tagger.add(new Tuple2<String, String>("path", eumedModel));
 		tagger.add(new Tuple2<String, Config>("config", new Config(new String[0])));
 		tagger.initialize();
 	}
@@ -88,23 +90,26 @@ public class DrugNERTagger extends JCasAnnotator_ImplBase {
 				Iterator<Entity> entities = sentence.entities().toIterator();
 				while (entities.hasNext()) {
 					Entity entity = entities.next();
-			            
-					createDrugAnnotation(aJCas, sentence.start() + entity.start() + doc.getBegin(), sentence.start() + doc.getBegin() + entity.end() + 1, entity.className());
+					
+					ChemicalType type = ChemicalType.fromString(entity.className());
+					if (ChemSpotConfiguration.isAnnotateEumed(type)) {
+						createChemicalAnnotation(aJCas, sentence.start() + entity.start() + doc.getBegin(), sentence.start() + doc.getBegin() + entity.end() + 1, entity.className());
+					}
 				}
 			}
 		}
 	}
 	 
 	
-	private Chemical createDrugAnnotation(JCas aJCas, int begin, int end, String type) {
-   		Chemical drug = new Chemical(aJCas);
-   		drug.setBegin(begin);
-   		drug.setEnd(end);
-   		drug.setSource(Constants.DRUG);
-   		drug.setEntityType(type);
-   		drug.addToIndexes();
+	private Chemical createChemicalAnnotation(JCas aJCas, int begin, int end, String type) {
+   		Chemical chemical = new Chemical(aJCas);
+   		chemical.setBegin(begin);
+   		chemical.setEnd(end);
+   		chemical.setSource(Constants.EUMED);
+   		chemical.setEntityType(type);
+   		chemical.addToIndexes();
    		//System.out.println("'" + drug.getCoveredText() + "'");
    		
-   		return drug;
+   		return chemical;
    	}
 }
