@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 import org.apache.uima.jcas.JCas;
 
 import de.berlin.hu.util.Constants;
+import de.berlin.hu.util.Constants.ChemicalType;
 import de.berlin.hu.wbi.common.research.Evaluator;
 
 public class ChemicalNEREvaluator {
@@ -30,13 +31,35 @@ public class ChemicalNEREvaluator {
     private List<Mention> truePositives = new ArrayList<Mention>();
     private List<Mention> falsePositives = new ArrayList<Mention>();
     private List<Mention> falseNegatives = new ArrayList<Mention>();
+    private List<Mention> predictions = new ArrayList<Mention>();
     private List<Mention> goldstandard = new ArrayList<Mention>();
     
     private List<Mention> normalizedAll = new ArrayList<Mention>();
     private List<Mention> normalized = new ArrayList<Mention>();
     private List<Mention> normalizedCorrect = new ArrayList<Mention>();
     private Object normalizationLock = new Object();
+    
+    public static String getEvaluationResult(Evaluator<?, ?> evaluator) {
+    	return getEvaluationResult(evaluator.getNumberOfTP(), evaluator.getNumberOfFP(), evaluator.getNumberOfFN());
+    }
 
+    public static String getEvaluationResult(int tps, int fps, int fns) {
+    	StringBuffer buffer = new StringBuffer();
+    	
+    	double precision = tps + fps > 0 ? (double) tps / ((double) tps + fps) : 0;
+        double recall = tps + fns > 0 ? (double) tps / ((double) tps + fns) : 0;
+        double fscore = precision + recall > 0 ? 2 * (precision * recall) / (precision + recall) : 0;
+    	
+    	buffer.append(String.format("True Positives  :  %d%n", tps));
+    	buffer.append(String.format("False Positives :  %d%n", fps));
+    	buffer.append(String.format("False Negatives :  %d%n", fns));
+    	buffer.append(String.format("Precision       :  %3.2f %%%n", precision * 100.0));
+    	buffer.append(String.format("Recall          :  %3.2f %%%n", recall * 100.0));
+    	buffer.append(String.format("F1 Score        :  %3.2f %%%n", fscore * 100.0));
+        
+        return buffer.toString();
+    }
+    
     /**
      * Evaluates the annotation results.
      * 
@@ -48,6 +71,7 @@ public class ChemicalNEREvaluator {
     	List<Mention> mentions = ChemSpot.getMentions(jcas);
     	List<Mention> goldstandardAnnotations = ChemSpot.getGoldstandardAnnotations(jcas);
     	
+    	predictions.addAll(mentions);
     	goldstandard.addAll(goldstandardAnnotations);
 
         synchronized(evaluationLock) {
@@ -71,11 +95,7 @@ public class ChemicalNEREvaluator {
 
 	            evaluateNormalization(new ArrayList<Mention>(evaluator.getTruePositives()), goldstandardAnnotations);
 	
-	            System.out.format("True Positives:\t\t%d\nFalse Positives:\t%d\nFalse Negatives:\t%d\n", TP, FP, FN);
-	            double precision = (double) TP / ((double) TP + FP);
-	            double recall = (double) TP / ((double) TP + FN);
-	            double fscore = precision + recall > 0 ? 2 * (precision * recall) / (precision + recall) : 0;
-	            System.out.format("Precision:\t\t%f\nRecall:\t\t\t%f\nF1 Score:\t\t%f\n", precision, recall, fscore);
+	            System.out.println(getEvaluationResult(TP, FP, FN));
 	            
             	if (!normalized.isEmpty()) {
             		double correctAllRatio = !normalizedAll.isEmpty() ? (double)normalizedCorrect.size() / (double)normalizedAll.size() : 0;
@@ -87,12 +107,43 @@ public class ChemicalNEREvaluator {
         }
     }
     
-    private void evaluateByType(List<Mention> tps, List<Mention> goldstandard) {
-    	Map<String, List<Mention>> mapTypeToGoldstandard = new HashMap<String, List<Mention>>();
+    public static String evaluateByPredictionType(List<Mention> tps, List<Mention> predictions) {
+    	Map<ChemicalType, List<Mention>> mapTypeToPredictions = new HashMap<ChemicalType, List<Mention>>();
+    	
+    	for (Mention prediction : predictions) {
+    		ChemicalType type = prediction.getType();
+    		if (type != null) {
+    			if (!mapTypeToPredictions.containsKey(type)) {
+    				mapTypeToPredictions.put(type, new ArrayList<Mention>());
+    			}
+    			mapTypeToPredictions.get(type).add(prediction);
+    		}
+    	}
+    	
+    	System.out.println();
+    	
+		StringBuffer buffer = new StringBuffer();
+			
+		buffer.append(String.format("Evaluation by Prediction Type:%n"));
+		
+		for (ChemicalType type : mapTypeToPredictions.keySet()) {
+			List<Mention> typeGoldstandard = new ArrayList<Mention>(mapTypeToPredictions.get(type));
+			typeGoldstandard.retainAll(tps);
+			List<Mention> typePredictions = mapTypeToPredictions.get(type);
+			
+			float precision = typePredictions.size() > 0 ? (float)typeGoldstandard.size() / (float)typePredictions.size() : 0;
+			buffer.append(String.format("%s - %d correct, %d found, precision: %3.2f%%%n", type, typeGoldstandard.size(), typePredictions.size(), precision * 100.0));
+		}
+		
+		return buffer.toString();
+    }
+    
+    public static String evaluateByGoldstandardType(List<Mention> predictions, List<Mention> goldstandard) {
+    	Map<ChemicalType, List<Mention>> mapTypeToGoldstandard = new HashMap<ChemicalType, List<Mention>>();
     	
     	for (Mention goldstandardMention : goldstandard) {
-    		String type = goldstandardMention.getType();
-    		if (type != null && !type.isEmpty()) {
+    		ChemicalType type = goldstandardMention.getType();
+    		if (type != null) {
     			if (!mapTypeToGoldstandard.containsKey(type)) {
     				mapTypeToGoldstandard.put(type, new ArrayList<Mention>());
     			}
@@ -102,19 +153,39 @@ public class ChemicalNEREvaluator {
     	
     	System.out.println();
     	
-    	if (!mapTypeToGoldstandard.isEmpty()) {
-    		for (String type : mapTypeToGoldstandard.keySet()) {
+    	if (mapTypeToGoldstandard.size() > 1) {
+    		StringBuffer buffer = new StringBuffer();
+    			
+    		buffer.append(String.format("Evaluation by Goldstandard Type:%n"));
+    		
+    		int tps = 0;
+    		int fps = 0;
+    		int fns = 0;
+    		for (ChemicalType type : mapTypeToGoldstandard.keySet()) {
     			List<Mention> typeGoldstandard = mapTypeToGoldstandard.get(type);
-    			List<Mention> typeTruePositives = new ArrayList<Mention>(tps);
-    			typeTruePositives.retainAll(typeGoldstandard);
+    			List<Mention> typePredictions = new ArrayList<Mention>();
+    			for (Mention prediction : predictions) {
+    				if (type.equals(prediction.getType())) {
+    					typePredictions.add(prediction);
+    				}
+    			}
     			
-    			int typeTPs = typeTruePositives.size();
-    			int typeAll = typeGoldstandard.size();
-    			double precision = typeAll != 0 ? (double)typeTPs / (double)typeAll : 0;
+    			Evaluator<Mention, Mention> evaluator = new Evaluator<Mention, Mention>(typePredictions, typeGoldstandard);
+    			evaluator.evaluate();
     			
-    			System.out.printf("%s - TPs: %d, All: %d, precision: %.4f %%%n", type, typeTPs, typeAll, precision * 100);
+    			tps += evaluator.getNumberOfTP();
+    			fps += evaluator.getNumberOfFP();
+    			fns += evaluator.getNumberOfFN();
+    			
+    			buffer.append(type + " - " + getEvaluationResult(evaluator).replaceAll("\r?\n(?!$)", ", ").replaceAll("  +", " "));
     		}
+    		
+    		buffer.append("ALL - " + getEvaluationResult(tps, fps, fns).replaceAll("\r?\n(?!$)", ", ").replaceAll("  +", " "));
+    		
+    		return buffer.toString();
     	}
+    	
+    	return "";
     }
     
     private double evaluateNormalization(List<Mention> tps, List<Mention> goldStandard) {
@@ -122,7 +193,6 @@ public class ChemicalNEREvaluator {
 		Collections.sort(goldStandard);
 	
     	int i = 0;
-    	
     	for (Mention m : tps) {
     		while (i < goldStandard.size() && goldStandard.get(i).getStart() < m.getStart()) i++;
     		
@@ -342,19 +412,24 @@ public class ChemicalNEREvaluator {
     
     public void writeDetailedEvaluationResults(String outputPath) throws IOException {
     	synchronized (evaluationLock) {
-    		evaluateByType(truePositives, goldstandard);
-    		
     		if (outputPath == null) outputPath = "";
     		
     		File evaluationFile  = new File(outputPath + "evaluation.txt");
     		OutputStream writer = new FileOutputStream(evaluationFile);
     		
     		BufferedWriter w = new BufferedWriter(new OutputStreamWriter(writer));
-    		w.write(String.format("True Positives:\t\t%d%nFalse Positives:\t%d%nFalse Negatives:\t%d%n", TP, FP, FN));
-            double precision = (double) TP / ((double) TP + FP);
-            double recall = (double) TP / ((double) TP + FN);
-            double fscore = precision + recall > 0 ? 2 * (precision * recall) / (precision + recall) : 0;
-            w.write(String.format("Precision:\t\t%f%nRecall:\t\t\t%f%nF1 Score:\t\t%f%n", precision, recall, fscore));
+            w.write(getEvaluationResult(TP, FP, FN));
+            
+            String predictionTypeEvaluation = evaluateByPredictionType(truePositives, predictions);
+            System.out.printf("%s", predictionTypeEvaluation);
+        	w.write(String.format("%n%n%s", predictionTypeEvaluation));
+            
+            String goldstandardTypeEvaluation = evaluateByGoldstandardType(predictions, goldstandard);
+            if (!goldstandardTypeEvaluation.isEmpty()) {
+            	System.out.printf("%s%n%n", goldstandardTypeEvaluation);
+            	w.write(String.format("%n%n%s", goldstandardTypeEvaluation));
+            }
+            
             w.flush();
     		
     		writeList(writer, "true positives", truePositives);
