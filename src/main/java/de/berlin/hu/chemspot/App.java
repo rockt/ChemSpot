@@ -689,23 +689,25 @@ public class App {
 		System.out.println("usage:");
 		System.out.println("  arguments:");
         System.out.println("\t-m path to a CRF model file (internal default model file will be used if not provided)");
-        System.out.println("\t-s path to a OpenNLP sentence model file (internal default model file will be used if not provided)o a OpenNLP sentence model file (internal default model file will be used if not provided)");
+        System.out.println("\t-s path to a OpenNLP sentence model file (internal default model file will be used if not provided)");
         System.out.println("\t-d path to a zipped set of brics dictionary automata (parameter defaults to 'dict.zip' if not provided)");
         System.out.println("\t-i path to a zipped tab-separated text file representing a map of terms to ids (parameter defaults to 'ids.zip' if not provided)");
+        System.out.println("\t-M path to a multi-class model file (parameter defaults to 'multiclass.bin' if not provided)");
         System.out.println();
-        System.out.println("\t-e if this parameter is set, the performance of ChemSpot on a IOB gold-standard corpus (cf. -c) or CRAFT corpus (cf. -C) is evaluated");
+        System.out.println("  flags:");
+        System.out.println("\t-e if this flag is set, the performance of ChemSpot on an IOB gold-standard corpus (cf. -c) is evaluated");
+        System.out.println("\t-u if this flag is set, ChemSpot will update the dictionary and ids file");
         System.out.println("\t-T number of threads to create when processing a document collection");
         System.out.println();
         System.out.println("  input control:");
-		System.out.println("\t-c path to a directory containing corpora in IOB format that should be tagged");
-		System.out.println("\t-C path to a directory containing CRAFT corpus files in UIMA XMI format that should be tagged");
-		System.out.println("\t-g path to a directory containing gzipped text files that should be tagged");
-		System.out.println("\t-t path to a text file that should be tagged");
-		System.out.println("\t-f path to a directory of text files that should be tagged");
+		System.out.println("\t-c path to a directory containing corpora in IOB format");
+		System.out.println("\t-g path to a directory containing gzipped text files");
+		System.out.println("\t-t path to a text file");
+		System.out.println("\t-f path to a directory of text files");
 		System.out.println();
         System.out.println("  output control:");
 		System.out.println("\t-o path to output file");
-		System.out.println("\t-I set if output should be converted to IOB format");
+		System.out.println("\t-I if this flag is set, the output will be converted into the IOB format");
         System.exit(0);
 	}
 }
