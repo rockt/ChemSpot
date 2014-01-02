@@ -573,9 +573,13 @@ public class ChemSpot {
             for (NamedEntity entity : entities) {
                 int firstTokenBegin = 0;
                 int lastTokenEnd = 0;
-
-                String id = entity.getId();
-                if (id == null) id = "";
+                
+                String id = "";
+                Mention m = new Mention(entity);
+                for (ChemicalID type : ChemicalID.values()) {
+                	String tempId = m.getId(type);
+                	id += (!id.isEmpty() ? "\t" : "") + (tempId != null && !tempId.isEmpty() ? tempId : "");
+                }
                 if (!Constants.GOLDSTANDARD.equals(entity.getSource())) {
                     if (pipelineAnnotations.containsKey(pmid)) {
                         pipelineAnnotations.get(pmid).add(entity);
@@ -584,15 +588,17 @@ public class ChemSpot {
                         tempArray.add(entity);
                         pipelineAnnotations.put(pmid, tempArray);
                     }
+                    
+                    String labelName = m.getType().toString();
                     List<Token> entityTokens = JCasUtil.selectCovered(Token.class, entity);
                     boolean first = true;
                     for (Token token : entityTokens) {
                         if (first) {
-                            if (id.isEmpty()) token.setLabel("B-CHEMICAL"); else token.setLabel("B-CHEMICAL" + "\t" + id);
+                            if (id.isEmpty()) token.setLabel("B-" + labelName); else token.setLabel("B-" + labelName + "\t" + id);
                             first = false;
                             firstTokenBegin = token.getBegin();
                         } else {
-                            token.setLabel("I-CHEMICAL" + "\t" + id);
+                            token.setLabel("I-" + labelName);
                         }
                         lastTokenEnd = token.getEnd();
                     }
@@ -650,12 +656,12 @@ public class ChemSpot {
                     	id += "\t" + (tempId != null && !tempId.isEmpty() ? tempId : "");
                     }
                     
-                    sb.append(pmid + "\t" + begin + "\t" + end + "\t" + text + id + "\n");
+                    sb.append(pmid + "\t" + begin + "\t" + end + "\t" + text + "\t" + m.getType().toString() + id + "\n");
                 }
                 numberOfEntities++;
             }
             if (numberOfEntities == 0) {
-            	sb.append(pmid + "\t-1\t-1\t\\N\t\\N\n");
+            	sb.append(pmid + "\t-1\t-1\t\\N\t\\N\t\\N" + new String(new char[ChemicalID.values().length]).replace("\0", "\t") + "\n");
             }
         }
         
