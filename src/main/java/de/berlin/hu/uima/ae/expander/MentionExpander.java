@@ -14,7 +14,7 @@ import de.berlin.hu.util.Constants;
 
 public class MentionExpander extends JCasAnnotator_ImplBase {
 
-	private NamedEntity expandEntity(NamedEntity ne) {
+	private static NamedEntity expandEntity(NamedEntity ne) {
 		String text = ne.getCAS().getDocumentText();
 		int begin = ne.getBegin();
 		int end = ne.getEnd();
@@ -74,6 +74,8 @@ public class MentionExpander extends JCasAnnotator_ImplBase {
 				
 				i++;
 			}
+			
+			if (left == -2 || right == -2) return;
 			
 			int initialLeft = left;
 			while (left > 0) {
