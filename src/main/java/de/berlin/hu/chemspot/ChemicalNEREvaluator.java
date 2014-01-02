@@ -125,7 +125,9 @@ public class ChemicalNEREvaluator {
 			
 		buffer.append(String.format("Evaluation by Prediction Type:%n"));
 		
-		for (ChemicalType type : mapTypeToPredictions.keySet()) {
+		List<ChemicalType> types = new ArrayList<ChemicalType>(mapTypeToPredictions.keySet());
+		Collections.sort(types);
+		for (ChemicalType type : types) {
 			List<Mention> typeGoldstandard = new ArrayList<Mention>(mapTypeToPredictions.get(type));
 			typeGoldstandard.retainAll(tps);
 			List<Mention> typePredictions = mapTypeToPredictions.get(type);
@@ -160,7 +162,9 @@ public class ChemicalNEREvaluator {
     		int tps = 0;
     		int fps = 0;
     		int fns = 0;
-    		for (ChemicalType type : mapTypeToGoldstandard.keySet()) {
+    		List<ChemicalType> types = new ArrayList<ChemicalType>(mapTypeToGoldstandard.keySet());
+    		Collections.sort(types);
+    		for (ChemicalType type : types) {
     			List<Mention> typeGoldstandard = mapTypeToGoldstandard.get(type);
     			List<Mention> typePredictions = new ArrayList<Mention>();
     			for (Mention prediction : predictions) {
