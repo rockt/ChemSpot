@@ -219,7 +219,7 @@ public class ChemSpotConfiguration {
 	}
 	
 	public static int getPubChemMaxLength() {
-		return Integer.parseInt(getProperty(UPDATE_PUBCHEM_MAX_LENGTH));
+		return Integer.parseInt(getProperty(UPDATE_PUBCHEM_MAX_LENGTH, "40"));
 	}
 	
 	public static boolean isRemoveTemporaryUpdateFiles() {
