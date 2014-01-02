@@ -1,6 +1,15 @@
 CHANGELOG of ChemSpot
 ----------------------
 
+2.0 - 2014-01-02
+-----------------------------------------------------------------------
+- Updated dictionary file and ids list (ChEBI version 2014-01-02)
+- New multi-class label tagger and classifier model
+- Support for classification of chemicals into: SYSTEMATIC, IDENTIFIER, 
+  FORMULA, TRIVIAL, ABBREVIATION, FAMILY and MULTIPLE
+- New automated dictionary and id file updater
+
+
 1.6 - 2013-12-03
 -----------------------------------------------------------------------
 - Updated dictionary file and ids list (ChEBI version 2013-12-03)
@@ -8,6 +17,7 @@ CHANGELOG of ChemSpot
 - Fixed bug where ChemSpot would not process some sentences if they
   weren't annotated properly
 - various minor improvements and bugfixes
+
 
 1.5 - 2013-04-02
 -----------------------------------------------------------------------
@@ -37,7 +47,6 @@ CHANGELOG of ChemSpot
 - Improved recognition of plural forms.
 - Sanitized application parameter settings.
 - Several bug fixes and minor improvements.
-
 
 
 1.3 - 2012-10-08
