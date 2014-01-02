@@ -1049,7 +1049,7 @@ public class DictionaryUpdater {
 			
 			int i = 2;
 			while (new File(oldFilePath).exists()) {
-				oldFilePath = idsFile.getPath().replaceAll(extensionPattern, "-old" + i + "$1");
+				oldFilePath = idsFile.getPath().replaceAll(extensionPattern, "-old" + i++ + "$1");
 			}
 			
 			System.out.printf("Renaming '%s' to '%s'%n", idsFile, oldFilePath);
