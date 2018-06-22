@@ -14,7 +14,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.package.data>../../data</project.package.data>
+		<project.package.data>data</project.package.data>
 	</properties>
 
 	<dependencies>
