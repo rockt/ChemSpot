@@ -20,7 +20,7 @@
 			<destName>crf_model.bin</destName>
 		</file>
 		<file>
-			<source>${project.basedir}/README</source>
+			<source>${project.basedir}/README.md</source>
 			<outputDirectory></outputDirectory>
 			<destName>README</destName>
 		</file>
