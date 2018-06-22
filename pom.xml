@@ -287,7 +287,13 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
         </pluginRepository>
     </pluginRepositories>
 
-	<repositories>
+    <repositories>
+      		<repository>
+			<id>uima-mirror</id>
+			<name>UIMA Incubating Mirror</name>
+			<layout>default</layout>
+			<url>http://maven.geomajas.org/</url>
+		</repository>
 		<repository>
 			<id>uima</id>
 			<name>UIMA Incubating</name>
