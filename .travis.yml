@@ -3,6 +3,8 @@ language: java
 before_install:
   - wget http://www.informatik.hu-berlin.de/forschung/gebiete/wbi/resources/chemspot/chemspot-2.0.zip
   - unzip chemspot-2.0.zip chemspot-2.0/ids.zip chemspot-2.0/dict.zip -d data
+  - pwd
+  - ls
 
 jdk:
   - oraclejdk8
