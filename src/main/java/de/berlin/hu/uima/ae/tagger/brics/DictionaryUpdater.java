@@ -192,7 +192,7 @@ public class DictionaryUpdater {
 				String[] ids1 = d1.get(chemical);
 				String[] ids2 = d2.get(chemical);
 				
-				if (ids1.length == ids2.length) {
+				if (ids1.length != ids2.length) {
 					if (ids1.length > ids2.length) {
 						ids2 = Arrays.copyOf(ids2, ids1.length);
 					} else {
@@ -229,6 +229,7 @@ public class DictionaryUpdater {
 				}
 				
 				if (wasUpdated) {
+					d1.put(chemical, ids1);
 					if (!mergeLogEntry.isEmpty()) {
 						mergeLogEntry = chemical + mergeLogEntry;
 						
@@ -262,10 +263,11 @@ public class DictionaryUpdater {
 					exactDuplicates++;
 				}
 			} else {
-				if (!chemical.matches("[\\w]+")) {
-					d1.put(chemical, d2.get(chemical));
-					added++;
-				}
+				// TODO: why was this regex used?
+//				if (!chemical.matches("[\\w]+")) {
+				d1.put(chemical, d2.get(chemical));
+				added++;
+//				}
 			}
 		}
 		
