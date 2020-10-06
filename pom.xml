@@ -14,7 +14,8 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.package.data>../updated-data</project.package.data>
+        <!--   change this to the location of ids.zip and dict.zip     -->
+        <project.package.data>./</project.package.data>
     </properties>
 
     <dependencies>
