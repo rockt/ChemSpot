@@ -428,7 +428,7 @@ public class ChemSpot {
             	printTime("feature generation phase 1 (+ preliminary normalization run)");
             }
             if (stopwordFilter != null) {
-            	//stopwordFilter.process(jcas);
+            	stopwordFilter.process(jcas);
             	printTime("stopword filter");
             }
             if (mentionExpander != null) {

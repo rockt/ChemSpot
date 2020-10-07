@@ -1,133 +1,134 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
-http://maven.apache.org/xsd/maven-4.0.0.xsd"> 
-	<modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>de.berlin.hu</groupId>
-	<artifactId>chemspot</artifactId>
-	<version>1.4</version>
-	<packaging>jar</packaging>
+    <groupId>de.berlin.hu</groupId>
+    <artifactId>chemspot</artifactId>
+    <version>2.0</version>
+    <packaging>jar</packaging>
 
 
-	<name>chemspot</name>
-	<url>http://maven.apache.org</url>
+    <name>chemspot</name>
+    <url>http://maven.apache.org</url>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.package.data>../../data</project.package.data>
-	</properties>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!--   change this to the location of ids.zip and dict.zip     -->
+        <project.package.data>./</project.package.data>
+    </properties>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.apache.uima</groupId>
-			<artifactId>uimaj-core</artifactId>
-			<version>2.3.0-incubating</version>
-			<type>jar</type>
-			<scope>compile</scope>
-			<optional>false</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.uima</groupId>
-			<artifactId>uimaj-adapter-vinci</artifactId>
-			<version>2.3.0-incubating</version>
-			<type>jar</type>
-			<scope>compile</scope>
-			<optional>false</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.uima</groupId>
-			<artifactId>uimaj-adapter-soap</artifactId>
-			<version>2.3.0-incubating</version>
-			<type>jar</type>
-			<scope>compile</scope>
-			<optional>false</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.uima</groupId>
-			<artifactId>uimaj-tools</artifactId>
-			<version>2.3.0-incubating</version>
-			<type>jar</type>
-			<scope>compile</scope>
-			<optional>false</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.uima</groupId>
-			<artifactId>uimaj-cpe</artifactId>
-			<version>2.3.0-incubating</version>
-			<type>jar</type>
-			<scope>compile</scope>
-			<optional>false</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.uima</groupId>
-			<artifactId>uimaj-document-annotation</artifactId>
-			<version>2.3.0-incubating</version>
-			<type>jar</type>
-			<scope>compile</scope>
-			<optional>false</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.uima</groupId>
-			<artifactId>uimaj-examples</artifactId>
-			<version>2.3.0-incubating</version>
-			<type>jar</type>
-			<scope>compile</scope>
-			<optional>false</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.uimafit</groupId>
-			<artifactId>uimafit</artifactId>
-			<version>1.2.0</version>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.4</version>
-			<type>jar</type>
-			<scope>test</scope>
-			<optional>false</optional>
-		</dependency>
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>2.0</version>
-			<type>jar</type>
-			<optional>false</optional>
-		</dependency>
-		<dependency>
-			<groupId>commons-net</groupId>
-			<artifactId>commons-net</artifactId>
-			<version>3.3</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-snowball</artifactId>
-			<version>2.9.3</version>
-			<type>jar</type>
-			<optional>false</optional>
-		</dependency>
-		<dependency>
-  			<groupId>org.uimafit</groupId>
-  			<artifactId>uimafit</artifactId>
-  			<version>1.1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>uk.co.flamingpenguin.jewelcli</groupId>
-			<artifactId>jewelcli</artifactId>
-			<version>0.6</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-configuration</groupId>
-			<artifactId>commons-configuration</artifactId>
-			<version>1.6</version>
-		</dependency>  
-		<dependency>
-			<groupId>cc.mallet</groupId>
-			<artifactId>mallet</artifactId>
-			<version>2.0.7</version>
-		</dependency>
-	
-		<!-- some dependencies are local files, use system-scope + ${basedir} -->
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.uima</groupId>
+            <artifactId>uimaj-core</artifactId>
+            <version>2.3.0-incubating</version>
+            <type>jar</type>
+            <scope>compile</scope>
+            <optional>false</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.uima</groupId>
+            <artifactId>uimaj-adapter-vinci</artifactId>
+            <version>2.3.0-incubating</version>
+            <type>jar</type>
+            <scope>compile</scope>
+            <optional>false</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.uima</groupId>
+            <artifactId>uimaj-adapter-soap</artifactId>
+            <version>2.3.0-incubating</version>
+            <type>jar</type>
+            <scope>compile</scope>
+            <optional>false</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.uima</groupId>
+            <artifactId>uimaj-tools</artifactId>
+            <version>2.3.0-incubating</version>
+            <type>jar</type>
+            <scope>compile</scope>
+            <optional>false</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.uima</groupId>
+            <artifactId>uimaj-cpe</artifactId>
+            <version>2.3.0-incubating</version>
+            <type>jar</type>
+            <scope>compile</scope>
+            <optional>false</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.uima</groupId>
+            <artifactId>uimaj-document-annotation</artifactId>
+            <version>2.3.0-incubating</version>
+            <type>jar</type>
+            <scope>compile</scope>
+            <optional>false</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.uima</groupId>
+            <artifactId>uimaj-examples</artifactId>
+            <version>2.3.0-incubating</version>
+            <type>jar</type>
+            <scope>compile</scope>
+            <optional>false</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.uimafit</groupId>
+            <artifactId>uimafit</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.4</version>
+            <type>jar</type>
+            <scope>test</scope>
+            <optional>false</optional>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.0</version>
+            <type>jar</type>
+            <optional>false</optional>
+        </dependency>
+        <dependency>
+            <groupId>commons-net</groupId>
+            <artifactId>commons-net</artifactId>
+            <version>3.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-snowball</artifactId>
+            <version>2.9.3</version>
+            <type>jar</type>
+            <optional>false</optional>
+        </dependency>
+        <!--		<dependency>-->
+        <!--  			<groupId>org.uimafit</groupId>-->
+        <!--  			<artifactId>uimafit</artifactId>-->
+        <!--  			<version>1.1.0</version>-->
+        <!--		</dependency>-->
+        <dependency>
+            <groupId>uk.co.flamingpenguin.jewelcli</groupId>
+            <artifactId>jewelcli</artifactId>
+            <version>0.6</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-configuration</groupId>
+            <artifactId>commons-configuration</artifactId>
+            <version>1.6</version>
+        </dependency>
+        <dependency>
+            <groupId>cc.mallet</groupId>
+            <artifactId>mallet</artifactId>
+            <version>2.0.7</version>
+        </dependency>
+
+        <!-- some dependencies are local files, use system-scope + ${basedir} -->
         <dependency>
             <groupId>opennlp</groupId>
             <artifactId>opennlp-uima</artifactId>
@@ -136,44 +137,62 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
             <type>jar</type>
             <optional>false</optional>
         -->
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/opennlp-uima-1.4.3.jar</systemPath>
+            <!--            <scope>system</scope>-->
+            <!--            <systemPath>${basedir}/lib/opennlp-uima-1.4.3.jar</systemPath>-->
         </dependency>
-		<dependency>
+
+        <dependency>
+            <groupId>opennlp</groupId>
+            <artifactId>maxent</artifactId>
+            <version>2.5.2</version>
+            <!--            <scope>system</scope>-->
+            <!--            <systemPath>${basedir}/lib/maxent-2.5.2.jar</systemPath>-->
+        </dependency>
+
+        <dependency>
+            <groupId>opennlp</groupId>
+            <artifactId>tools</artifactId>
+            <version>1.4.3</version>
+            <!--            <scope>system</scope>-->
+            <!--            <systemPath>${basedir}/lib/opennlp-tools-1.4.3.jar</systemPath>-->
+        </dependency>
+
+        <dependency>
             <groupId>banner</groupId>
             <artifactId>banner</artifactId>
             <version>2011-10-12</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/banner.jar</systemPath>
+            <!--            <scope>system</scope>-->
+            <!--            <systemPath>${basedir}/lib/banner.jar</systemPath>-->
         </dependency>
         <dependency>
             <groupId>eumed</groupId>
             <artifactId>eumed</artifactId>
             <version>2013-6-4</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/eumed-light.jar</systemPath>
+            <!--            <scope>system</scope>-->
+            <!--            <systemPath>${basedir}/lib/eumed-light.jar</systemPath>-->
         </dependency>
         <dependency>
             <groupId>dragontool</groupId>
             <artifactId>dragontool</artifactId>
             <version>2011-10-12</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/dragontool.jar</systemPath>
+            <!--            <scope>system</scope>-->
+            <!--            <systemPath>${basedir}/lib/dragontool.jar</systemPath>-->
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>heptag</groupId>
             <artifactId>heptag</artifactId>
             <version>2011-10-12</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/heptag.jar</systemPath>
+            <!--            <scope>system</scope>-->
+            <!--            <systemPath>${basedir}/lib/heptag.jar</systemPath>-->
         </dependency>
         <dependency>
             <groupId>automaton</groupId>
             <artifactId>automaton</artifactId>
             <version>2012-06-28</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/automaton-120628.jar</systemPath>
+            <!--            <scope>system</scope>-->
+            <!--            <systemPath>${basedir}/lib/automaton-120628.jar</systemPath>-->
         </dependency>
+
         <dependency>
             <groupId>uk.ac.cam.ch.opsin</groupId>
             <artifactId>opsin-inchi</artifactId>
@@ -184,9 +203,9 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
             <artifactId>scala-library</artifactId>
             <version>2.9.2</version>
         </dependency>
-	</dependencies>
+    </dependencies>
 
-	<build>
+    <build>
         <resources>
             <resource>
                 <targetPath>${basedir}/target/classes/resources</targetPath>
@@ -197,21 +216,150 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
                 <directory>${basedir}/desc</directory>
             </resource>
         </resources>
+
         <plugins>
             <plugin>
-                 <groupId>org.codehaus.mojo</groupId>
-                 <artifactId>build-helper-maven-plugin</artifactId>
-                 <executions>
-                     <execution>
-                         <phase>generate-sources</phase>
-                         <goals><goal>add-source</goal></goals>
-                         <configuration>
-                             <sources>
-                                 <source>${basedir}/src/main/types</source>
-                             </sources>
-                         </configuration>
-                     </execution>
-                 </executions>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>2.5.1</version>
+                <executions>
+                    <execution>
+                        <id>install-opennlp-uima</id>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <phase>validate</phase>
+                        <configuration>
+                            <groupId>opennlp</groupId>
+                            <artifactId>opennlp-uima</artifactId>
+                            <version>1.4.3</version>
+                            <packaging>jar</packaging>
+                            <file>${basedir}/lib/opennlp-uima-1.4.3.jar</file>
+                            <generatePom>true</generatePom>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-opennlp-maxent</id>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <phase>validate</phase>
+                        <configuration>
+                            <groupId>opennlp</groupId>
+                            <artifactId>maxent</artifactId>
+                            <version>2.5.2</version>
+                            <packaging>jar</packaging>
+                            <file>${basedir}/lib/maxent-2.5.2.jar</file>
+                            <generatePom>true</generatePom>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-opennlp-tools</id>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <phase>validate</phase>
+                        <configuration>
+                            <groupId>opennlp</groupId>
+                            <artifactId>tools</artifactId>
+                            <version>1.4.3</version>
+                            <packaging>jar</packaging>
+                            <file>${basedir}/lib/opennlp-tools-1.4.3.jar</file>
+                            <generatePom>true</generatePom>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-banner</id>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <phase>validate</phase>
+                        <configuration>
+                            <groupId>banner</groupId>
+                            <artifactId>banner</artifactId>
+                            <version>2011-10-12</version>
+                            <packaging>jar</packaging>
+                            <file>${basedir}/lib/banner.jar</file>
+                            <generatePom>true</generatePom>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-eumed</id>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <phase>validate</phase>
+                        <configuration>
+                            <groupId>eumed</groupId>
+                            <artifactId>eumed</artifactId>
+                            <version>2013-6-4</version>
+                            <packaging>jar</packaging>
+                            <file>${basedir}/lib/eumed-light.jar</file>
+                            <generatePom>true</generatePom>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-dragontool</id>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <phase>validate</phase>
+                        <configuration>
+                            <groupId>dragontool</groupId>
+                            <artifactId>dragontool</artifactId>
+                            <version>2011-10-12</version>
+                            <packaging>jar</packaging>
+                            <file>${basedir}/lib/dragontool.jar</file>
+                            <generatePom>true</generatePom>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-heptag</id>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <phase>validate</phase>
+                        <configuration>
+                            <groupId>heptag</groupId>
+                            <artifactId>heptag</artifactId>
+                            <version>2011-10-12</version>
+                            <packaging>jar</packaging>
+                            <file>${basedir}/lib/heptag.jar</file>
+                            <generatePom>true</generatePom>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-automaton</id>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <phase>validate</phase>
+                        <configuration>
+                            <groupId>automaton</groupId>
+                            <artifactId>automaton</artifactId>
+                            <version>2012-06-28</version>
+                            <packaging>jar</packaging>
+                            <file>${basedir}/lib/automaton-120628.jar</file>
+                            <generatePom>true</generatePom>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals><goal>add-source</goal></goals>
+                        <configuration>
+                            <sources>
+                                <source>${basedir}/src/main/types</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.scala-tools</groupId>
@@ -225,7 +373,31 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
                     </execution>
                 </executions>
             </plugin>
+            <!--            <plugin>-->
+            <!--                <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                <artifactId>maven-assembly-plugin</artifactId>-->
+            <!--                <configuration>-->
+            <!--                    <archive>-->
+            <!--                        <manifest>-->
+            <!--                            <mainClass>de.berlin.hu.chemspot.App</mainClass>-->
+            <!--                        </manifest>-->
+            <!--                    </archive>-->
+            <!--                    <descriptorRefs>-->
+            <!--                        <descriptorRef>jar-with-dependencies</descriptorRef>-->
+            <!--                    </descriptorRefs>-->
+            <!--                </configuration>-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <id>make-jar-with-dependencies</id>-->
+            <!--                        <phase>package</phase>-->
+            <!--                        <goals>-->
+            <!--                            <goal>single</goal>-->
+            <!--                        </goals>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--            </plugin>-->
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
                     <archive>
@@ -248,19 +420,20 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
                     <execution>
                         <id>make-archive</id>
                         <phase>package</phase>
                         <goals>
-                           <goal>single</goal>
+                            <goal>single</goal>
                         </goals>
                         <configuration>
-                        	<manifest>
-                            <mainClass>de.berlin.hu.chemspot.App</mainClass>
-                            <addClasspath>true</addClasspath>
-                       		</manifest>
+                            <manifest>
+                                <mainClass>de.berlin.hu.chemspot.App</mainClass>
+                                <addClasspath>true</addClasspath>
+                            </manifest>
                             <descriptors>
                                 <descriptor>src/main/assembly/release.xml</descriptor>
                             </descriptors>
@@ -270,49 +443,25 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
                     </execution>
                 </executions>
             </plugin>
-		</plugins>
-	</build>
+        </plugins>
+    </build>
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>scala</id>
-            <name>Scala Tools</name>
-            <url>http://scala-tools.org/repo-releases/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
-
-	<repositories>
-		<repository>
-			<id>uima</id>
-			<name>UIMA Incubating</name>
-			<layout>default</layout>
-			<url>http://people.apache.org/repo/m2-incubating-repository/</url>
-		</repository>
-		<repository>
-			<id>OpenNLPRepository</id>
-			<url>http://opennlp.sourceforge.net/maven2</url>
-		</repository>
-		<repository>
-                <id>ucc-repo</id>
-                <url>http://maven.ch.cam.ac.uk/m2repo</url>
-        </repository>
+    <repositories>
         <repository>
-              <id>scala</id>
-              <name>Scala Tools</name>
-              <url>http://scala-tools.org/repo-releases/</url>
-              <releases>
-                  <enabled>true</enabled>
-              </releases>
-              <snapshots>
-                  <enabled>false</enabled>
-              </snapshots>
-          </repository>
-	</repositories>
+            <id>uima</id>
+            <name>UIMA Incubating</name>
+            <layout>default</layout>
+            <url>http://maven.geomajas.org</url>
+        </repository>
+<!--        <repository>-->
+<!--            <id>uima</id>-->
+<!--            <name>UIMA Incubating</name>-->
+<!--            <layout>default</layout>-->
+<!--            <url>http://people.apache.org/repo/m2-incubating-repository/</url>-->
+<!--        </repository>-->
+<!--        <repository>-->
+<!--            <id>OpenNLPRepository</id>-->
+<!--            <url>http://opennlp.sourceforge.net/maven2</url>-->
+<!--        </repository>-->
+    </repositories>
 </project>
-
