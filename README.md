@@ -6,6 +6,9 @@ ChemSpot is released under the Common Public License 1.0 (see LICENSE).
 
 The warning message "Couldn't open cc.mallet.util.MalletLogger resources/logging.properties file." can be ignored.
 
+## Packaging ChemSpot:
+Simply running "mvn prepare-package" should create the jar with dependencies needed to run ChemSpot.
+To run "mvn package" (which also creates a release zip file with all the resources) make sure you have ids.zip and dict.zip locally and set project.package.data in the pom.xml to their location.
 
 ## Running ChemSpot:
 - Extract chemspot.zip into a directory
