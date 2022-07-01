@@ -21,7 +21,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
 		<dependency>
 			<groupId>org.apache.uima</groupId>
 			<artifactId>uimaj-core</artifactId>
-			<version>2.3.0-incubating</version>
+			<version>2.10.2</version>
 			<type>jar</type>
 			<scope>compile</scope>
 			<optional>false</optional>
